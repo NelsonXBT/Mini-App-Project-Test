@@ -1,0 +1,139 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+enum VideoProvider {
+  youtube
+  bunny
+}
+
+enum ResourceType {
+  pdf
+  download
+  google_doc
+  drive
+  github
+  website
+  notion
+}
+
+model User {
+  id          String   @id @default(cuid())
+  telegramId  BigInt   @unique
+  username    String?
+  firstName   String
+  lastName    String?
+  photoUrl    String?
+  isAdmin     Boolean  @default(false)
+
+  enrollments Enrollment[]
+  progress    LessonProgress[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?
+  thumbnail   String?
+
+  isFree      Boolean  @default(true)
+  price       Decimal?
+
+  isPublished Boolean  @default(false)
+
+  modules     Module[]
+  enrollments Enrollment[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Module {
+  id        String @id @default(cuid())
+  title     String
+  order     Int
+
+  courseId  String
+  course    Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  lessons   Lesson[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Lesson {
+  id            String @id @default(cuid())
+  title         String
+  description   String?
+
+  provider      VideoProvider
+  videoId       String
+  duration      Int?
+
+  order         Int
+
+  moduleId       String
+  module         Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  progress       LessonProgress[]
+  resources      Resource[]
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Enrollment {
+  id        String @id @default(cuid())
+
+  userId    String
+  courseId  String
+
+  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course     Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, courseId])
+}
+
+model LessonProgress {
+  id         String @id @default(cuid())
+
+  userId     String
+  lessonId   String
+
+  completed  Boolean @default(false)
+
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson      Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  completedAt DateTime?
+
+  @@unique([userId, lessonId])
+}
+
+model Resource {
+  id          String @id @default(cuid())
+
+  lessonId    String
+  lesson       Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+
+  title       String
+  type        ResourceType
+  url         String
+  sortOrder   Int @default(1)
+
+  createdAt   DateTime @default(now())
+}

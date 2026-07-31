@@ -2,7 +2,9 @@ import Greeting from "@/components/home/Greeting";
 import ContinueLearning from "@/components/home/ContinueLearning";
 import FollowNelson from "@/components/home/FollowNelson";
 
-import { user } from "@/lib/data";
+const user = {
+  name: "Nelson",
+};
 
 export default function Home() {
   return (
