@@ -9,7 +9,7 @@ export default function Header() {
         </h1>
 
         <p className="text-xs text-zinc-500">
-          Creative Lab
+          {/* Creative Lab */}
         </p>
       </div>
 

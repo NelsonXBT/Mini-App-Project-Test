@@ -10,12 +10,12 @@ export default function LessonInfo({
   title,
 }: LessonInfoProps) {
   return (
-    <section className="mt-6">
-      <p className="text-sm text-zinc-400">
-        Lesson {lessonNumber} of {totalLessons}
+    <section className="space-y-2">
+      <p className="text-sm font-medium text-cyan-400">
+        Lesson {lessonNumber}/{totalLessons}
       </p>
 
-      <h2 className="mt-2 text-3xl font-bold text-white">
+      <h2 className="text-2xl font-bold leading-tight text-white">
         {title}
       </h2>
     </section>

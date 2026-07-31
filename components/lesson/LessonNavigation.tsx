@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 type Lesson = {
   id: number;
@@ -17,14 +18,15 @@ export default function LessonNavigation({
   nextLesson,
 }: LessonNavigationProps) {
   return (
-    <nav className="mt-12 border-t border-zinc-800 pt-8">
-      <div className="mt-8 flex gap-4">
+    <nav className="pt-2">
+      <div className="grid grid-cols-2 gap-3">
         {previousLesson ? (
           <Link
             href={`/courses/${courseId}/lessons/${previousLesson.id}`}
-            className="flex-1"
+            className="flex items-center justify-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm font-medium text-white transition hover:border-cyan-500 hover:text-cyan-400"
           >
-            ← Previous Lesson
+            <ChevronLeft size={18} />
+            Previous
           </Link>
         ) : (
           <div />
@@ -33,9 +35,10 @@ export default function LessonNavigation({
         {nextLesson ? (
           <Link
             href={`/courses/${courseId}/lessons/${nextLesson.id}`}
-            className="flex-1"
+            className="flex items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 py-3 text-sm font-semibold text-black transition hover:bg-cyan-400"
           >
-            Next Lesson →
+            Next
+            <ChevronRight size={18} />
           </Link>
         ) : (
           <div />

@@ -8,9 +8,6 @@ import LessonInfo from "@/components/lesson/LessonInfo";
 import UpNext from "@/components/lesson/UpNext";
 import MarkComplete from "@/components/lesson/MarkComplete";
 
-
-
-
 type Props = {
   params: Promise<{
     id: string;
@@ -39,17 +36,14 @@ export default async function LessonPage({ params }: Props) {
     (lesson) => lesson.id === Number(lessonId)
   );
 
-  // Lesson Progress
   const lessonNumber = currentIndex + 1;
   const totalLessons = courseLessons.length;
 
-  // Previous Lesson
   const previousLesson =
     currentIndex > 0
       ? courseLessons[currentIndex - 1]
       : null;
 
-  // Next Lesson
   const nextLesson =
     currentIndex < courseLessons.length - 1
       ? courseLessons[currentIndex + 1]
@@ -66,53 +60,51 @@ export default async function LessonPage({ params }: Props) {
   }
 
   return (
-    <main className="min-h-screen p-6">
-         <LessonHeader
-        courseId={id}
-        courseTitle={course.title}
-      />
-
-      <LessonMeta
-        duration={lesson.duration}
-        completed={lesson.completed}
-      />
-
-      <VideoPlayer
-        videoUrl={lesson.videoUrl}
-        thumbnail={lesson.thumbnail}
-      />
-
-            <LessonInfo
-            lessonNumber={lessonNumber}
-            totalLessons={totalLessons}
-            title={lesson.title}
+    <main className="min-h-screen px-5 py-5">
+      <div className="mx-auto max-w-3xl space-y-5">
+        <LessonHeader
+          courseId={id}
+          courseTitle={course.title}
         />
 
-        <hr className="my-8 border-zinc-800" />
+        <LessonMeta
+          duration={lesson.duration}
+          completed={lesson.completed}
+        />
 
-      <LessonDescription
-        description={lesson.description}
-      />
+        <VideoPlayer
+          videoUrl={lesson.videoUrl}
+          thumbnail={lesson.thumbnail}
+        />
 
-      <hr className="my-8 border-zinc-800" />
+        <LessonInfo
+          lessonNumber={lessonNumber}
+          totalLessons={totalLessons}
+          title={lesson.title}
+        />
 
-      {nextLesson && (
-            <UpNext
-                title={nextLesson.title}
-                duration={nextLesson.duration}
-                href={`/courses/${id}/lessons/${nextLesson.id}`}
-            />
-            )}
+        <LessonDescription
+          description={lesson.description}
+        />
 
-            <hr className="my-8 border-zinc-800" />
+        {nextLesson && (
+          <UpNext
+            title={nextLesson.title}
+            duration={nextLesson.duration}
+            href={`/courses/${id}/lessons/${nextLesson.id}`}
+          />
+        )}
 
-            <MarkComplete completed={lesson.completed} />
+        <MarkComplete
+          completed={lesson.completed}
+        />
 
-      <LessonNavigation
-        courseId={id}
-        previousLesson={previousLesson}
-        nextLesson={nextLesson}
-      />
+        <LessonNavigation
+          courseId={id}
+          previousLesson={previousLesson}
+          nextLesson={nextLesson}
+        />
+      </div>
     </main>
   );
 }
