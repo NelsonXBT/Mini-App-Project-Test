@@ -5,10 +5,8 @@ import { useState } from "react";
 import ResourceTabs from "./ResourceTabs";
 import ResourceCard from "./ResourceCard";
 
-import {
-  resourcePacks,
-  resourceTools,
-} from "@/lib/data";
+import { featuredResources } from "@/lib/constants/featured-resources";
+import { featuredTools } from "@/lib/constants/featured-tools";
 
 export default function ResourceContent() {
   const [activeTab, setActiveTab] = useState<
@@ -24,7 +22,7 @@ export default function ResourceContent() {
 
       <div className="space-y-3">
         {activeTab === "packs"
-          ? resourcePacks.map((pack) => (
+          ? featuredResources.map((pack) => (
               <ResourceCard
                 key={pack.id}
                 icon={pack.icon}
@@ -33,7 +31,7 @@ export default function ResourceContent() {
                 badge={`${pack.files} Files`}
               />
             ))
-          : resourceTools.map((tool) => (
+          : featuredTools.map((tool) => (
               <ResourceCard
                 key={tool.id}
                 icon={tool.icon}

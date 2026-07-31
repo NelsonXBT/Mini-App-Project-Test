@@ -3,7 +3,7 @@ import { ChevronRight, Clock } from "lucide-react";
 
 type UpNextProps = {
   title: string;
-  duration: string;
+  duration: number;
   href: string;
 };
 
@@ -12,6 +12,11 @@ export default function UpNext({
   duration,
   href,
 }: UpNextProps) {
+  const formattedDuration =
+    duration > 0
+      ? `${Math.ceil(duration / 60)} min`
+      : "—";
+
   return (
     <section className="rounded-xl border border-zinc-800 bg-zinc-900">
       <Link
@@ -29,7 +34,7 @@ export default function UpNext({
 
           <div className="mt-1 flex items-center gap-1 text-sm text-zinc-500">
             <Clock size={14} />
-            <span>{duration}</span>
+            <span>{formattedDuration}</span>
           </div>
         </div>
 

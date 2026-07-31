@@ -1,24 +1,17 @@
-import Link from "next/link";
-import { allCourses, lessons } from "@/lib/data";
+import { getCourse } from "@/lib/db/courses";
 import CourseContent from "@/components/course/CourseContent";
 import CourseProgress from "@/components/course/CourseProgress";
 
 type Props = {
   params: Promise<{
-    id: string;
+    slug: string;
   }>;
 };
 
 export default async function CoursePage({ params }: Props) {
-  const { id } = await params;
+  const { slug } = await params;
 
-  const course = allCourses.find(
-    (course) => course.id === Number(id)
-  );
-
-  const courseLessons = lessons.filter(
-    (lesson) => lesson.courseId === Number(id)
-  );
+  const course = await getCourse(slug);
 
   if (!course) {
     return (
@@ -30,6 +23,11 @@ export default async function CoursePage({ params }: Props) {
     );
   }
 
+  const totalLessons = course.modules.reduce(
+    (total, module) => total + module.lessons.length,
+    0
+  );
+
   return (
     <main className="space-y-4">
       <div>
@@ -38,19 +36,20 @@ export default async function CoursePage({ params }: Props) {
         </h1>
 
         <p className="mt-1 text-sm text-zinc-500">
-          {course.lessons} Lessons
+          {totalLessons} Lesson{totalLessons !== 1 ? "s" : ""}
         </p>
       </div>
 
       <CourseProgress
-        completed={12}
-        total={42}
-        progress={22}
+        completed={0}
+        total={totalLessons}
+        progress={0}
       />
 
       <CourseContent
-        lessons={courseLessons}
+    modules={course.modules}
+          courseSlug={course.slug}
       />
-    </main>
+          </main>
   );
 }

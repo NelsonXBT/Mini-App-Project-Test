@@ -9,6 +9,9 @@
     "lint": "eslint",
     "seed": "tsx prisma/seed.ts"
   },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
+  },
   "dependencies": {
     "@prisma/client": "^6.16.2",
     "framer-motion": "^12.43.0",

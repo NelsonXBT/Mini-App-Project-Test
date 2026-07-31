@@ -1,7 +1,9 @@
-import { allCourses } from "@/lib/data";
+import { getCourses } from "@/lib/db/courses";
 import CourseCard from "@/components/course/CourseCard";
 
-export default function CoursesPage() {
+export default async function CoursesPage() {
+  const courses = await getCourses();
+
   return (
     <main className="space-y-4">
       <div className="mx-auto max-w-5xl">
@@ -10,7 +12,7 @@ export default function CoursesPage() {
         </h1>
 
         <div className="space-y-4">
-          {allCourses.map((course) => (
+          {courses.map((course) => (
             <CourseCard
               key={course.id}
               course={course}

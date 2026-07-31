@@ -1,5 +1,5 @@
 import CommunityCard from "./CommunityCard";
-import { communityItems } from "@/lib/data";
+import { communityItems } from "@/lib/constants/community";
 
 export default function CommunityContent() {
   return (

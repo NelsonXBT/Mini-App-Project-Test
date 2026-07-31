@@ -1,19 +1,17 @@
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Prisma } from "@prisma/client";
 
-type Lesson = {
-  id: number;
-  title: string;
-};
+type Lesson = Prisma.LessonGetPayload<{}>;
 
 type LessonNavigationProps = {
-  courseId: string;
+  courseSlug: string;
   previousLesson: Lesson | null;
   nextLesson: Lesson | null;
 };
 
 export default function LessonNavigation({
-  courseId,
+  courseSlug,
   previousLesson,
   nextLesson,
 }: LessonNavigationProps) {
@@ -22,7 +20,7 @@ export default function LessonNavigation({
       <div className="grid grid-cols-2 gap-3">
         {previousLesson ? (
           <Link
-            href={`/courses/${courseId}/lessons/${previousLesson.id}`}
+            href={`/courses/${courseSlug}/lessons/${previousLesson.id}`}
             className="flex items-center justify-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm font-medium text-white transition hover:border-cyan-500 hover:text-cyan-400"
           >
             <ChevronLeft size={18} />
@@ -34,7 +32,7 @@ export default function LessonNavigation({
 
         {nextLesson ? (
           <Link
-            href={`/courses/${courseId}/lessons/${nextLesson.id}`}
+            href={`/courses/${courseSlug}/lessons/${nextLesson.id}`}
             className="flex items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 py-3 text-sm font-semibold text-black transition hover:bg-cyan-400"
           >
             Next

@@ -1,16 +1,16 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Prisma } from "@prisma/client";
 
-type Course = {
-  id: number;
-  title: string;
-  description: string;
-  thumbnail: string;
-  lessons: number;
-  enrolled: boolean;
-  progress: number;
-  level: string;
-};
+type Course = Prisma.CourseGetPayload<{
+  include: {
+    modules: {
+      include: {
+        lessons: true;
+      };
+    };
+  };
+}>;
 
 type CourseCardProps = {
   course: Course;
@@ -19,9 +19,14 @@ type CourseCardProps = {
 export default function CourseCard({
   course,
 }: CourseCardProps) {
+  const lessonCount = course.modules.reduce(
+    (total, module) => total + module.lessons.length,
+    0
+  );
+
   return (
     <Link
-      href={`/courses/${course.id}`}
+      href={`/courses/${course.slug}`}
       className="block"
     >
       <article className="rounded-2xl border border-zinc-800 bg-zinc-900 p-3 transition-all duration-300 hover:border-cyan-500 hover:bg-zinc-800">
@@ -29,7 +34,7 @@ export default function CourseCard({
           {/* Thumbnail */}
           <div className="relative h-24 w-28 flex-shrink-0 overflow-hidden rounded-xl">
             <Image
-              src={course.thumbnail}
+              src={course.thumbnail ?? "/thumbnails/coursethumbnail.png"}
               alt={course.title}
               fill
               className="object-cover"
@@ -38,41 +43,25 @@ export default function CourseCard({
 
           {/* Content */}
           <div className="flex min-w-0 flex-1 flex-col">
-            {/* Title */}
             <h2 className="line-clamp-2 text-lg font-bold leading-tight text-white">
               {course.title}
             </h2>
 
-            {/* Description */}
             <p className="mt-1 line-clamp-2 text-sm leading-5 text-zinc-400">
-              {course.description}
+              {course.description ?? "No description available."}
             </p>
 
-            {/* Lesson Count & Level */}
             <div className="mt-3 flex items-center justify-between text-xs text-zinc-500">
-              <span>{course.lessons} Lessons</span>
-              <span>{course.level}</span>
+              <span>
+                {lessonCount} Lesson{lessonCount !== 1 ? "s" : ""}
+              </span>
+
+              <span>
+                {course.isFree
+                  ? "Free"
+                  : `₦${course.price?.toString() ?? "0"}`}
+              </span>
             </div>
-
-            {/* Progress */}
-            {course.enrolled && (
-              <>
-                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-zinc-800">
-                  <div
-                    className="h-full rounded-full bg-cyan-500 transition-all duration-500"
-                    style={{
-                      width: `${course.progress}%`,
-                    }}
-                  />
-                </div>
-
-                <div className="mt-2 flex justify-end">
-                  <span className="text-xs font-semibold text-cyan-400">
-                    {course.progress}% Complete
-                  </span>
-                </div>
-              </>
-            )}
           </div>
         </div>
       </article>

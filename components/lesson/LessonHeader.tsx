@@ -2,18 +2,18 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
 type LessonHeaderProps = {
-  courseId: string;
+  courseSlug: string;
   courseTitle: string;
 };
 
 export default function LessonHeader({
-  courseId,
+  courseSlug,
   courseTitle,
 }: LessonHeaderProps) {
   return (
     <header className="mb-6 flex items-center gap-4">
       <Link
-        href={`/courses/${courseId}`}
+        href={`/courses/${courseSlug}`}
         aria-label="Back to course"
         className="rounded-full p-2 transition hover:bg-zinc-800 hover:text-cyan-400"
       >

@@ -1,4 +1,4 @@
-import { prisma } from "../prisma";
+import { prisma } from "@/lib/prisma";
 
 export async function getCourses() {
   return prisma.course.findMany({
@@ -19,7 +19,10 @@ export async function getCourses() {
 }
 
 export async function getCourse(slug: string) {
-  return prisma.course.findUnique({
+  console.log("================================");
+  console.log("Looking for course slug:", slug);
+
+  const course = await prisma.course.findUnique({
     where: {
       slug,
     },
@@ -41,4 +44,10 @@ export async function getCourse(slug: string) {
       },
     },
   });
+
+  console.log("Database result:");
+  console.dir(course, { depth: null });
+  console.log("================================");
+
+  return course;
 }

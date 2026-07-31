@@ -1,5 +1,5 @@
 type LessonMetaProps = {
-  duration: string;
+  duration: number;
   completed: boolean;
 };
 
@@ -7,9 +7,14 @@ export default function LessonMeta({
   duration,
   completed,
 }: LessonMetaProps) {
+  const formattedDuration =
+    duration > 0
+      ? `${Math.ceil(duration / 60)} min`
+      : "—";
+
   return (
     <div className="mt-6 flex gap-6 text-sm text-gray-400">
-      <span>⏱ {duration}</span>
+      <span>⏱ {formattedDuration}</span>
 
       <span>
         {completed

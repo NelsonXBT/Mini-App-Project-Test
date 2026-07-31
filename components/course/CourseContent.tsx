@@ -1,31 +1,39 @@
 "use client";
 
 import { useState } from "react";
+import { Prisma } from "@prisma/client";
 
 import CourseTabs from "./CourseTabs";
-import LessonCard from "./LessonCard";
+import ModuleCard from "./ModuleCard";
 import FileCard from "./FileCard";
 
-import { courseFiles } from "@/lib/data";
+type Module = Prisma.ModuleGetPayload<{
+  include: {
+    lessons: true;
+  };
+}>;
 
-type Lesson = {
-  id: number;
-  courseId: number;
+type Resource = {
+  id: string;
   title: string;
-  duration: string;
-  completed: boolean;
+  files: number;
+  icon: string;
 };
 
 type CourseContentProps = {
-  lessons: Lesson[];
+  modules: Module[];
+  resources?: Resource[];
+  courseSlug: string;
 };
 
 export default function CourseContent({
-  lessons,
+  modules,
+  resources = [],
+  courseSlug,
 }: CourseContentProps) {
-  const [activeTab, setActiveTab] = useState<
-    "lessons" | "files"
-  >("lessons");
+  const [activeTab, setActiveTab] = useState<"lessons" | "files">("lessons");
+
+  let lessonOffset = 0;
 
   return (
     <>
@@ -35,29 +43,38 @@ export default function CourseContent({
       />
 
       {activeTab === "lessons" ? (
-        <div className="space-y-3">
-          {lessons.map((lesson, index) => (
-            <LessonCard
-              key={lesson.id}
-              courseId={lesson.courseId}
-              lessonId={lesson.id}
-              lessonNumber={index + 1}
-              title={lesson.title}
-              duration={lesson.duration}
-              completed={lesson.completed}
-            />
-          ))}
+        <div className="space-y-5">
+          {modules.map((module) => {
+            const currentOffset = lessonOffset;
+
+            lessonOffset += module.lessons.length;
+
+            return (
+              <ModuleCard
+                key={module.id}
+                module={module}
+                lessonOffset={currentOffset}
+                courseSlug={courseSlug}
+              />
+            );
+          })}
         </div>
       ) : (
         <div className="space-y-3">
-          {courseFiles.map((file) => (
-            <FileCard
-              key={file.id}
-              icon={file.icon}
-              title={file.title}
-              files={file.files}
-            />
-          ))}
+          {resources.length === 0 ? (
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5 text-center text-sm text-zinc-500">
+              No resources available yet.
+            </div>
+          ) : (
+            resources.map((resource) => (
+              <FileCard
+                key={resource.id}
+                icon={resource.icon}
+                title={resource.title}
+                files={resource.files}
+              />
+            ))
+          )}
         </div>
       )}
     </>

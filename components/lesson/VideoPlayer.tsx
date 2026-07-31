@@ -1,61 +1,41 @@
-"use client";
-
-import Image from "next/image";
-import { useRef, useState } from "react";
-
 type VideoPlayerProps = {
-  videoUrl: string;
-  thumbnail: string;
+  provider: string;
+  videoId: string;
 };
 
 export default function VideoPlayer({
-  videoUrl,
-  thumbnail,
+  provider,
+  videoId,
 }: VideoPlayerProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [started, setStarted] = useState(false);
+  if (provider === "youtube") {
+    return (
+      <div className="mb-3 overflow-hidden rounded-xl border border-zinc-800 bg-black">
+        <div className="aspect-video">
+          <iframe
+            className="h-full w-full"
+            src={`https://www.youtube.com/embed/${videoId}`}
+            title="Lesson Video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        </div>
+      </div>
+    );
+  }
 
-  const handlePlay = () => {
-    setStarted(true);
-
-    setTimeout(() => {
-      videoRef.current?.play();
-    }, 50);
-  };
+  if (provider === "bunny") {
+    return (
+      <div className="mb-3 overflow-hidden rounded-xl border border-zinc-800 bg-black">
+        <div className="aspect-video flex items-center justify-center text-zinc-400">
+          Bunny Stream player coming soon.
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="mb-3 overflow-hidden rounded-xl border border-zinc-800 bg-black">
-      <div className="relative aspect-video">
-        <video
-          ref={videoRef}
-          src={videoUrl}
-          controls={started}
-          controlsList="nodownload"
-          className="h-full w-full object-cover"
-        />
-
-        {!started && (
-          <>
-            <Image
-              src={thumbnail}
-              alt="Lesson Thumbnail"
-              fill
-              priority
-              className="object-cover"
-            />
-
-            <button
-              onClick={handlePlay}
-              aria-label="Play lesson"
-              className="absolute inset-0 flex items-center justify-center bg-black/25 transition hover:bg-black/35"
-            >
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-cyan-500 text-3xl text-black shadow-lg transition-transform hover:scale-105">
-                ▶
-              </div>
-            </button>
-          </>
-        )}
-      </div>
+    <div className="mb-3 overflow-hidden rounded-xl border border-red-900 bg-red-950 p-6 text-center text-red-300">
+      Unsupported video provider: {provider}
     </div>
   );
 }
