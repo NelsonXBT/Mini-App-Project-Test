@@ -22,8 +22,8 @@ export default async function CoursePage({ params }: Props) {
 
   if (!course) {
     return (
-      <main className="min-h-screen p-6">
-        <h1 className="text-3xl font-bold">
+      <main>
+        <h1 className="text-2xl font-bold">
           Course not found
         </h1>
       </main>
@@ -31,22 +31,22 @@ export default async function CoursePage({ params }: Props) {
   }
 
   return (
-    <main className="min-h-screen p-6">
-      <h1 className="text-3xl font-bold">
-        {course.title}
-      </h1>
+    <main className="space-y-4">
+      <div>
+        <h1 className="text-2xl font-bold leading-tight">
+          {course.title}
+        </h1>
 
-      <p className="mt-1 text-sm text-zinc-500">
-        {course.lessons} Lessons
-      </p>
-
-      <div className="mt-6 mb-6">
-        <CourseProgress
-          completed={12}
-          total={42}
-          progress={22}
-        />
+        <p className="mt-1 text-sm text-zinc-500">
+          {course.lessons} Lessons
+        </p>
       </div>
+
+      <CourseProgress
+        completed={12}
+        total={42}
+        progress={22}
+      />
 
       <CourseContent
         lessons={courseLessons}

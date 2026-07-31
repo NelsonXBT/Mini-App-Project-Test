@@ -51,8 +51,8 @@ export default async function LessonPage({ params }: Props) {
 
   if (!course || !lesson) {
     return (
-      <main className="mx-auto max-w-3xl px-4 py-6">
-        <h1 className="text-3xl font-bold">
+      <main>
+        <h1 className="text-2xl font-bold">
           Lesson not found
         </h1>
       </main>
@@ -60,8 +60,8 @@ export default async function LessonPage({ params }: Props) {
   }
 
   return (
-    <main className="min-h-screen px-5 py-5">
-      <div className="mx-auto max-w-3xl space-y-5">
+    <main>
+      <div className="mx-auto max-w-3xl space-y-4">
         <LessonHeader
           courseId={id}
           courseTitle={course.title}
