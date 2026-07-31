@@ -1,18 +1,26 @@
-export default function BunnyIframeTest() {
+"use client";
+
+export default function BunnyHlsTest() {
   return (
     <main className="mx-auto max-w-4xl p-6">
       <h1 className="mb-6 text-2xl font-bold">
-        Bunny Embed Test
+        Test 3 — Native HTML5 (HLS)
       </h1>
 
-      <div className="relative aspect-video overflow-hidden rounded-xl">
-        <iframe
-          src="https://player.mediadelivery.net/embed/717891/b46ce3e3-a752-42eb-af1c-a14800d344d9?autoplay=false"
-          className="absolute inset-0 h-full w-full"
-          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen;"
-          allowFullScreen
+      <div className="overflow-hidden rounded-xl bg-black">
+        <video
+          src="https://vz-4b93e9b4-6e7.b-cdn.net/b46ce3e3-a752-42eb-af1c-a14800d344d9/playlist.m3u8"
+          autoPlay
+          muted
+          playsInline
+          controls={false}
+          className="w-full"
         />
       </div>
+
+      <p className="mt-4 text-sm text-zinc-400">
+        Native HTML5 player with controls hidden.
+      </p>
     </main>
   );
 }
