@@ -1,8 +1,12 @@
 "use client";
 
 import { useState } from "react";
+
 import CourseTabs from "./CourseTabs";
 import LessonCard from "./LessonCard";
+import FileCard from "./FileCard";
+
+import { courseFiles } from "@/lib/data";
 
 type Lesson = {
   id: number;
@@ -19,7 +23,9 @@ type CourseContentProps = {
 export default function CourseContent({
   lessons,
 }: CourseContentProps) {
-  const [activeTab, setActiveTab] = useState<"lessons" | "files">("lessons");
+  const [activeTab, setActiveTab] = useState<
+    "lessons" | "files"
+  >("lessons");
 
   return (
     <>
@@ -29,22 +35,29 @@ export default function CourseContent({
       />
 
       {activeTab === "lessons" ? (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {lessons.map((lesson, index) => (
-                <LessonCard
-                    key={lesson.id}
-                    courseId={lesson.courseId}
-                    lessonId={lesson.id}
-                    lessonNumber={index + 1}
-                    title={lesson.title}
-                    duration={lesson.duration}
-                    completed={lesson.completed}
-                />
-                ))}
+            <LessonCard
+              key={lesson.id}
+              courseId={lesson.courseId}
+              lessonId={lesson.id}
+              lessonNumber={index + 1}
+              title={lesson.title}
+              duration={lesson.duration}
+              completed={lesson.completed}
+            />
+          ))}
         </div>
       ) : (
-        <div className="rounded-xl border border-dashed border-zinc-700 p-8 text-center text-zinc-500">
-          Course files will appear here.
+        <div className="space-y-3">
+          {courseFiles.map((file) => (
+            <FileCard
+              key={file.id}
+              icon={file.icon}
+              title={file.title}
+              files={file.files}
+            />
+          ))}
         </div>
       )}
     </>

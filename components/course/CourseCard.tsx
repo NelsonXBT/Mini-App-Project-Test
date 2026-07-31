@@ -24,10 +24,10 @@ export default function CourseCard({
       href={`/courses/${course.id}`}
       className="block"
     >
-      <article className="rounded-2xl border border-zinc-800 bg-zinc-900 p-4 transition-all duration-300 hover:border-cyan-500 hover:bg-zinc-800">
-        <div className="flex gap-4">
+      <article className="rounded-2xl border border-zinc-800 bg-zinc-900 p-3 transition-all duration-300 hover:border-cyan-500 hover:bg-zinc-800">
+        <div className="flex gap-3">
           {/* Thumbnail */}
-          <div className="relative h-24 w-36 flex-shrink-0 overflow-hidden rounded-xl">
+          <div className="relative h-24 w-28 flex-shrink-0 overflow-hidden rounded-xl">
             <Image
               src={course.thumbnail}
               alt={course.title}
@@ -37,24 +37,27 @@ export default function CourseCard({
           </div>
 
           {/* Content */}
-          <div className="flex flex-1 flex-col">
-            <h2 className="line-clamp-1 text-lg font-bold text-white">
+          <div className="flex min-w-0 flex-1 flex-col">
+            {/* Title */}
+            <h2 className="line-clamp-2 text-lg font-bold leading-tight text-white">
               {course.title}
             </h2>
 
-            <p className="mt-1 line-clamp-2 text-sm text-zinc-400">
+            {/* Description */}
+            <p className="mt-1 line-clamp-2 text-sm leading-5 text-zinc-400">
               {course.description}
             </p>
 
+            {/* Lesson Count & Level */}
             <div className="mt-3 flex items-center justify-between text-xs text-zinc-500">
               <span>{course.lessons} Lessons</span>
-
               <span>{course.level}</span>
             </div>
 
+            {/* Progress */}
             {course.enrolled && (
               <>
-                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-zinc-800">
+                <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-zinc-800">
                   <div
                     className="h-full rounded-full bg-cyan-500 transition-all duration-500"
                     style={{

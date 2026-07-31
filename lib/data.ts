@@ -164,3 +164,135 @@ export const lessons = [
       "Begin your AI sound design journey by understanding ambience, sound effects, dialogue, and background music workflows.",
   },
 ];
+
+
+export const courseFiles = [
+  {
+    id: 1,
+    courseId: 1,
+    title: "Project Files",
+    files: 12,
+    icon: "📁",
+  },
+  {
+    id: 2,
+    courseId: 1,
+    title: "Source Footage",
+    files: 8,
+    icon: "🎥",
+  },
+  {
+    id: 3,
+    courseId: 1,
+    title: "PDF Guides",
+    files: 5,
+    icon: "📕",
+  },
+  {
+    id: 4,
+    courseId: 1,
+    title: "Presets & LUTs",
+    files: 6,
+    icon: "🎨",
+  },
+  {
+    id: 5,
+    courseId: 1,
+    title: "Templates",
+    files: 4,
+    icon: "🧩",
+  },
+];
+
+export const resourcePacks = [
+  {
+    id: 1,
+    title: "Prompt Packs",
+    description: "High-quality prompts for AI filmmaking.",
+    icon: "✨",
+    files: 45,
+  },
+  {
+    id: 2,
+    title: "Workflow Templates",
+    description: "Ready-to-use production workflows.",
+    icon: "📋",
+    files: 18,
+  },
+  {
+    id: 3,
+    title: "Project Files",
+    description: "Download project assets and examples.",
+    icon: "📁",
+    files: 12,
+  },
+  {
+    id: 4,
+    title: "LUT Collection",
+    description: "Professional cinematic LUTs.",
+    icon: "🎨",
+    files: 26,
+  },
+  {
+    id: 5,
+    title: "Stock Assets",
+    description: "Royalty-free images, videos and audio.",
+    icon: "🖼️",
+    files: 84,
+  },
+];
+
+export const resourceTools = [
+  {
+    id: 1,
+    title: "Bunny Stream",
+    description: "Secure video hosting platform.",
+    icon: "🐰",
+  },
+  {
+    id: 2,
+    title: "Bybit",
+    description: "Crypto exchange.",
+    icon: "💰",
+  },
+  {
+    id: 3,
+    title: "Bitget",
+    description: "Trade cryptocurrencies securely.",
+    icon: "📈",
+  },
+  {
+    id: 4,
+    title: "TradingView",
+    description: "Professional charting tools.",
+    icon: "📊",
+  },
+];
+
+
+export const communityItems = [
+  {
+    id: 1,
+    title: "Telegram Community",
+    description: "Chat with other creators and members.",
+    icon: "💬",
+  },
+  {
+    id: 2,
+    title: "Announcements",
+    description: "Course updates and important news.",
+    icon: "📢",
+  },
+  {
+    id: 3,
+    title: "Support",
+    description: "Get help whenever you're stuck.",
+    icon: "🛟",
+  },
+  {
+    id: 4,
+    title: "Live Sessions",
+    description: "Weekly Q&A and creator workshops.",
+    icon: "🎥",
+  },
+];
