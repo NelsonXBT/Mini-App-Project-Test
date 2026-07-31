@@ -1,34 +1,65 @@
-import { currentCourse } from "@/lib/data";
+import Image from "next/image";
 import Link from "next/link";
-
-
+import { currentCourse } from "@/lib/data";
 
 export default function ContinueLearning() {
   return (
-    <Link href="/courses/1">
-    <section className="mt-2 rounded-2xl bg-zinc-900 p-5 cursor-pointer">
-
-      <p className="text-sm text-gray-400">
+    <section className="mt-3">
+      <h2 className="mb-4 text-lg font-semibold text-zinc-400">
         Continue Learning
-      </p>
-
-      <h2 className="mt-2 text-xl font-bold">
-        {currentCourse.title}
       </h2>
 
-      <p className="mt-4 text-gray-400">
-        {currentCourse.currentLesson}
-      </p>
+      <div className="rounded-3xl bg-zinc-900 p-4">
+        {/* Top Section */}
+        <div className="flex gap-4">
+          <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl">
+            <Image
+              src={currentCourse.thumbnail}
+              alt={currentCourse.title}
+              fill
+              className="object-cover"
+            />
+          </div>
 
-      <p className="mt-4 text-cyan-400">
-        {currentCourse.progress}% ━━━━━━━━━━
-      </p>
+          <div className="flex flex-1 flex-col">
+            <h3 className="line-clamp-2 text-lg font-semibold text-white">
+              {currentCourse.title}
+            </h3>
 
-      <button className="mt-5 rounded-xl bg-cyan-500 px-5 py-3 font-semibold text-black">
-        Continue
-      </button>
+           <p className="mt-2 line-clamp-2 text-sm text-zinc-300">
+                {currentCourse.currentLesson}
+              </p>
 
+              <p className="mt-2 text-sm text-zinc-500">
+                Lesson {currentCourse.lesson} of{" "}
+                {currentCourse.totalLessons}
+              </p>
+
+            <div className="mt-auto flex items-center gap-2 pt-3">
+              <div className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-700">
+                <div
+                  className="h-full rounded-full bg-cyan-500"
+                  style={{
+                    width: `${currentCourse.progress}%`,
+                  }}
+                />
+              </div>
+
+              <span className="text-sm font-medium text-cyan-400">
+                {currentCourse.progress}%
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Button */}
+        <Link
+          href={`/courses/${currentCourse.id}`}
+          className="mt-5 block rounded-xl bg-cyan-500 py-3 text-center font-semibold text-black transition hover:bg-cyan-400"
+        >
+          Continue Lesson
+        </Link>
+      </div>
     </section>
-</Link>
   );
 }

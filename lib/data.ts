@@ -5,8 +5,14 @@ export const user = {
 export const currentCourse = {
   id: 1,
   title: "AI Filmmaking Masterclass",
-  progress: 22,
+  thumbnail: "/thumbnails/coursethumbnail.png",
+
   currentLesson: "Creating Consistent Characters",
+
+  lesson: 12,
+  totalLessons: 42,
+
+  progress: 22,
 };
 
 export const nextLessons = [
@@ -172,35 +178,35 @@ export const courseFiles = [
     courseId: 1,
     title: "Project Files",
     files: 12,
-    icon: "📁",
+    icon: "folder",
   },
   {
     id: 2,
     courseId: 1,
     title: "Source Footage",
     files: 8,
-    icon: "🎥",
+    icon: "film",
   },
   {
     id: 3,
     courseId: 1,
     title: "PDF Guides",
     files: 5,
-    icon: "📕",
+    icon: "book",
   },
   {
     id: 4,
     courseId: 1,
     title: "Presets & LUTs",
     files: 6,
-    icon: "🎨",
+    icon: "palette",
   },
   {
     id: 5,
     courseId: 1,
     title: "Templates",
     files: 4,
-    icon: "🧩",
+    icon: "blocks",
   },
 ];
 
@@ -209,35 +215,35 @@ export const resourcePacks = [
     id: 1,
     title: "Prompt Packs",
     description: "High-quality prompts for AI filmmaking.",
-    icon: "✨",
+    icon: "package",
     files: 45,
   },
   {
     id: 2,
     title: "Workflow Templates",
     description: "Ready-to-use production workflows.",
-    icon: "📋",
+    icon: "clipboard",
     files: 18,
   },
   {
     id: 3,
     title: "Project Files",
     description: "Download project assets and examples.",
-    icon: "📁",
+    icon: "folder",
     files: 12,
   },
   {
     id: 4,
     title: "LUT Collection",
     description: "Professional cinematic LUTs.",
-    icon: "🎨",
+    icon: "palette",
     files: 26,
   },
   {
     id: 5,
     title: "Stock Assets",
     description: "Royalty-free images, videos and audio.",
-    icon: "🖼️",
+    icon: "images",
     files: 84,
   },
 ];
@@ -247,25 +253,25 @@ export const resourceTools = [
     id: 1,
     title: "Bunny Stream",
     description: "Secure video hosting platform.",
-    icon: "🐰",
+    icon: "rabbit",
   },
   {
     id: 2,
     title: "Bybit",
     description: "Crypto exchange.",
-    icon: "💰",
+    icon: "coins",
   },
   {
     id: 3,
     title: "Bitget",
     description: "Trade cryptocurrencies securely.",
-    icon: "📈",
+    icon: "trending",
   },
   {
     id: 4,
     title: "TradingView",
     description: "Professional charting tools.",
-    icon: "📊",
+    icon: "chart",
   },
 ];
 
@@ -275,24 +281,24 @@ export const communityItems = [
     id: 1,
     title: "Telegram Community",
     description: "Chat with other creators and members.",
-    icon: "💬",
+    icon: "message",
   },
   {
     id: 2,
     title: "Announcements",
     description: "Course updates and important news.",
-    icon: "📢",
+    icon: "megaphone",
   },
   {
     id: 3,
     title: "Support",
     description: "Get help whenever you're stuck.",
-    icon: "🛟",
+    icon: "lifebuoy",
   },
   {
     id: 4,
     title: "Live Sessions",
     description: "Weekly Q&A and creator workshops.",
-    icon: "🎥",
+    icon: "video",
   },
 ];

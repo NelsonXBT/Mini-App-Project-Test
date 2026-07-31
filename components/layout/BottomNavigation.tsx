@@ -1,32 +1,73 @@
+"use client";
 
 import Link from "next/link";
-
-
+import { usePathname } from "next/navigation";
+import {
+  House,
+  BookOpen,
+  FolderOpen,
+  Users,
+} from "lucide-react";
 
 export default function BottomNavigation() {
-    return (
-        <nav className="fixed bottom-0 left-0 w-full bg-zinc-950 border-t border-zinc-800">
+  const pathname = usePathname();
 
-            <div className="max-w-md mx-auto flex justify-around py-4">
+  const navItems = [
+    {
+      href: "/",
+      label: "Home",
+      icon: House,
+    },
+    {
+      href: "/courses",
+      label: "Courses",
+      icon: BookOpen,
+    },
 
-                <button className="text-cyan-400 font-semibold">
-                    <Link href="/">Home</Link>
-                </button>
+    {
+      href: "/community",
+      label: "Community",
+      icon: Users,
+    },
+    
+    {
+      href: "/resources",
+      label: "Resources",
+      icon: FolderOpen,
+    },
+    
+  ];
 
-                <button className="text-cyan-400 font-semibold">
-                    <Link href="/courses">Courses</Link>
-                </button>
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 border-t border-zinc-800 bg-zinc-950">
+      <div className="mx-auto flex max-w-md justify-around py-2">
+        {navItems.map((item) => {
+          const Icon = item.icon;
 
-                <button className="text-cyan-400 font-semibold">
-                    <Link href="/resources">Resources</Link>
-                </button>
+          const active =
+            pathname === item.href ||
+            (item.href !== "/" &&
+              pathname.startsWith(item.href));
 
-                <button className="text-cyan-400 font-semibold">
-                    <Link href="/community">Community</Link>
-                </button>
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`flex flex-col items-center gap-1 px-4 py-2 transition ${
+                active
+                  ? "text-cyan-400"
+                  : "text-zinc-500 hover:text-zinc-300"
+              }`}
+            >
+              <Icon className="h-5 w-5" />
 
-            </div>
-
-        </nav>
-    );
+              <span className="text-xs">
+                {item.label}
+              </span>
+            </Link>
+          );
+        })}
+      </div>
+    </nav>
+  );
 }

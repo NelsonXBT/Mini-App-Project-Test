@@ -67,9 +67,10 @@ export default async function LessonPage({ params }: Props) {
 
   return (
     <main className="min-h-screen p-6">
-            <LessonHeader
+         <LessonHeader
+        courseId={id}
         courseTitle={course.title}
-        />
+      />
 
       <LessonMeta
         duration={lesson.duration}

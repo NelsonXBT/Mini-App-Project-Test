@@ -14,24 +14,14 @@ export default function Greeting({ name }: GreetingProps) {
   }
 
   return (
-    <section className="flex items-start justify-between">
-      <div>
-        <p className="text-gray-400 text-sm">
-          {greeting}👋,
-        </p>
+    <section>
+      <p className="text-sm text-zinc-400">
+        {greeting} 👋,
+      </p>
 
-        <h1 className="text-3xl font-bold">
-          {name} 
-        </h1>
-
-        <p className="mt-2 text-gray-400">
-          Let's continue your creative journey.
-        </p>
-      </div>
-
-      <button className="text-2xl">
-        🔔
-      </button>
+      <h1 className="text-2xl font-bold text-white">
+        {name}
+      </h1>
     </section>
   );
 }
