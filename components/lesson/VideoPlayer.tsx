@@ -1,41 +1,18 @@
+import IMEPlayer from "@/components/player/IMEPlayer";
+
 type VideoPlayerProps = {
   provider: string;
   videoId: string;
 };
 
 export default function VideoPlayer({
-  provider,
   videoId,
 }: VideoPlayerProps) {
-  if (provider === "youtube") {
-    return (
-      <div className="mb-3 overflow-hidden rounded-xl border border-zinc-800 bg-black">
-        <div className="aspect-video">
-          <iframe
-            className="h-full w-full"
-            src={`https://www.youtube.com/embed/${videoId}`}
-            title="Lesson Video"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          />
-        </div>
-      </div>
-    );
-  }
-
-  if (provider === "bunny") {
-    return (
-      <div className="mb-3 overflow-hidden rounded-xl border border-zinc-800 bg-black">
-        <div className="aspect-video flex items-center justify-center text-zinc-400">
-          Bunny Stream player coming soon.
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="mb-3 overflow-hidden rounded-xl border border-red-900 bg-red-950 p-6 text-center text-red-300">
-      Unsupported video provider: {provider}
+    <div className="mb-3 overflow-hidden rounded-xl border border-zinc-800 bg-black">
+      <IMEPlayer
+        src="https://vz-4b93e9b4-6e7.b-cdn.net/b46ce3e3-a752-42eb-af1c-a14800d344d9/playlist.m3u8"
+      />
     </div>
   );
 }
