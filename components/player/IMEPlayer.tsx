@@ -185,66 +185,9 @@ const router = useRouter();
     setVolume(value);
   }
 
-  async function fullscreen()  {
-
-     router.push("/player");
-  return;
-
-    if (isFullscreen) {
-        const tg = (window as any).Telegram?.WebApp;
-
-        if (tg?.exitFullscreen) {
-            await tg.exitFullscreen();
-        }
-
-        document.documentElement.classList.remove("player-fullscreen");
-
-        setIsFullscreen(false);
-        setFullscreenRequested(false);
-        setShowRotateOverlay(false);
-
-        return;
-        }
-
-    setFullscreenRequested(true);
-
-    const tg = (window as any).Telegram?.WebApp;
-
-    if (tg?.requestFullscreen) {
-      await tg.requestFullscreen();
-      setIsFullscreen(true);
-      document.documentElement.classList.add("player-fullscreen");
-      
-      
-
-      try {
-        await (
-            screen.orientation as ScreenOrientation & {
-            lock: (orientation: string) => Promise<void>;
-            }
-        ).lock("landscape");
-        } catch {
-        // Ignore if orientation lock isn't supported
-        }
-
-      setTimeout(() => {
-        const landscape =
-            window.innerWidth >
-            window.innerHeight;
-
-        setShowRotateOverlay(
-            isMobile &&
-            !landscape
-        );
-        }, 300);
-
-      return;
-    }
-
-    if (wrapperRef.current?.requestFullscreen) {
-      await wrapperRef.current.requestFullscreen();
-    }
-  }
+  async function fullscreen() {
+    router.push("/player");
+}
 
   return (
     <>
