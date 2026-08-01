@@ -2,7 +2,7 @@ import { Bell } from "lucide-react";
 
 export default function Header() {
   return (
-    <header className="mb-3 flex items-center justify-between">
+    <header className="player-header mb-3 flex items-center justify-between transition-all duration-300">
       <div>
         <h1 className="text-xl font-bold tracking-wide text-cyan-400 leading-none">
           IME

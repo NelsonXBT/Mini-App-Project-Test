@@ -24,3 +24,11 @@ html.player-fullscreen .app-main {
   overflow: hidden;
   height: 100vh;
 }
+
+/* Hide header while player is fullscreen */
+
+html.player-fullscreen .player-header {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
