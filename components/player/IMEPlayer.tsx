@@ -205,11 +205,15 @@ export default function IMEPlayer({
   return (
     <>
       <div
-        ref={wrapperRef}
-        className="relative aspect-video w-full overflow-hidden rounded-2xl bg-black"
-        onMouseMove={showControls}
-        onTouchStart={showControls}
-      >
+            ref={wrapperRef}
+            className={`relative overflow-hidden bg-black ${
+                showRotateOverlay
+                ? "fixed inset-0 z-50 rounded-none"
+                : "aspect-video w-full rounded-2xl"
+            }`}
+            onMouseMove={showControls}
+            onTouchStart={showControls}
+            >
         <VideoCanvas
           ref={videoRef}
           src={src}
