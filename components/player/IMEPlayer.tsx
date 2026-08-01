@@ -134,6 +134,22 @@ export default function IMEPlayer({
     };
   }, [fullscreenRequested]);
 
+
+    useEffect(() => {
+    if (showRotateOverlay) {
+        document.body.style.overflow = "hidden";
+        document.documentElement.style.overflow = "hidden";
+    } else {
+        document.body.style.overflow = "";
+        document.documentElement.style.overflow = "";
+    }
+
+    return () => {
+        document.body.style.overflow = "";
+        document.documentElement.style.overflow = "";
+    };
+    }, [showRotateOverlay]);
+
   function togglePlay() {
     const video = videoRef.current;
 
@@ -208,7 +224,7 @@ export default function IMEPlayer({
             ref={wrapperRef}
             className={`relative overflow-hidden bg-black ${
                 showRotateOverlay
-                ? "fixed inset-0 z-50 rounded-none"
+                ? "fixed inset-0 z-50 rounded-none overflow-hidden touch-none"
                 : "aspect-video w-full rounded-2xl"
             }`}
             onMouseMove={showControls}
