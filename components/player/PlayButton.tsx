@@ -16,8 +16,8 @@ export default function PlayButton({
     >
       {playing ? (
         <svg
-          width="18"
-          height="18"
+          width="22"
+          height="22"
           viewBox="0 0 24 24"
           fill="black"
           aria-hidden="true"
@@ -27,13 +27,16 @@ export default function PlayButton({
         </svg>
       ) : (
         <svg
-        width="28"
-        height="28"
-        fill="black"
-        viewBox="0 0 24 24"
-        >
-        <polygon points="6,4 20,12 6,20" />
-        </svg>
+            width="26"
+            height="26"
+            fill="black"
+            viewBox="0 0 24 24"
+            >
+            <polygon
+                points="6,4 20,12 6,20"
+                transform="translate(1 0)"
+            />
+            </svg>
       )}
     </button>
   );
