@@ -110,8 +110,6 @@ const VideoCanvas = forwardRef<HTMLVideoElement, Props>(
         ref={ref}
         playsInline
         preload="metadata"
-        autoPlay
-        muted
         onClick={onClick}
         className="absolute inset-0 w-full h-full object-contain bg-black"
         />
