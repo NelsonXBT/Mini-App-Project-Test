@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import LoadingSpinner from "./LoadingSpinner";
 import PlayButton from "./PlayButton";
@@ -12,6 +13,8 @@ import type { IMEPlayerProps } from "./types";
 export default function IMEPlayer({
   src,
 }: IMEPlayerProps) {
+const router = useRouter();
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -183,6 +186,9 @@ export default function IMEPlayer({
   }
 
   async function fullscreen()  {
+
+     router.push("/player");
+  return;
 
     if (isFullscreen) {
         const tg = (window as any).Telegram?.WebApp;
