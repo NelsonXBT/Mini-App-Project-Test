@@ -171,6 +171,7 @@ export default function IMEPlayer({
 
     if (tg?.requestFullscreen) {
       await tg.requestFullscreen();
+      document.body.classList.add("player-fullscreen");
 
       try {
         await (

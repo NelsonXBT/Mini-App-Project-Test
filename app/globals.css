@@ -5,3 +5,11 @@ body {
   color: white;
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Hide bottom navigation while player is fullscreen */
+
+body.player-fullscreen .player-nav {
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
+}

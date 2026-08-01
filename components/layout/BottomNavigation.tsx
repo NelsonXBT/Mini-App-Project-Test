@@ -36,7 +36,9 @@ export default function BottomNavigation() {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 border-t border-zinc-800 bg-zinc-950/95 backdrop-blur-sm">
+    <nav
+        className="fixed bottom-0 left-0 right-0 border-t border-zinc-800 bg-zinc-950/95 backdrop-blur-sm transition-all duration-300 player-nav"
+>
       <div className="mx-auto flex max-w-md justify-around py-1.5">
         {navItems.map((item) => {
           const Icon = item.icon;
