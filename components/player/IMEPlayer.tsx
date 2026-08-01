@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 
 import LoadingSpinner from "./LoadingSpinner";
 import PlayButton from "./PlayButton";
-import FullscreenButton from "./FullscreenButton";
 import VideoCanvas from "./VideoCanvas";
 import PlayerControls from "./PlayerControls";
 
@@ -288,15 +287,7 @@ export default function IMEPlayer({
 
       {/* Temporary fullscreen button below player */}
 
-      <div className="mt-3 flex justify-center">
-
-        <FullscreenButton
-          mobile
-          onClick={fullscreen}
-        />
-
-      </div>
-
+      
     </>
   );
 }

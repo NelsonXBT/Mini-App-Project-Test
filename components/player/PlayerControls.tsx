@@ -26,46 +26,40 @@ export default function PlayerControls({
   onFullscreen,
 }: Props) {
   return (
-    <>
-      {/* Bottom Controls */}
+    <div className="absolute inset-x-0 bottom-0">
 
-      <div className="absolute inset-x-0 bottom-0">
+      <div className="bg-gradient-to-t from-black/80 via-black/30 to-transparent px-3 py-2">
 
-        <div className="bg-gradient-to-t from-black/80 via-black/30 to-transparent px-3 py-2">
+        {/* Time + Fullscreen */}
 
-          {/* Time */}
+        <div className="flex items-center justify-between">
 
           <TimeDisplay
             current={current}
             duration={duration}
           />
 
-          {/* Progress */}
+          <FullscreenButton
+            mobile={isMobile}
+            onClick={onFullscreen}
+          />
 
-          <div className="mt-2">
+        </div>
 
-            <ProgressBar
-              current={current}
-              duration={duration}
-              onSeek={onSeek}
-            />
+        {/* Progress */}
 
-          </div>
+        <div className="mt-2">
+
+          <ProgressBar
+            current={current}
+            duration={duration}
+            onSeek={onSeek}
+          />
 
         </div>
 
       </div>
 
-      {/* Temporary Fullscreen Button */}
-
-      <div className="mt-4 flex justify-center">
-
-        <FullscreenButton
-          mobile
-          onClick={onFullscreen}
-        />
-
-      </div>
-    </>
+    </div>
   );
 }
