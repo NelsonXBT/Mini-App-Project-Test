@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import ProgressBar from "./ProgressBar";
 import TimeDisplay from "./TimeDisplay";
 import VolumeControl from "./VolumeControl";
@@ -27,24 +29,54 @@ export default function PlayerControls({
   onVolume,
   onFullscreen,
 }: Props) {
+  const [showVolume, setShowVolume] = useState(false);
+
+  useEffect(() => {
+    if (!showVolume) return;
+
+    const timer = setTimeout(() => {
+      setShowVolume(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [showVolume]);
+
   return (
     <div className="absolute inset-x-0 bottom-0">
 
       <div className="bg-gradient-to-t from-black/80 via-black/30 to-transparent px-6 pb-5 pt-2">
 
-        {/* Time + Fullscreen */}
+        {/* Time + Controls */}
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3">
 
           <TimeDisplay
             current={current}
             duration={duration}
           />
 
-          <FullscreenButton
-            mobile={isMobile}
-            onClick={onFullscreen}
-          />
+          <div className="flex items-center gap-3">
+
+            {showVolume && (
+              <VolumeControl
+                volume={volume}
+                onChange={onVolume}
+              />
+            )}
+
+            <button
+              onClick={() => setShowVolume(!showVolume)}
+              className="text-xl text-white"
+            >
+              🔊
+            </button>
+
+            <FullscreenButton
+              mobile={isMobile}
+              onClick={onFullscreen}
+            />
+
+          </div>
 
         </div>
 
