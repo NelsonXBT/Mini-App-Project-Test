@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Hls from "hls.js";
 
 import LoadingSpinner from "./LoadingSpinner";
 import PlayButton from "./PlayButton";
@@ -9,17 +8,18 @@ import ProgressBar from "./ProgressBar";
 import TimeDisplay from "./TimeDisplay";
 import VolumeControl from "./VolumeControl";
 import FullscreenButton from "./FullscreenButton";
+import VideoCanvas from "./VideoCanvas";
 
 import type { IMEPlayerProps } from "./types";
-
-
-
 
 export default function IMEPlayer({
   src,
 }: IMEPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+
+  const controlsTimeout =
+    useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -28,19 +28,16 @@ export default function IMEPlayer({
   const [current, setCurrent] = useState(0);
 
   const [volume, setVolume] = useState(1);
-  const [muted, setMuted] = useState(false);
 
   const [controlsVisible, setControlsVisible] =
     useState(true);
-
-  const controlsTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   function showControls() {
     setControlsVisible(true);
 
     if (controlsTimeout.current) {
-        clearTimeout(controlsTimeout.current);
-        }
+      clearTimeout(controlsTimeout.current);
+    }
 
     controlsTimeout.current = setTimeout(() => {
       if (playing) {
@@ -50,107 +47,43 @@ export default function IMEPlayer({
   }
 
   useEffect(() => {
-    const video = videoRef.current;
-
-    if (!video) return;
-
-    let hls: Hls | undefined;
-
-    if (
-      video.canPlayType(
-        "application/vnd.apple.mpegurl"
-      )
-    ) {
-      video.src = src;
-    } else if (Hls.isSupported()) {
-      hls = new Hls();
-
-      hls.loadSource(src);
-
-      hls.attachMedia(video);
-      hls.on(Hls.Events.ERROR, (_, data) => {
-        console.error("HLS Error:", data);
-        setLoading(false);
-        });
-    }
-
-    const loaded = () => {
-      setLoading(false);
-
-      setDuration(video.duration);
-    };
-
-    const update = () => {
-      setCurrent(video.currentTime);
-    };
-
-    const play = () => {
-      setPlaying(true);
-
-      showControls();
-    };
-
-    const pause = () => {
-      setPlaying(false);
-
-      setControlsVisible(true);
-    };
-
-    video.addEventListener(
-      "loadedmetadata",
-      loaded
-    );
-
-    video.addEventListener(
-      "timeupdate",
-      update
-    );
-
-    video.addEventListener("play", play);
-
-    video.addEventListener("pause", pause);
     const keyboard = (e: KeyboardEvent) => {
-  if (e.code === "Space") {
-    e.preventDefault();
-    togglePlay();
-  }
+      const video = videoRef.current;
 
-  if (e.code === "ArrowRight") {
-    video.currentTime += 10;
-  }
+      if (!video) return;
 
-  if (e.code === "ArrowLeft") {
-    video.currentTime -= 10;
-  }
-};
+      switch (e.code) {
+        case "Space":
+          e.preventDefault();
+          togglePlay();
+          break;
 
-window.addEventListener("keydown", keyboard);
+        case "ArrowRight":
+          video.currentTime += 10;
+          break;
+
+        case "ArrowLeft":
+          video.currentTime -= 10;
+          break;
+      }
+    };
+
+    window.addEventListener(
+      "keydown",
+      keyboard
+    );
 
     return () => {
-      hls?.destroy();
-
-      video.removeEventListener(
-        "loadedmetadata",
-        loaded
-      );
-
-      video.removeEventListener(
-        "timeupdate",
-        update
-      );
-
-      video.removeEventListener("play", play);
-
-      video.removeEventListener("pause", pause);
       window.removeEventListener(
-    "keydown",
-    keyboard
-    );
-    if (controlsTimeout.current) {
-    clearTimeout(controlsTimeout.current);
-    }
+        "keydown",
+        keyboard
+      );
+
+      if (controlsTimeout.current) {
+        clearTimeout(controlsTimeout.current);
+      }
     };
-  }, [src]);
+  }, [playing]);
 
   function togglePlay() {
     const video = videoRef.current;
@@ -172,14 +105,14 @@ window.addEventListener("keydown", keyboard);
     video.currentTime = time;
   }
 
-  function changeVolume(v: number) {
+  function changeVolume(value: number) {
     const video = videoRef.current;
 
     if (!video) return;
 
-    video.volume = v;
+    video.volume = value;
 
-    setVolume(v);
+    setVolume(value);
   }
 
   async function fullscreen() {
@@ -193,79 +126,102 @@ window.addEventListener("keydown", keyboard);
     if (
       wrapperRef.current?.requestFullscreen
     ) {
-      wrapperRef.current.requestFullscreen();
+      await wrapperRef.current.requestFullscreen();
     }
   }
 
-  return (
-    <div
-      ref={wrapperRef}
-      onMouseMove={showControls}
-      onTouchStart={showControls}
-      className="relative overflow-hidden rounded-2xl bg-black"
-    >
-      <video
-        ref={videoRef}
-        playsInline
-        preload="metadata"
-        onClick={togglePlay}
-        className="aspect-video w-full bg-black"
-        />
-
-      {loading && <LoadingSpinner />}
-
-      <div
-  className={`
-    absolute inset-0
-    transition-opacity
-    duration-300
-    ${controlsVisible ? "opacity-100" : "opacity-0"}
-  `}
->
-  {/* Center Button */}
-
-  <div className="absolute inset-0 flex items-center justify-center">
-    <PlayButton
-      playing={playing}
+return (
+  <div
+    ref={wrapperRef}
+    className="relative aspect-video w-full overflow-hidden rounded-2xl bg-black"
+    onMouseMove={showControls}
+    onTouchStart={showControls}
+  >
+    <VideoCanvas
+      ref={videoRef}
+      src={src}
+      onLoaded={(duration) => {
+        setDuration(duration);
+        setLoading(false);
+      }}
+      onTimeUpdate={setCurrent}
+      onPlay={() => {
+        setPlaying(true);
+        showControls();
+      }}
+      onPause={() => {
+        setPlaying(false);
+        setControlsVisible(true);
+      }}
+      onLoading={setLoading}
       onClick={togglePlay}
     />
-  </div>
 
-  {/* Bottom Controls */}
+    {loading && <LoadingSpinner />}
 
-  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent p-4 space-y-3">
+    <div
+      className={`absolute inset-0 transition-opacity duration-300 ${
+        controlsVisible
+          ? "opacity-100"
+          : "opacity-0"
+      }`}
+    >
+      {/* Center Play Button */}
 
-    <ProgressBar
-      current={current}
-      duration={duration}
-      onSeek={seek}
-    />
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
 
-    <div className="flex items-center justify-between gap-4">
+        <div className="pointer-events-auto">
 
-      <TimeDisplay
-        current={current}
-        duration={duration}
-      />
+          <PlayButton
+            playing={playing}
+            onClick={togglePlay}
+          />
 
-      <div className="flex items-center gap-3">
+        </div>
 
-        <VolumeControl
-          volume={volume}
-          onChange={changeVolume}
-        />
+      </div>
 
-        <FullscreenButton
-          onClick={fullscreen}
-        />
+      {/* Bottom Controls */}
+
+      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
+
+        <div className="px-4 pb-4 pt-12">
+
+          <ProgressBar
+            current={current}
+            duration={duration}
+            onSeek={seek}
+          />
+
+          <div className="mt-4 flex items-center justify-between gap-4">
+
+            <TimeDisplay
+              current={current}
+              duration={duration}
+            />
+
+            <div className="flex items-center gap-3">
+
+              <VolumeControl
+                volume={volume}
+                onChange={changeVolume}
+              />
+
+              <FullscreenButton
+                onClick={fullscreen}
+              />
+
+            </div>
+
+          </div>
+
+        </div>
 
       </div>
 
     </div>
 
   </div>
-
-</div>
-    </div>
-  );
+);
 }
+
