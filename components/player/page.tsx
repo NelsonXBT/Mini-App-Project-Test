@@ -1,6 +1,35 @@
+"use client";
+
+import { useEffect } from "react";
 import IMEPlayer from "@/components/player/IMEPlayer";
 
 export default function PlayerPage() {
+  useEffect(() => {
+    async function enterFullscreen() {
+      const tg = (window as any).Telegram?.WebApp;
+
+      if (tg?.requestFullscreen) {
+        try {
+          await tg.requestFullscreen();
+        } catch (e) {
+          console.log("Telegram fullscreen failed", e);
+        }
+      }
+
+      try {
+        await (
+          screen.orientation as ScreenOrientation & {
+            lock: (orientation: string) => Promise<void>;
+          }
+        ).lock("landscape");
+      } catch {
+        // Ignore if unsupported
+      }
+    }
+
+    enterFullscreen();
+  }, []);
+
   return (
     <div className="fixed inset-0 bg-black">
       <IMEPlayer
