@@ -4,9 +4,6 @@ import { useEffect, useRef, useState } from "react";
 
 import LoadingSpinner from "./LoadingSpinner";
 import PlayButton from "./PlayButton";
-import ProgressBar from "./ProgressBar";
-import TimeDisplay from "./TimeDisplay";
-import VolumeControl from "./VolumeControl";
 import FullscreenButton from "./FullscreenButton";
 import VideoCanvas from "./VideoCanvas";
 import PlayerControls from "./PlayerControls";
@@ -32,7 +29,15 @@ export default function IMEPlayer({
 
   const [controlsVisible, setControlsVisible] =
     useState(true);
-    const [isMobile, setIsMobile] = useState(false);
+
+  const [isMobile, setIsMobile] =
+    useState(false);
+
+  const [showRotateOverlay, setShowRotateOverlay] =
+    useState(false);
+
+  const [fullscreenRequested, setFullscreenRequested] =
+    useState(false);
 
   function showControls() {
     setControlsVisible(true);
@@ -69,7 +74,6 @@ export default function IMEPlayer({
           break;
       }
     };
-    
 
     window.addEventListener(
       "keydown",
@@ -89,29 +93,47 @@ export default function IMEPlayer({
   }, [playing]);
 
   useEffect(() => {
-    // keyboard shortcuts
+    const updateLayout = () => {
+      const mobile =
+        window.innerWidth < 768;
 
-}, [playing]);
+      const landscape =
+        window.innerWidth >
+        window.innerHeight;
 
-        useEffect(() => {
-            const updateLayout = () => {
-                setIsMobile(window.innerWidth < 768);
-            };
+      setIsMobile(mobile);
 
-            updateLayout();
+      if (fullscreenRequested) {
+        setShowRotateOverlay(
+          mobile && !landscape
+        );
+      }
+    };
 
-            window.addEventListener(
-                "resize",
-                updateLayout
-            );
+    updateLayout();
 
-            return () => {
-                window.removeEventListener(
-                    "resize",
-                    updateLayout
-                );
-            };
-        }, []);
+    window.addEventListener(
+      "resize",
+      updateLayout
+    );
+
+    window.addEventListener(
+      "orientationchange",
+      updateLayout
+    );
+
+    return () => {
+      window.removeEventListener(
+        "resize",
+        updateLayout
+      );
+
+      window.removeEventListener(
+        "orientationchange",
+        updateLayout
+      );
+    };
+  }, [fullscreenRequested]);
 
   function togglePlay() {
     const video = videoRef.current;
@@ -143,90 +165,134 @@ export default function IMEPlayer({
     setVolume(value);
   }
 
-  async function fullscreen() {
+  async function fullscreen()  {
+    setFullscreenRequested(true);
+
     const tg = (window as any).Telegram?.WebApp;
 
     if (tg?.requestFullscreen) {
       await tg.requestFullscreen();
+
+      try {
+        await screen.orientation.lock("landscape");
+      } catch {
+        // Ignore if orientation lock isn't supported
+      }
+
+      setTimeout(() => {
+        const landscape =
+            window.innerWidth >
+            window.innerHeight;
+
+        setShowRotateOverlay(
+            isMobile &&
+            !landscape
+        );
+        }, 300);
+
       return;
     }
 
-    if (
-      wrapperRef.current?.requestFullscreen
-    ) {
+    if (wrapperRef.current?.requestFullscreen) {
       await wrapperRef.current.requestFullscreen();
     }
   }
 
-return (
-  <>
-    <div
-      ref={wrapperRef}
-      className="relative aspect-video w-full overflow-hidden rounded-2xl bg-black"
-      onMouseMove={showControls}
-      onTouchStart={showControls}
-    >
-      <VideoCanvas
-        ref={videoRef}
-        src={src}
-        onLoaded={(duration) => {
-          setDuration(duration);
-          setLoading(false);
-        }}
-        onTimeUpdate={setCurrent}
-        onPlay={() => {
-          setPlaying(true);
-          showControls();
-        }}
-        onPause={() => {
-          setPlaying(false);
-          setControlsVisible(true);
-        }}
-        onLoading={setLoading}
-        onClick={togglePlay}
-      />
-
-      {loading && <LoadingSpinner />}
-
+  return (
+    <>
       <div
-        className={`absolute inset-0 transition-opacity duration-300 ${
-          controlsVisible ? "opacity-100" : "opacity-0"
-        }`}
+        ref={wrapperRef}
+        className="relative aspect-video w-full overflow-hidden rounded-2xl bg-black"
+        onMouseMove={showControls}
+        onTouchStart={showControls}
       >
-        {/* Center Play Button */}
+        <VideoCanvas
+          ref={videoRef}
+          src={src}
+          onLoaded={(duration) => {
+            setDuration(duration);
+            setLoading(false);
+          }}
+          onTimeUpdate={setCurrent}
+          onPlay={() => {
+            setPlaying(true);
+            showControls();
+          }}
+          onPause={() => {
+            setPlaying(false);
+            setControlsVisible(true);
+          }}
+          onLoading={setLoading}
+          onClick={togglePlay}
+        />
 
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="pointer-events-auto">
-            <PlayButton
-              playing={playing}
-              onClick={togglePlay}
-            />
+        {loading && <LoadingSpinner />}
+
+        {showRotateOverlay && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/90">
+            <div className="flex flex-col items-center gap-4 text-white">
+
+              <div className="text-5xl">
+                🔄
+              </div>
+
+              <p className="text-center text-sm font-semibold">
+                Rotate your phone to landscape
+              </p>
+
+            </div>
           </div>
+        )}
+
+        <div
+          className={`absolute inset-0 transition-opacity duration-300 ${
+            controlsVisible
+              ? "opacity-100"
+              : "opacity-0"
+          }`}
+        >
+          {/* Center Play Button */}
+
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+
+            <div className="pointer-events-auto">
+
+              <PlayButton
+                playing={playing}
+                onClick={togglePlay}
+              />
+
+            </div>
+
+          </div>
+
+          {/* Bottom Controls */}
+
+          <PlayerControls
+            current={current}
+            duration={duration}
+            volume={volume}
+            isMobile={isMobile}
+            onSeek={seek}
+            onVolume={changeVolume}
+            onFullscreen={fullscreen}
+          />
+
         </div>
 
-        {/* Bottom Controls */}
-
-        <PlayerControls
-          current={current}
-          duration={duration}
-          volume={volume}
-          isMobile={isMobile}
-          onSeek={seek}
-          onVolume={changeVolume}
-          onFullscreen={fullscreen}
-        />
       </div>
-    </div>
 
-    {/* TEMPORARY FULLSCREEN BUTTON BELOW PLAYER */}
+      {/* Temporary fullscreen button below player */}
 
-    <div className="mt-3 flex justify-center">
-      <FullscreenButton
-        mobile
-        onClick={fullscreen}
-      />
-    </div>
-  </>
-);
+      <div className="mt-3 flex justify-center">
+
+        <FullscreenButton
+          mobile
+          onClick={fullscreen}
+        />
+
+      </div>
+
+    </>
+  );
 }
-
