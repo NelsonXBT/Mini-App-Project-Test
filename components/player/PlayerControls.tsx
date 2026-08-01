@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Volume2 } from "lucide-react";
 
 import ProgressBar from "./ProgressBar";
 import TimeDisplay from "./TimeDisplay";
@@ -65,16 +66,17 @@ export default function PlayerControls({
             )}
 
             <button
-              onClick={() => setShowVolume(!showVolume)}
-              className="text-xl text-white"
+            onClick={() => setShowVolume(!showVolume)}
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-black/25 backdrop-blur-sm text-white transition hover:bg-black/40 hover:text-white"
             >
-              🔊
+            <Volume2 size={18} strokeWidth={2.6} />
             </button>
 
-            <FullscreenButton
-              mobile={isMobile}
-              onClick={onFullscreen}
-            />
+           <FullscreenButton
+    mobile={true}
+    isFullscreen={isFullscreen}
+    onClick={onFullscreen}
+/>
 
           </div>
 

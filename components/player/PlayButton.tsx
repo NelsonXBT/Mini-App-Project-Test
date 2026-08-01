@@ -27,13 +27,12 @@ export default function PlayButton({
         </svg>
       ) : (
         <svg
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="black"
-          aria-hidden="true"
+        width="28"
+        height="28"
+        fill="black"
+        viewBox="0 0 24 24"
         >
-          <polygon points="7,5 19,12 7,19" />
+        <polygon points="6,4 20,12 6,20" />
         </svg>
       )}
     </button>

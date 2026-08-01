@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef } from "react";
+
 interface Props {
   current: number;
   duration: number;
@@ -11,41 +13,116 @@ export default function ProgressBar({
   duration,
   onSeek,
 }: Props) {
+  const barRef = useRef<HTMLDivElement>(null);
+
   const percent =
     duration > 0
       ? (current / duration) * 100
       : 0;
 
-  function handleClick(
-    e: React.MouseEvent<HTMLDivElement>
-  ) {
+  function update(clientX: number) {
+    if (!barRef.current) return;
+
     const rect =
-      e.currentTarget.getBoundingClientRect();
+      barRef.current.getBoundingClientRect();
 
-    const x = e.clientX - rect.left;
+    let progress =
+      (clientX - rect.left) / rect.width;
 
-    const progress =
-      x / rect.width;
+    progress = Math.max(0, Math.min(1, progress));
 
     onSeek(progress * duration);
   }
 
+  function handleMouseDown(
+    e: React.MouseEvent<HTMLDivElement>
+  ) {
+    update(e.clientX);
+
+    function move(ev: MouseEvent) {
+      update(ev.clientX);
+    }
+
+    function up() {
+      window.removeEventListener(
+        "mousemove",
+        move
+      );
+
+      window.removeEventListener(
+        "mouseup",
+        up
+      );
+    }
+
+    window.addEventListener(
+      "mousemove",
+      move
+    );
+
+    window.addEventListener(
+      "mouseup",
+      up
+    );
+  }
+
+  function handleTouchStart(
+    e: React.TouchEvent<HTMLDivElement>
+  ) {
+    update(e.touches[0].clientX);
+
+    function move(ev: TouchEvent) {
+      update(ev.touches[0].clientX);
+    }
+
+    function end() {
+      window.removeEventListener(
+        "touchmove",
+        move
+      );
+
+      window.removeEventListener(
+        "touchend",
+        end
+      );
+    }
+
+    window.addEventListener(
+      "touchmove",
+      move
+    );
+
+    window.addEventListener(
+      "touchend",
+      end
+    );
+  }
+
   return (
     <div
-      onClick={handleClick}
+      ref={barRef}
+      onMouseDown={handleMouseDown}
+      onTouchStart={handleTouchStart}
       className="
         relative
-        h-1.5
+        h-1
         w-full
         cursor-pointer
         rounded-full
-        bg-white/30
+        bg-white/20
       "
     >
       {/* Played */}
 
       <div
-        className="absolute left-0 top-0 h-full rounded-full bg-cyan-500"
+        className="
+          absolute
+          left-0
+          top-0
+          h-full
+          rounded-full
+          bg-cyan-500
+        "
         style={{
           width: `${percent}%`,
         }}
@@ -57,12 +134,13 @@ export default function ProgressBar({
         className="
           absolute
           top-1/2
-          h-3
-          w-3
-          -translate-y-1/2
+          h-2.5
+          w-2.5
           -translate-x-1/2
+          -translate-y-1/2
           rounded-full
           bg-cyan-500
+          shadow
         "
         style={{
           left: `${percent}%`,
