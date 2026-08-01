@@ -2,196 +2,171 @@
 
 import { useEffect, useState } from "react";
 
-export default function ResourceContent() {
-  const [info, setInfo] = useState<any>(null);
+declare global {
+  interface Window {
+    Telegram?: {
+      WebApp?: {
+        version: string;
+        platform: string;
+        viewportHeight?: number;
+        viewportStableHeight?: number;
+        requestFullscreen?: () => Promise<void>;
+        exitFullscreen?: () => Promise<void>;
+      };
+    };
+  }
+}
 
-  function updateInfo() {
-    const tg = (window as any).Telegram?.WebApp;
+export default function VideoLabPage() {
+  const [theaterMode, setTheaterMode] = useState(false);
 
-    if (!tg) {
-      setInfo({
-        detected: false,
-        message: "Telegram WebApp API not detected",
-      });
-      return;
-    }
+  const [info, setInfo] = useState({
+    platform: "",
+    version: "",
+    viewportHeight: 0,
+    viewportStableHeight: 0,
+  });
+
+  function refreshInfo() {
+    const tg = window.Telegram?.WebApp;
+
+    if (!tg) return;
 
     setInfo({
-      detected: true,
       platform: tg.platform,
       version: tg.version,
-
-      isExpanded: tg.isExpanded,
-
-      requestFullscreen:
-        typeof tg.requestFullscreen === "function",
-
-      exitFullscreen:
-        typeof tg.exitFullscreen === "function",
-
-      expand:
-        typeof tg.expand === "function",
-
-      lockOrientation:
-        typeof tg.lockOrientation === "function",
-
-      viewportHeight: tg.viewportHeight,
-
+      viewportHeight: tg.viewportHeight ?? 0,
       viewportStableHeight:
-        tg.viewportStableHeight,
+        tg.viewportStableHeight ?? 0,
     });
   }
 
   useEffect(() => {
-    updateInfo();
-
-    const tg = (window as any).Telegram?.WebApp;
-
-    if (!tg) return;
-
-    const handleViewport = () => {
-      console.log("Viewport Changed");
-
-      updateInfo();
-    };
-
-    tg.onEvent?.("viewportChanged", handleViewport);
-
-    return () => {
-      tg.offEvent?.("viewportChanged", handleViewport);
-    };
+    refreshInfo();
   }, []);
 
-  async function requestFullscreen() {
-    const tg = (window as any).Telegram?.WebApp;
+  async function enterPlayer() {
+    const tg = window.Telegram?.WebApp;
 
-    if (!tg?.requestFullscreen) {
-      alert("Fullscreen unavailable");
-      return;
+    if (tg?.requestFullscreen) {
+      await tg.requestFullscreen();
     }
 
-    try {
-      console.log("Calling requestFullscreen()...");
+    refreshInfo();
 
-      const result = await tg.requestFullscreen();
-
-      console.log("Result:", result);
-
-      updateInfo();
-
-      alert("requestFullscreen() finished successfully.");
-    } catch (err: any) {
-      console.error(err);
-
-      alert(
-        "Fullscreen failed:\n\n" +
-          JSON.stringify(err, null, 2)
-      );
-    }
+    setTheaterMode(true);
   }
 
-  async function exitFullscreen() {
-    const tg = (window as any).Telegram?.WebApp;
+  async function exitPlayer() {
+    const tg = window.Telegram?.WebApp;
 
-    if (!tg?.exitFullscreen) {
-      alert("Exit Fullscreen unavailable");
-      return;
+    if (tg?.exitFullscreen) {
+      await tg.exitFullscreen();
     }
 
-    try {
-      const result = await tg.exitFullscreen();
+    refreshInfo();
 
-      console.log("Exit Result:", result);
-
-      updateInfo();
-
-      alert("exitFullscreen() finished.");
-    } catch (err: any) {
-      console.error(err);
-
-      alert(
-        "Exit failed:\n\n" +
-          JSON.stringify(err, null, 2)
-      );
-    }
+    setTheaterMode(false);
   }
 
-  function expandApp() {
-    const tg = (window as any).Telegram?.WebApp;
+  if (theaterMode) {
+    return (
+      <div className="fixed inset-0 z-[9999] flex flex-col bg-black">
 
-    if (!tg?.expand) {
-      alert("Expand unavailable");
-      return;
-    }
+        <div className="flex items-center justify-between p-4">
 
-    tg.expand();
+          <h2 className="font-bold text-white">
+            Fullscreen Test
+          </h2>
 
-    updateInfo();
-  }
+          <button
+            onClick={exitPlayer}
+            className="rounded-lg bg-red-500 px-4 py-2 font-semibold"
+          >
+            Exit
+          </button>
 
-  function lockLandscape() {
-    const tg = (window as any).Telegram?.WebApp;
+        </div>
 
-    if (!tg?.lockOrientation) {
-      alert("Landscape unavailable");
-      return;
-    }
+        <div className="flex-1 flex items-center justify-center">
 
-    try {
-      tg.lockOrientation("landscape");
+          <div className="aspect-video w-full">
 
-      alert("Landscape requested.");
-    } catch (err: any) {
-      console.error(err);
+            <iframe
+              src="https://player.mediadelivery.net/embed/717891/b46ce3e3-a752-42eb-af1c-a14800d344d9"
+              className="h-full w-full"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+            />
 
-      alert(JSON.stringify(err, null, 2));
-    }
+          </div>
+
+        </div>
+
+        <div className="border-t border-zinc-800 p-4 text-sm text-zinc-400">
+
+          <p>Viewport: {info.viewportHeight}</p>
+
+          <p>
+            Stable Height:{" "}
+            {info.viewportStableHeight}
+          </p>
+
+        </div>
+
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-5">
+    <main className="mx-auto max-w-4xl space-y-6 p-6">
 
-      <h2 className="text-2xl font-bold">
-        Telegram Fullscreen Diagnostics
-      </h2>
+      <h1 className="text-3xl font-bold">
+        Bunny Fullscreen Prototype
+      </h1>
 
       <div className="rounded-xl bg-zinc-900 p-5">
-        <pre className="whitespace-pre-wrap text-sm text-zinc-300">
-          {JSON.stringify(info, null, 2)}
-        </pre>
-      </div>
 
-      <div className="grid gap-3">
+        <p>
+          <strong>Platform:</strong>{" "}
+          {info.platform}
+        </p>
 
-        <button
-          onClick={requestFullscreen}
-          className="rounded-xl bg-cyan-500 p-4 font-bold text-black"
-        >
-          Request Fullscreen
-        </button>
+        <p>
+          <strong>Telegram:</strong>{" "}
+          {info.version}
+        </p>
 
-        <button
-          onClick={expandApp}
-          className="rounded-xl border border-cyan-500 p-4"
-        >
-          Expand Mini App
-        </button>
+        <p>
+          <strong>Viewport:</strong>{" "}
+          {info.viewportHeight}
+        </p>
 
-        <button
-          onClick={lockLandscape}
-          className="rounded-xl border border-green-500 p-4"
-        >
-          Lock Landscape
-        </button>
-
-        <button
-          onClick={exitFullscreen}
-          className="rounded-xl border border-red-500 p-4"
-        >
-          Exit Fullscreen
-        </button>
+        <p>
+          <strong>Stable Height:</strong>{" "}
+          {info.viewportStableHeight}
+        </p>
 
       </div>
-    </div>
+
+      <div className="aspect-video overflow-hidden rounded-xl">
+
+        <iframe
+          src="https://player.mediadelivery.net/embed/717891/b46ce3e3-a752-42eb-af1c-a14800d344d9"
+          className="h-full w-full"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowFullScreen
+        />
+
+      </div>
+
+      <button
+        onClick={enterPlayer}
+        className="w-full rounded-xl bg-cyan-500 py-4 text-lg font-bold text-black"
+      >
+        Watch Fullscreen
+      </button>
+
+    </main>
   );
 }

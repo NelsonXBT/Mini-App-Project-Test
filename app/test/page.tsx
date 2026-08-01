@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import Hls from "hls.js";
+import { useEffect, useState } from "react";
 
 declare global {
   interface Window {
@@ -9,176 +8,165 @@ declare global {
       WebApp?: {
         version: string;
         platform: string;
-        isExpanded?: boolean;
-        requestFullscreen?: () => void;
-        exitFullscreen?: () => void;
-        expand?: () => void;
+        viewportHeight?: number;
+        viewportStableHeight?: number;
+        requestFullscreen?: () => Promise<void>;
+        exitFullscreen?: () => Promise<void>;
       };
     };
   }
 }
 
 export default function VideoLabPage() {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [theaterMode, setTheaterMode] = useState(false);
 
-  const [platform, setPlatform] = useState("Unknown");
-  const [version, setVersion] = useState("Unknown");
-  const [supportsFullscreen, setSupportsFullscreen] =
-    useState(false);
+  const [info, setInfo] = useState({
+    platform: "",
+    version: "",
+    viewportHeight: 0,
+    viewportStableHeight: 0,
+  });
 
-  useEffect(() => {
-    const video = videoRef.current;
-
-    if (video) {
-      const source =
-        "https://vz-4b93e9b4-6e7.b-cdn.net/b46ce3e3-a752-42eb-af1c-a14800d344d9/playlist.m3u8";
-
-      if (
-        video.canPlayType(
-          "application/vnd.apple.mpegurl"
-        )
-      ) {
-        video.src = source;
-      } else if (Hls.isSupported()) {
-        const hls = new Hls();
-
-        hls.loadSource(source);
-        hls.attachMedia(video);
-
-        return () => hls.destroy();
-      }
-    }
-
+  function refreshInfo() {
     const tg = window.Telegram?.WebApp;
 
-    if (tg) {
-      setPlatform(tg.platform);
-      setVersion(tg.version);
-      setSupportsFullscreen(
-        typeof tg.requestFullscreen === "function"
-      );
-    }
-  }, []);
+    if (!tg) return;
 
-  function enterFullscreen() {
-    const tg = window.Telegram?.WebApp;
-
-    if (!tg) {
-      alert("Telegram WebApp not detected.");
-      return;
-    }
-
-    if (typeof tg.requestFullscreen === "function") {
-      tg.requestFullscreen();
-    } else {
-      alert(
-        "requestFullscreen() is not supported on this Telegram version."
-      );
-    }
+    setInfo({
+      platform: tg.platform,
+      version: tg.version,
+      viewportHeight: tg.viewportHeight ?? 0,
+      viewportStableHeight:
+        tg.viewportStableHeight ?? 0,
+    });
   }
 
-  function expandMiniApp() {
+  useEffect(() => {
+    refreshInfo();
+  }, []);
+
+  async function enterPlayer() {
     const tg = window.Telegram?.WebApp;
 
-    if (!tg) {
-      alert("Telegram WebApp not detected.");
-      return;
+    if (tg?.requestFullscreen) {
+      await tg.requestFullscreen();
     }
 
-    if (typeof tg.expand === "function") {
-      tg.expand();
-    } else {
-      alert("expand() is unavailable.");
+    refreshInfo();
+
+    setTheaterMode(true);
+  }
+
+  async function exitPlayer() {
+    const tg = window.Telegram?.WebApp;
+
+    if (tg?.exitFullscreen) {
+      await tg.exitFullscreen();
     }
+
+    refreshInfo();
+
+    setTheaterMode(false);
+  }
+
+  if (theaterMode) {
+    return (
+      <div className="fixed inset-0 z-[9999] flex flex-col bg-black">
+
+        <div className="flex items-center justify-between p-4">
+
+          <h2 className="font-bold text-white">
+            Fullscreen Test
+          </h2>
+
+          <button
+            onClick={exitPlayer}
+            className="rounded-lg bg-red-500 px-4 py-2 font-semibold"
+          >
+            Exit
+          </button>
+
+        </div>
+
+        <div className="flex-1 flex items-center justify-center">
+
+          <div className="aspect-video w-full">
+
+            <iframe
+              src="https://player.mediadelivery.net/embed/717891/b46ce3e3-a752-42eb-af1c-a14800d344d9"
+              className="h-full w-full"
+              allow="autoplay; fullscreen; picture-in-picture"
+              allowFullScreen
+            />
+
+          </div>
+
+        </div>
+
+        <div className="border-t border-zinc-800 p-4 text-sm text-zinc-400">
+
+          <p>Viewport: {info.viewportHeight}</p>
+
+          <p>
+            Stable Height:{" "}
+            {info.viewportStableHeight}
+          </p>
+
+        </div>
+
+      </div>
+    );
   }
 
   return (
-    <main className="mx-auto max-w-5xl space-y-10 p-6">
+    <main className="mx-auto max-w-4xl space-y-6 p-6">
+
       <h1 className="text-3xl font-bold">
-        Bunny Stream Test Lab
+        Bunny Fullscreen Prototype
       </h1>
 
-      <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5 space-y-2">
+      <div className="rounded-xl bg-zinc-900 p-5">
+
         <p>
-          <strong>Platform:</strong> {platform}
+          <strong>Platform:</strong>{" "}
+          {info.platform}
         </p>
 
         <p>
-          <strong>Telegram Version:</strong> {version}
+          <strong>Telegram:</strong>{" "}
+          {info.version}
         </p>
 
         <p>
-          <strong>requestFullscreen():</strong>{" "}
-          {supportsFullscreen
-            ? "✅ Supported"
-            : "❌ Not Supported"}
+          <strong>Viewport:</strong>{" "}
+          {info.viewportHeight}
         </p>
 
-        <div className="flex flex-col gap-3 pt-3">
-          <button
-            onClick={enterFullscreen}
-            className="rounded-xl bg-cyan-500 px-5 py-4 text-lg font-bold text-black"
-          >
-            Enter Telegram Fullscreen
-          </button>
+        <p>
+          <strong>Stable Height:</strong>{" "}
+          {info.viewportStableHeight}
+        </p>
 
-          <button
-            onClick={expandMiniApp}
-            className="rounded-xl border border-cyan-500 px-5 py-4 font-semibold text-cyan-400"
-          >
-            Expand Mini App
-          </button>
-        </div>
       </div>
 
-      {/* Test 1 */}
+      <div className="aspect-video overflow-hidden rounded-xl">
 
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold">
-          Test 1 — Bunny Embed Player
-        </h2>
-
-        <div className="aspect-video overflow-hidden rounded-xl border border-zinc-700">
-          <iframe
-            src="https://player.mediadelivery.net/embed/717891/b46ce3e3-a752-42eb-af1c-a14800d344d9"
-            className="h-full w-full"
-            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen;"
-            allowFullScreen
-          />
-        </div>
-      </section>
-
-      {/* Test 2 */}
-
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold">
-          Test 2 — Bunny Direct Player
-        </h2>
-
-        <div className="aspect-video overflow-hidden rounded-xl border border-zinc-700">
-          <iframe
-            src="https://player.mediadelivery.net/play/717891/b46ce3e3-a752-42eb-af1c-a14800d344d9"
-            className="h-full w-full"
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowFullScreen
-          />
-        </div>
-      </section>
-
-      {/* Test 3 */}
-
-      <section className="space-y-3">
-        <h2 className="text-xl font-semibold">
-          Test 3 — Native HTML5 (HLS)
-        </h2>
-
-        <video
-          ref={videoRef}
-          controls
-          playsInline
-          className="aspect-video w-full rounded-xl border border-zinc-700 bg-black"
+        <iframe
+          src="https://player.mediadelivery.net/embed/717891/b46ce3e3-a752-42eb-af1c-a14800d344d9"
+          className="h-full w-full"
+          allow="autoplay; fullscreen; picture-in-picture"
+          allowFullScreen
         />
-      </section>
+
+      </div>
+
+      <button
+        onClick={enterPlayer}
+        className="w-full rounded-xl bg-cyan-500 py-4 text-lg font-bold text-black"
+      >
+        Watch Fullscreen
+      </button>
+
     </main>
   );
 }
