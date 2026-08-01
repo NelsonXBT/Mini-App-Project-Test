@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 export default function ResourceContent() {
   const [info, setInfo] = useState<any>(null);
 
-
-  useEffect(() => {
+  function updateInfo() {
     const tg = (window as any).Telegram?.WebApp;
 
     if (!tg) {
@@ -14,15 +13,14 @@ export default function ResourceContent() {
         detected: false,
         message: "Telegram WebApp API not detected",
       });
-
       return;
     }
-
 
     setInfo({
       detected: true,
       platform: tg.platform,
       version: tg.version,
+
       isExpanded: tg.isExpanded,
 
       requestFullscreen:
@@ -37,80 +35,131 @@ export default function ResourceContent() {
       lockOrientation:
         typeof tg.lockOrientation === "function",
 
-      viewportHeight:
-        tg.viewportHeight,
+      viewportHeight: tg.viewportHeight,
 
       viewportStableHeight:
         tg.viewportStableHeight,
     });
+  }
 
-  }, []);
+  useEffect(() => {
+    updateInfo();
 
-
-
-  function requestFullscreen() {
     const tg = (window as any).Telegram?.WebApp;
 
-    if (tg?.requestFullscreen) {
-      tg.requestFullscreen();
-    } else {
+    if (!tg) return;
+
+    const handleViewport = () => {
+      console.log("Viewport Changed");
+
+      updateInfo();
+    };
+
+    tg.onEvent?.("viewportChanged", handleViewport);
+
+    return () => {
+      tg.offEvent?.("viewportChanged", handleViewport);
+    };
+  }, []);
+
+  async function requestFullscreen() {
+    const tg = (window as any).Telegram?.WebApp;
+
+    if (!tg?.requestFullscreen) {
       alert("Fullscreen unavailable");
+      return;
+    }
+
+    try {
+      console.log("Calling requestFullscreen()...");
+
+      const result = await tg.requestFullscreen();
+
+      console.log("Result:", result);
+
+      updateInfo();
+
+      alert("requestFullscreen() finished successfully.");
+    } catch (err: any) {
+      console.error(err);
+
+      alert(
+        "Fullscreen failed:\n\n" +
+          JSON.stringify(err, null, 2)
+      );
     }
   }
 
+  async function exitFullscreen() {
+    const tg = (window as any).Telegram?.WebApp;
 
+    if (!tg?.exitFullscreen) {
+      alert("Exit Fullscreen unavailable");
+      return;
+    }
+
+    try {
+      const result = await tg.exitFullscreen();
+
+      console.log("Exit Result:", result);
+
+      updateInfo();
+
+      alert("exitFullscreen() finished.");
+    } catch (err: any) {
+      console.error(err);
+
+      alert(
+        "Exit failed:\n\n" +
+          JSON.stringify(err, null, 2)
+      );
+    }
+  }
 
   function expandApp() {
     const tg = (window as any).Telegram?.WebApp;
 
-    if (tg?.expand) {
-      tg.expand();
-    } else {
+    if (!tg?.expand) {
       alert("Expand unavailable");
+      return;
     }
+
+    tg.expand();
+
+    updateInfo();
   }
-
-
 
   function lockLandscape() {
     const tg = (window as any).Telegram?.WebApp;
 
-    if (tg?.lockOrientation) {
+    if (!tg?.lockOrientation) {
+      alert("Landscape unavailable");
+      return;
+    }
+
+    try {
       tg.lockOrientation("landscape");
-    } else {
-      alert("Landscape lock unavailable");
+
+      alert("Landscape requested.");
+    } catch (err: any) {
+      console.error(err);
+
+      alert(JSON.stringify(err, null, 2));
     }
   }
-
-
-
-  function exitFullscreen() {
-    const tg = (window as any).Telegram?.WebApp;
-
-    if (tg?.exitFullscreen) {
-      tg.exitFullscreen();
-    } else {
-      alert("Exit fullscreen unavailable");
-    }
-  }
-
-
 
   return (
     <div className="space-y-5">
 
       <h2 className="text-2xl font-bold">
-        Telegram Fullscreen Test
+        Telegram Fullscreen Diagnostics
       </h2>
-
 
       <div className="rounded-xl bg-zinc-900 p-5">
         <pre className="whitespace-pre-wrap text-sm text-zinc-300">
           {JSON.stringify(info, null, 2)}
         </pre>
       </div>
-
-
 
       <div className="grid gap-3">
 
@@ -121,7 +170,6 @@ export default function ResourceContent() {
           Request Fullscreen
         </button>
 
-
         <button
           onClick={expandApp}
           className="rounded-xl border border-cyan-500 p-4"
@@ -129,14 +177,12 @@ export default function ResourceContent() {
           Expand Mini App
         </button>
 
-
         <button
           onClick={lockLandscape}
           className="rounded-xl border border-green-500 p-4"
         >
           Lock Landscape
         </button>
-
 
         <button
           onClick={exitFullscreen}
@@ -146,7 +192,6 @@ export default function ResourceContent() {
         </button>
 
       </div>
-
     </div>
   );
 }
