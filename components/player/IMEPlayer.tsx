@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 import LoadingSpinner from "./LoadingSpinner";
 import PlayButton from "./PlayButton";
@@ -14,6 +14,8 @@ export default function IMEPlayer({
   src,
 }: IMEPlayerProps) {
 const router = useRouter();
+const pathname = usePathname();
+const isPlayerPage = pathname === "/player";
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
