@@ -6,6 +6,7 @@ import "./globals.css";
 
 import Header from "@/components/layout/Header";
 import BottomNavigation from "@/components/layout/BottomNavigation";
+import TelegramAuth from "@/components/telegram/TelegramAuth";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,6 +38,10 @@ export default function RootLayout({
           src="https://telegram.org/js/telegram-web-app.js"
           strategy="beforeInteractive"
         />
+
+        <TelegramAuth />
+
+        
 
         <main className="app-main min-h-screen px-5 pt-3 pb-20">
           <Header />

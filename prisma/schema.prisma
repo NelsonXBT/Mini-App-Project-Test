@@ -109,17 +109,22 @@ model Enrollment {
 }
 
 model LessonProgress {
-  id         String @id @default(cuid())
+  id        String @id @default(cuid())
 
-  userId     String
-  lessonId   String
+  userId    String
+  lessonId  String
 
-  completed  Boolean @default(false)
+  completed Boolean @default(false)
 
-  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lesson      Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  // Playback state
+  currentTime Int @default(0)
+  progress    Float @default(0)
 
-  completedAt DateTime?
+  lastWatchedAt DateTime?
+  completedAt  DateTime?
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
   @@unique([userId, lessonId])
 }
