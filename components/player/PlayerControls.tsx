@@ -65,18 +65,18 @@ export default function PlayerControls({
               />
             )}
 
-            <button
+            {/* <button
             onClick={() => setShowVolume(!showVolume)}
             className="flex h-10 w-10 items-center justify-center rounded-full bg-black/25 backdrop-blur-sm text-white transition hover:bg-black/40 hover:text-white"
             >
             <Volume2 size={18} strokeWidth={2.6} />
-            </button>
+            </button> */}
 
            <FullscreenButton
-    mobile={true}
-    isFullscreen={isFullscreen}
-    onClick={onFullscreen}
-/>
+                mobile={true}
+                isFullscreen={isFullscreen}
+                onClick={onFullscreen}
+            />
 
           </div>
 
