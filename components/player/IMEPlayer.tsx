@@ -174,10 +174,14 @@ export default function IMEPlayer({
       await tg.requestFullscreen();
 
       try {
-        await screen.orientation.lock("landscape");
-      } catch {
+        await (
+            screen.orientation as ScreenOrientation & {
+            lock: (orientation: string) => Promise<void>;
+            }
+        ).lock("landscape");
+        } catch {
         // Ignore if orientation lock isn't supported
-      }
+        }
 
       setTimeout(() => {
         const landscape =
