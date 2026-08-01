@@ -42,8 +42,9 @@ async function main() {
     data: {
       title: "Welcome",
       description: "Welcome to the course.",
-      provider: VideoProvider.youtube,
-      videoId: "dQw4w9WgXcQ",
+      provider: VideoProvider.bunny,
+      videoId:
+        "https://vz-4b93e9b4-6e7.b-cdn.net/b46ce3e3-a752-42eb-af1c-a14800d344d9/playlist.m3u8",
       duration: 300,
       order: 1,
       moduleId: module1.id,

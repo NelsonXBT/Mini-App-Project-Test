@@ -6,13 +6,20 @@ type VideoPlayerProps = {
 };
 
 export default function VideoPlayer({
+  provider,
   videoId,
 }: VideoPlayerProps) {
+  if (provider === "bunny") {
+    return (
+      <div className="mb-3 overflow-hidden rounded-xl border border-zinc-800 bg-black">
+        <IMEPlayer src={videoId} />
+      </div>
+    );
+  }
+
   return (
-    <div className="mb-3 overflow-hidden rounded-xl border border-zinc-800 bg-black">
-      <IMEPlayer
-        src="https://vz-4b93e9b4-6e7.b-cdn.net/b46ce3e3-a752-42eb-af1c-a14800d344d9/playlist.m3u8"
-      />
+    <div className="mb-3 overflow-hidden rounded-xl border border-red-900 bg-red-950 p-6 text-center text-red-300">
+      Unsupported video provider: {provider}
     </div>
   );
 }
