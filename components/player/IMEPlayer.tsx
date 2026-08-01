@@ -208,6 +208,7 @@ export default function IMEPlayer({
       await tg.requestFullscreen();
       setIsFullscreen(true);
       document.documentElement.classList.add("player-fullscreen");
+      
 
       try {
         await (
