@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Minimize2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import LoadingSpinner from "./LoadingSpinner";
@@ -226,17 +227,21 @@ export default function FullscreenPlayer({
   }
 
   async function exitPlayer() {
-    const tg =
-      (window as any).Telegram?.WebApp;
+  try {
+    screen.orientation.unlock();
+  } catch {}
 
-    if (tg?.exitFullscreen) {
-      try {
-        await tg.exitFullscreen();
-      } catch {}
-    }
+  const tg =
+    (window as any).Telegram?.WebApp;
 
-    router.back();
-  }  return (
+  if (tg?.exitFullscreen) {
+    try {
+      await tg.exitFullscreen();
+    } catch {}
+  }
+
+  router.back();
+}  return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
 
       <VideoCanvas
@@ -261,18 +266,49 @@ export default function FullscreenPlayer({
 
       {loading && <LoadingSpinner />}
 
-      {showRotateOverlay && (
-        <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/90">
-          <div className="flex flex-col items-center gap-4 text-white">
-            <div className="text-5xl">🔄</div>
+     {showRotateOverlay && (
+        <div
+          onClick={exitPlayer}
+          className="absolute inset-0 z-50 flex items-center justify-center bg-black/25 backdrop-blur-[2px]"
+        >
+          <div
+            className="flex flex-col items-center text-white"
+            onClick={(e) => e.stopPropagation()}
+          >
 
-            <p className="text-center text-sm font-semibold">
-              Rotate your phone to landscape
+            <p className="text-xl font-semibold">
+              Rotate your phone
             </p>
+
+            <p className="mt-2 text-sm text-white/70">
+              or tap below to exit fullscreen
+            </p>
+
+            <button
+              onClick={exitPlayer}
+              className="
+                mt-6
+                flex
+                h-14
+                w-14
+                items-center
+                justify-center
+                rounded-full
+                bg-white/10
+                backdrop-blur-md
+                transition
+                hover:bg-white/20
+              "
+            >
+              <Minimize2
+                size={28}
+                strokeWidth={2.8}
+                className="text-white"
+              />
+            </button>
           </div>
         </div>
       )}
-
       <div
         className={`absolute inset-0 transition-opacity duration-300 ${
           controlsVisible
