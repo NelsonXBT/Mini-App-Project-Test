@@ -29,85 +29,58 @@ export default function ProgressBar({
     let progress =
       (clientX - rect.left) / rect.width;
 
-    progress = Math.max(0, Math.min(1, progress));
+    progress = Math.max(
+      0,
+      Math.min(progress, 1)
+    );
 
     onSeek(progress * duration);
   }
 
-  function handleMouseDown(
-    e: React.MouseEvent<HTMLDivElement>
+  function handlePointerDown(
+    e: React.PointerEvent<HTMLDivElement>
   ) {
+    e.preventDefault();
+
     update(e.clientX);
 
-    function move(ev: MouseEvent) {
+    const move = (ev: PointerEvent) => {
       update(ev.clientX);
-    }
+    };
 
-    function up() {
+    const up = () => {
       window.removeEventListener(
-        "mousemove",
+        "pointermove",
         move
       );
 
       window.removeEventListener(
-        "mouseup",
+        "pointerup",
         up
       );
-    }
+    };
 
     window.addEventListener(
-      "mousemove",
+      "pointermove",
       move
     );
 
     window.addEventListener(
-      "mouseup",
+      "pointerup",
       up
-    );
-  }
-
-  function handleTouchStart(
-    e: React.TouchEvent<HTMLDivElement>
-  ) {
-    update(e.touches[0].clientX);
-
-    function move(ev: TouchEvent) {
-      update(ev.touches[0].clientX);
-    }
-
-    function end() {
-      window.removeEventListener(
-        "touchmove",
-        move
-      );
-
-      window.removeEventListener(
-        "touchend",
-        end
-      );
-    }
-
-    window.addEventListener(
-      "touchmove",
-      move
-    );
-
-    window.addEventListener(
-      "touchend",
-      end
     );
   }
 
   return (
     <div
       ref={barRef}
-      onMouseDown={handleMouseDown}
-      onTouchStart={handleTouchStart}
+      onPointerDown={handlePointerDown}
       className="
         relative
         h-1
         w-full
         cursor-pointer
+        touch-none
         rounded-full
         bg-white/20
       "
@@ -117,9 +90,8 @@ export default function ProgressBar({
       <div
         className="
           absolute
+          inset-y-0
           left-0
-          top-0
-          h-full
           rounded-full
           bg-cyan-500
         "
@@ -140,7 +112,6 @@ export default function ProgressBar({
           -translate-y-1/2
           rounded-full
           bg-cyan-500
-          shadow
         "
         style={{
           left: `${percent}%`,
