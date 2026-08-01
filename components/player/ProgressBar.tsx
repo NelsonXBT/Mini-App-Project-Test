@@ -75,6 +75,9 @@ export default function ProgressBar({
     <div
       ref={barRef}
       onPointerDown={handlePointerDown}
+      style={{
+        touchAction: "none",
+        }}
       className="
         relative
         h-1

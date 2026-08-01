@@ -219,7 +219,7 @@ const isPlayerPage = pathname === "/player";
                 : "aspect-video w-full rounded-2xl"
             }`}
             onMouseMove={showControls}
-            onTouchStart={toggleControls}
+            
             >
         <VideoCanvas
           ref={videoRef}
