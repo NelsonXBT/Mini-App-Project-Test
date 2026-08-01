@@ -1,7 +1,11 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Minimize2 } from "lucide-react";
+import {
+  Minimize2,
+  RotateCcw,
+  RotateCw,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import LoadingSpinner from "./LoadingSpinner";
@@ -190,6 +194,28 @@ export default function FullscreenPlayer({
     }
   }
 
+  function backward10() {
+  const video = videoRef.current;
+
+  if (!video) return;
+
+  video.currentTime = Math.max(
+    0,
+    video.currentTime - 10
+  );
+}
+
+function forward10() {
+  const video = videoRef.current;
+
+  if (!video) return;
+
+  video.currentTime = Math.min(
+    video.duration,
+    video.currentTime + 10
+  );
+}
+
   function toggleControls() {
   if (controlsVisible) {
     setControlsVisible(false);
@@ -322,16 +348,83 @@ export default function FullscreenPlayer({
 
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
 
-          <div className="pointer-events-auto">
-            <PlayButton
-              playing={playing}
-              onClick={togglePlay}
-            />
-          </div>
+  <div className="pointer-events-auto flex items-center gap-8">
+
+    {/* Back 10 seconds */}
+
+    <button
+      onClick={backward10}
+      className="
+        flex
+        h-12
+        w-12
+        items-center
+        justify-center
+        rounded-full
+        bg-black/25
+        backdrop-blur-sm
+        text-white
+        transition
+        active:scale-95
+      "
+    >
+      <div className="relative">
+
+        <RotateCcw
+          size={24}
+          strokeWidth={2.4}
+        />
+
+        <span className="absolute inset-0 flex items-center justify-center text-[9px] font-bold">
+          10
+        </span>
+
+      </div>
+    </button>
+
+    {/* Play */}
+
+    <PlayButton
+      playing={playing}
+      onClick={togglePlay}
+    />
+
+    {/* Forward 10 seconds */}
+
+    <button
+      onClick={forward10}
+      className="
+        flex
+        h-12
+        w-12
+        items-center
+        justify-center
+        rounded-full
+        bg-black/25
+        backdrop-blur-sm
+        text-white
+        transition
+        active:scale-95
+      "
+    >
+      <div className="relative">
+
+                <RotateCw
+                  size={24}
+                  strokeWidth={2.4}
+                />
+
+              <span className="absolute inset-0 flex items-center justify-center text-[9px] font-bold">
+                10
+              </span>
+
+            </div>
+          </button>
 
         </div>
 
-        {/* Top Bar */}
+      </div>
+          {/* Top Bar */}
 
         {/* <div className="absolute left-4 top-4 z-40">
 
