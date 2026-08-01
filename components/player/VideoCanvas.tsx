@@ -113,7 +113,7 @@ const VideoCanvas = forwardRef<HTMLVideoElement, Props>(
         autoPlay
         muted
         onClick={onClick}
-        className="absolute inset-0 h-full w-full object-contain bg-black"
+        className="absolute inset-0 w-full h-full object-contain bg-black"
         />
     );
   }

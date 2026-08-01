@@ -244,7 +244,7 @@ export default function IMEPlayer({
             ref={wrapperRef}
             className={`relative overflow-hidden bg-black ${
                 showRotateOverlay
-                ? "fixed inset-0 z-50 rounded-none overflow-hidden touch-none"
+                ? "fixed left-0 right-0 top-12 bottom-0 z-50 rounded-none overflow-hidden touch-none flex items-center justify-center"
                 : "aspect-video w-full rounded-2xl"
             }`}
             onMouseMove={showControls}
