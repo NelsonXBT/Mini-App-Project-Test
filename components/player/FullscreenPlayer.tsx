@@ -48,18 +48,18 @@ export default function FullscreenPlayer({
     useState(false);
 
   function showControls() {
-    setControlsVisible(true);
+  setControlsVisible(true);
 
-    if (controlsTimeout.current) {
-      clearTimeout(controlsTimeout.current);
-    }
-
-    controlsTimeout.current = setTimeout(() => {
-      if (playing) {
-        setControlsVisible(false);
-      }
-    }, 3000);
+  if (controlsTimeout.current) {
+    clearTimeout(controlsTimeout.current);
   }
+
+  if (playing) {
+    controlsTimeout.current = setTimeout(() => {
+      setControlsVisible(false);
+    }, 2000);
+  }
+}
 
   useEffect(() => {
     const keyboard = (e: KeyboardEvent) => {
@@ -189,6 +189,24 @@ export default function FullscreenPlayer({
     }
   }
 
+  function toggleControls() {
+  if (controlsVisible) {
+    setControlsVisible(false);
+
+    if (controlsTimeout.current) {
+      clearTimeout(controlsTimeout.current);
+    }
+  } else {
+    showControls();
+
+    if (playing) {
+      controlsTimeout.current = setTimeout(() => {
+        setControlsVisible(false);
+      }, 2000);
+    }
+  }
+}
+
   function seek(time: number) {
     const video = videoRef.current;
 
@@ -238,7 +256,7 @@ export default function FullscreenPlayer({
           setControlsVisible(true);
         }}
         onLoading={setLoading}
-        onClick={togglePlay}
+        onClick={toggleControls}
       />
 
       {loading && <LoadingSpinner />}
@@ -262,7 +280,7 @@ export default function FullscreenPlayer({
             : "opacity-0"
         }`}
         onMouseMove={showControls}
-        onTouchStart={showControls}
+        onTouchStart={toggleControls}
       >
         {/* Center Play Button */}
 
@@ -279,7 +297,7 @@ export default function FullscreenPlayer({
 
         {/* Top Bar */}
 
-        <div className="absolute left-4 top-4 z-40">
+        {/* <div className="absolute left-4 top-4 z-40">
 
           <button
             onClick={exitPlayer}
@@ -288,7 +306,7 @@ export default function FullscreenPlayer({
             ← Back
           </button>
 
-        </div>
+        </div> */}
 
         {/* Bottom Controls */}
 

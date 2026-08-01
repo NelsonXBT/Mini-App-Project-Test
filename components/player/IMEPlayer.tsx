@@ -46,18 +46,18 @@ const isPlayerPage = pathname === "/player";
     useState(false);
 
   function showControls() {
-    setControlsVisible(true);
+  setControlsVisible(true);
 
-    if (controlsTimeout.current) {
-      clearTimeout(controlsTimeout.current);
-    }
-
-    controlsTimeout.current = setTimeout(() => {
-      if (playing) {
-        setControlsVisible(false);
-      }
-    }, 3000);
+  if (controlsTimeout.current) {
+    clearTimeout(controlsTimeout.current);
   }
+
+  if (playing) {
+    controlsTimeout.current = setTimeout(() => {
+      setControlsVisible(false);
+    }, 2000);
+  }
+}
 
   useEffect(() => {
     const keyboard = (e: KeyboardEvent) => {
@@ -169,6 +169,24 @@ const isPlayerPage = pathname === "/player";
     }
   }
 
+  function toggleControls() {
+  if (controlsVisible) {
+    setControlsVisible(false);
+
+    if (controlsTimeout.current) {
+      clearTimeout(controlsTimeout.current);
+    }
+  } else {
+    showControls();
+
+    if (playing) {
+      controlsTimeout.current = setTimeout(() => {
+        setControlsVisible(false);
+      }, 2000);
+    }
+  }
+}
+
   function seek(time: number) {
     const video = videoRef.current;
 
@@ -201,7 +219,7 @@ const isPlayerPage = pathname === "/player";
                 : "aspect-video w-full rounded-2xl"
             }`}
             onMouseMove={showControls}
-            onTouchStart={showControls}
+            onTouchStart={toggleControls}
             >
         <VideoCanvas
           ref={videoRef}
@@ -220,7 +238,7 @@ const isPlayerPage = pathname === "/player";
             setControlsVisible(true);
           }}
           onLoading={setLoading}
-          onClick={togglePlay}
+          onClick={toggleControls}
         />
 
         {loading && <LoadingSpinner />}
