@@ -10,6 +10,7 @@ interface Props {
   duration: number;
   volume: number;
   isMobile: boolean;
+  isFullscreen: boolean;
 
   onSeek: (time: number) => void;
   onVolume: (volume: number) => void;
@@ -21,6 +22,7 @@ export default function PlayerControls({
   duration,
   volume,
   isMobile,
+  isFullscreen,
   onSeek,
   onVolume,
   onFullscreen,

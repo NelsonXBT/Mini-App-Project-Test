@@ -37,6 +37,8 @@ export default function IMEPlayer({
 
   const [fullscreenRequested, setFullscreenRequested] =
     useState(false);
+  const [isFullscreen, setIsFullscreen] =
+    useState(false);
 
   function showControls() {
     setControlsVisible(true);
@@ -181,12 +183,30 @@ export default function IMEPlayer({
   }
 
   async function fullscreen()  {
+
+    if (isFullscreen) {
+        const tg = (window as any).Telegram?.WebApp;
+
+        if (tg?.exitFullscreen) {
+            await tg.exitFullscreen();
+        }
+
+        document.documentElement.classList.remove("player-fullscreen");
+
+        setIsFullscreen(false);
+        setFullscreenRequested(false);
+        setShowRotateOverlay(false);
+
+        return;
+        }
+
     setFullscreenRequested(true);
 
     const tg = (window as any).Telegram?.WebApp;
 
     if (tg?.requestFullscreen) {
       await tg.requestFullscreen();
+      setIsFullscreen(true);
       document.documentElement.classList.add("player-fullscreen");
 
       try {
@@ -293,14 +313,15 @@ export default function IMEPlayer({
           {/* Bottom Controls */}
 
           <PlayerControls
-            current={current}
-            duration={duration}
-            volume={volume}
-            isMobile={isMobile}
-            onSeek={seek}
-            onVolume={changeVolume}
-            onFullscreen={fullscreen}
-          />
+        current={current}
+        duration={duration}
+        volume={volume}
+        isMobile={isMobile}
+        isFullscreen={isFullscreen}
+        onSeek={seek}
+        onVolume={changeVolume}
+        onFullscreen={fullscreen}
+        />
 
         </div>
 
