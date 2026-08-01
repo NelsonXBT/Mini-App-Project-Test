@@ -38,7 +38,7 @@ export default function RootLayout({
           strategy="beforeInteractive"
         />
 
-        <main className="min-h-screen px-5 pt-3 pb-20">
+        <main className="app-main min-h-screen px-5 pt-3 pb-20">
           <Header />
 
           <div className="mt-3">

@@ -8,8 +8,19 @@ body {
 
 /* Hide bottom navigation while player is fullscreen */
 
-body.player-fullscreen .player-nav {
+html.player-fullscreen .player-nav {
   transform: translateY(100%);
   opacity: 0;
   pointer-events: none;
+}
+
+html.player-fullscreen,
+html.player-fullscreen body {
+  overflow: hidden;
+  height: 100%;
+}
+
+html.player-fullscreen .app-main {
+  overflow: hidden;
+  height: 100vh;
 }
