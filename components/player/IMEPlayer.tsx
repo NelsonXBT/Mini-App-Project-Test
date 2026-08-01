@@ -9,6 +9,7 @@ import TimeDisplay from "./TimeDisplay";
 import VolumeControl from "./VolumeControl";
 import FullscreenButton from "./FullscreenButton";
 import VideoCanvas from "./VideoCanvas";
+import PlayerControls from "./PlayerControls";
 
 import type { IMEPlayerProps } from "./types";
 
@@ -31,6 +32,7 @@ export default function IMEPlayer({
 
   const [controlsVisible, setControlsVisible] =
     useState(true);
+    const [isMobile, setIsMobile] = useState(false);
 
   function showControls() {
     setControlsVisible(true);
@@ -67,6 +69,7 @@ export default function IMEPlayer({
           break;
       }
     };
+    
 
     window.addEventListener(
       "keydown",
@@ -84,6 +87,31 @@ export default function IMEPlayer({
       }
     };
   }, [playing]);
+
+  useEffect(() => {
+    // keyboard shortcuts
+
+}, [playing]);
+
+        useEffect(() => {
+            const updateLayout = () => {
+                setIsMobile(window.innerWidth < 768);
+            };
+
+            updateLayout();
+
+            window.addEventListener(
+                "resize",
+                updateLayout
+            );
+
+            return () => {
+                window.removeEventListener(
+                    "resize",
+                    updateLayout
+                );
+            };
+        }, []);
 
   function togglePlay() {
     const video = videoRef.current;
@@ -131,97 +159,74 @@ export default function IMEPlayer({
   }
 
 return (
-  <div
-    ref={wrapperRef}
-    className="relative aspect-video w-full overflow-hidden rounded-2xl bg-black"
-    onMouseMove={showControls}
-    onTouchStart={showControls}
-  >
-    <VideoCanvas
-      ref={videoRef}
-      src={src}
-      onLoaded={(duration) => {
-        setDuration(duration);
-        setLoading(false);
-      }}
-      onTimeUpdate={setCurrent}
-      onPlay={() => {
-        setPlaying(true);
-        showControls();
-      }}
-      onPause={() => {
-        setPlaying(false);
-        setControlsVisible(true);
-      }}
-      onLoading={setLoading}
-      onClick={togglePlay}
-    />
-
-    {loading && <LoadingSpinner />}
-
+  <>
     <div
-      className={`absolute inset-0 transition-opacity duration-300 ${
-        controlsVisible
-          ? "opacity-100"
-          : "opacity-0"
-      }`}
+      ref={wrapperRef}
+      className="relative aspect-video w-full overflow-hidden rounded-2xl bg-black"
+      onMouseMove={showControls}
+      onTouchStart={showControls}
     >
-      {/* Center Play Button */}
+      <VideoCanvas
+        ref={videoRef}
+        src={src}
+        onLoaded={(duration) => {
+          setDuration(duration);
+          setLoading(false);
+        }}
+        onTimeUpdate={setCurrent}
+        onPlay={() => {
+          setPlaying(true);
+          showControls();
+        }}
+        onPause={() => {
+          setPlaying(false);
+          setControlsVisible(true);
+        }}
+        onLoading={setLoading}
+        onClick={togglePlay}
+      />
 
-      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+      {loading && <LoadingSpinner />}
 
-        <div className="pointer-events-auto">
+      <div
+        className={`absolute inset-0 transition-opacity duration-300 ${
+          controlsVisible ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        {/* Center Play Button */}
 
-          <PlayButton
-            playing={playing}
-            onClick={togglePlay}
-          />
-
-        </div>
-
-      </div>
-
-      {/* Bottom Controls */}
-
-      <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent">
-
-        <div className="px-4 pb-4 pt-12">
-
-          <ProgressBar
-            current={current}
-            duration={duration}
-            onSeek={seek}
-          />
-
-          <div className="mt-4 flex items-center justify-between gap-4">
-
-            <TimeDisplay
-              current={current}
-              duration={duration}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="pointer-events-auto">
+            <PlayButton
+              playing={playing}
+              onClick={togglePlay}
             />
-
-            <div className="flex items-center gap-3">
-
-              <VolumeControl
-                volume={volume}
-                onChange={changeVolume}
-              />
-
-              <FullscreenButton
-                onClick={fullscreen}
-              />
-
-            </div>
-
           </div>
-
         </div>
 
-      </div>
+        {/* Bottom Controls */}
 
+        <PlayerControls
+          current={current}
+          duration={duration}
+          volume={volume}
+          isMobile={isMobile}
+          onSeek={seek}
+          onVolume={changeVolume}
+          onFullscreen={fullscreen}
+        />
+      </div>
     </div>
 
-  </div>
+    {/* TEMPORARY FULLSCREEN BUTTON BELOW PLAYER */}
+
+    <div className="mt-3 flex justify-center">
+      <FullscreenButton
+        mobile
+        onClick={fullscreen}
+      />
+    </div>
+  </>
 );
 }
 
