@@ -30,3 +30,7 @@ html.player-fullscreen .app-main {
 html.player-fullscreen .player-header {
   display: none;
 }
+
+.player-header {
+    background: red !important;
+}

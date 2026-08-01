@@ -209,6 +209,7 @@ export default function IMEPlayer({
       setIsFullscreen(true);
       document.documentElement.classList.add("player-fullscreen");
       
+      
 
       try {
         await (
