@@ -12,6 +12,10 @@ import {
 export default function BottomNavigation() {
   const pathname = usePathname();
 
+if (pathname === "/player") {
+  return null;
+}
+
   const navItems = [
     {
       href: "/",
