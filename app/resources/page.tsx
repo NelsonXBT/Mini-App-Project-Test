@@ -43,6 +43,14 @@ export default function VideoLabPage() {
 
   useEffect(() => {
     refreshInfo();
+
+    window.addEventListener("resize", refreshInfo);
+
+    return () =>
+      window.removeEventListener(
+        "resize",
+        refreshInfo
+      );
   }, []);
 
   async function enterPlayer() {
@@ -71,46 +79,48 @@ export default function VideoLabPage() {
 
   if (theaterMode) {
     return (
-      <div className="fixed inset-0 z-[9999] flex flex-col bg-black">
+      <div className="fixed inset-0 z-[99999] bg-black">
 
-        <div className="flex items-center justify-between p-4">
+        {/* Exit Button */}
 
-          <h2 className="font-bold text-white">
-            Fullscreen Test
-          </h2>
+        <button
+          onClick={exitPlayer}
+          className="
+            absolute
+            right-4
+            top-4
+            z-50
+            rounded-full
+            bg-red-600/90
+            px-5
+            py-3
+            font-bold
+            text-white
+            backdrop-blur
+          "
+        >
+          Exit
+        </button>
 
-          <button
-            onClick={exitPlayer}
-            className="rounded-lg bg-red-500 px-4 py-2 font-semibold"
+        {/* Player */}
+
+        <div className="flex h-full w-full items-center justify-center p-2">
+
+          <div
+            className="
+              aspect-video
+              w-full
+              max-w-full
+              max-h-full
+            "
           >
-            Exit
-          </button>
-
-        </div>
-
-        <div className="flex-1 flex items-center justify-center">
-
-          <div className="aspect-video w-full">
-
             <iframe
               src="https://player.mediadelivery.net/embed/717891/b46ce3e3-a752-42eb-af1c-a14800d344d9"
-              className="h-full w-full"
+              className="h-full w-full rounded-xl"
               allow="autoplay; fullscreen; picture-in-picture"
               allowFullScreen
             />
-
           </div>
-
-        </div>
-
-        <div className="border-t border-zinc-800 p-4 text-sm text-zinc-400">
-
-          <p>Viewport: {info.viewportHeight}</p>
-
-          <p>
-            Stable Height:{" "}
-            {info.viewportStableHeight}
-          </p>
 
         </div>
 
@@ -119,7 +129,7 @@ export default function VideoLabPage() {
   }
 
   return (
-    <main className="mx-auto max-w-4xl space-y-6 p-6">
+    <main className="mx-auto max-w-4xl space-y-8 p-6">
 
       <h1 className="text-3xl font-bold">
         Bunny Fullscreen Prototype
@@ -162,7 +172,7 @@ export default function VideoLabPage() {
 
       <button
         onClick={enterPlayer}
-        className="w-full rounded-xl bg-cyan-500 py-4 text-lg font-bold text-black"
+        className="w-full rounded-xl bg-cyan-500 py-4 text-xl font-bold text-black"
       >
         Watch Fullscreen
       </button>
