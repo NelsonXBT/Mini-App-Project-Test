@@ -30,7 +30,7 @@ export default function PlayerControls({
   return (
     <div className="absolute inset-x-0 bottom-0">
 
-      <div className="bg-gradient-to-t from-black/80 via-black/30 to-transparent px-5 pb-4 pt-2">
+      <div className="bg-gradient-to-t from-black/80 via-black/30 to-transparent px-6 pb-5 pt-2">
 
         {/* Time + Fullscreen */}
 
