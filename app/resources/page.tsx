@@ -51,44 +51,54 @@ export default function ResourcesPage() {
   }, []);
 
   async function verifyLogin() {
-    const tg = window.Telegram?.WebApp;
+  const tg = window.Telegram?.WebApp;
 
-    if (!tg?.initData) {
-      setLoginResult({
-        success: false,
-        error: "Telegram initData missing.",
-      });
+  if (!tg?.initData) {
+    setLoginResult({
+      success: false,
+      error: "Telegram initData missing.",
+    });
+    return;
+  }
 
-      return;
-    }
+  try {
+    setLoading(true);
+
+    const res = await fetch("/api/auth/telegram/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        initData: tg.initData,
+      }),
+    });
+
+    const text = await res.text();
+
+    let json;
 
     try {
-      setLoading(true);
-
-      const res = await fetch("/api/auth/telegram/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          initData: tg.initData,
-        }),
-      });
-
-      const json = await res.json();
-
-      setLoginResult(json);
-    } catch (err) {
-      console.error(err);
-
-      setLoginResult({
-        success: false,
-        error: "Request failed.",
-      });
-    } finally {
-      setLoading(false);
+      json = JSON.parse(text);
+    } catch {
+      json = {
+        status: res.status,
+        body: text,
+      };
     }
+
+    setLoginResult(json);
+  } catch (err: any) {
+    console.error(err);
+
+    setLoginResult({
+      success: false,
+      error: err?.message ?? "Unknown fetch error",
+    });
+  } finally {
+    setLoading(false);
   }
+}
 
   if (!tgData) {
     return (
