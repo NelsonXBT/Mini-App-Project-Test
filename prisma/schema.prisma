@@ -24,6 +24,13 @@ enum ResourceType {
   notion
 }
 
+enum EnrollmentStatus {
+  ACTIVE
+  INACTIVE
+}
+
+
+
 model User {
   id          String   @id @default(cuid())
   telegramId  BigInt   @unique
@@ -66,6 +73,11 @@ model Course {
   price       Decimal?
 
   isPublished Boolean  @default(false)
+
+  // Telegram Protection
+  telegramChatId       String?
+  telegramUsername     String?
+  telegramInviteLink   String?
 
   modules     Module[]
   enrollments Enrollment[]
@@ -118,7 +130,12 @@ model Enrollment {
   user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   course     Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
+  status           EnrollmentStatus @default(ACTIVE)
+  lastCheckedAt    DateTime?
+  lastVerifiedAt   DateTime?
+
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([userId, courseId])
 }

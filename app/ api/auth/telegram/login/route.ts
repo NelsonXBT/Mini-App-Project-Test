@@ -1,23 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { prisma } from "@/lib/prisma";
-
 import { verifyTelegramInitData } from "@/lib/telegram/verify";
-import { createSession } from "@/lib/telegram/session";
+import { checkMembership } from "@/lib/telegram/checkMembership";
 
 export async function POST(req: NextRequest) {
   try {
     const { initData } = await req.json();
-  console.log("========== Telegram Login ==========");
-console.log("Has initData:", !!initData);
 
-if (initData) {
-  console.log(initData);
-}
+    console.log("========== Telegram Login ==========");
+    console.log("Has initData:", !!initData);
 
-console.log("====================================");
+    if (initData) {
+      console.log(initData);
+    }
 
-
+    console.log("====================================");
 
     if (!initData) {
       return NextResponse.json(
@@ -60,50 +57,31 @@ console.log("====================================");
 
     const telegramUser = JSON.parse(userString);
 
-    const user = await prisma.user.upsert({
-      where: {
-        telegramId: BigInt(telegramUser.id),
-      },
+    const isMember = await checkMembership(
+      "-1003963602715",
+      telegramUser.id
+    );
 
-      update: {
-        username: telegramUser.username ?? null,
-        firstName: telegramUser.first_name,
-        lastName: telegramUser.last_name ?? null,
-        photoUrl: telegramUser.photo_url ?? null,
-      },
+    console.log("========== Membership ==========");
+    console.log("Telegram User:", telegramUser.id);
+    console.log("Channel:", "-1003963602715");
+    console.log("Member:", isMember);
+    console.log("================================");
 
-      create: {
-        telegramId: BigInt(telegramUser.id),
-        username: telegramUser.username ?? null,
-        firstName: telegramUser.first_name,
-        lastName: telegramUser.last_name ?? null,
-        photoUrl: telegramUser.photo_url ?? null,
-      },
-    });
-
-    const session = await createSession(user.id);
-
-    const response = NextResponse.json({
+    return NextResponse.json({
       success: true,
-      user,
+      member: isMember,
+      telegramUser,
     });
 
-    response.cookies.set({
-      name: "ime_session",
-      value: session.token,
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      expires: session.expiresAt,
-      path: "/",
-    });
-
-    return response;
   } catch (error) {
     console.error(error);
 
     return NextResponse.json(
-      { error: "Authentication failed." },
+      {
+        success: false,
+        error: "Authentication failed.",
+      },
       { status: 500 }
     );
   }
