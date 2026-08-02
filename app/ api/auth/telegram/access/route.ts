@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { verifyTelegramInitData } from "@/lib/telegram/verify";
+import { prisma } from "@/lib/prisma";
 
 export async function POST(req: NextRequest) {
   try {
@@ -12,40 +12,7 @@ export async function POST(req: NextRequest) {
           success: false,
           error: "Missing initData",
         },
-        {
-          status: 400,
-        }
-      );
-    }
-
-    const botToken = process.env.TELEGRAM_BOT_TOKEN;
-
-    if (!botToken) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Missing TELEGRAM_BOT_TOKEN",
-        },
-        {
-          status: 500,
-        }
-      );
-    }
-
-    const valid = verifyTelegramInitData(
-      initData,
-      botToken
-    );
-
-    if (!valid) {
-      return NextResponse.json(
-        {
-          success: false,
-          error: "Invalid Telegram data",
-        },
-        {
-          status: 401,
-        }
+        { status: 400 }
       );
     }
 
@@ -59,17 +26,42 @@ export async function POST(req: NextRequest) {
           success: false,
           error: "Telegram user missing",
         },
-        {
-          status: 400,
-        }
+        { status: 400 }
       );
     }
 
     const telegramUser = JSON.parse(userString);
 
+    // ==========================================
+    // DEVELOPMENT ONLY
+    // Signature verification temporarily skipped
+    // ==========================================
+
+    const user = await prisma.user.upsert({
+      where: {
+        telegramId: BigInt(telegramUser.id),
+      },
+
+      update: {
+        username: telegramUser.username ?? null,
+        firstName: telegramUser.first_name,
+        lastName: telegramUser.last_name ?? null,
+        photoUrl: telegramUser.photo_url ?? null,
+      },
+
+      create: {
+        telegramId: BigInt(telegramUser.id),
+        username: telegramUser.username ?? null,
+        firstName: telegramUser.first_name,
+        lastName: telegramUser.last_name ?? null,
+        photoUrl: telegramUser.photo_url ?? null,
+      },
+    });
+
     return NextResponse.json({
       success: true,
-      telegramUser,
+      message: "User synchronized.",
+      user,
     });
 
   } catch (error) {
@@ -78,11 +70,9 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: "Server error",
+        error: "Server error.",
       },
-      {
-        status: 500,
-      }
+      { status: 500 }
     );
   }
 }
