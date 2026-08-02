@@ -2,20 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-declare global {
-  interface Window {
-    Telegram?: {
-      WebApp?: {
-        version: string;
-        platform: string;
-        viewportHeight?: number;
-        viewportStableHeight?: number;
-        requestFullscreen?: () => Promise<void>;
-        exitFullscreen?: () => Promise<void>;
-      };
-    };
-  }
-}
 
 export default function VideoLabPage() {
   const [theaterMode, setTheaterMode] = useState(false);
