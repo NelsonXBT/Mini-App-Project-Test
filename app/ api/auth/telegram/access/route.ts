@@ -5,6 +5,8 @@ import { prisma } from "@/lib/prisma";
 import { verifyTelegramInitData } from "@/lib/telegram/verify";
 import { checkMembership } from "@/lib/telegram/checkMembership";
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req: NextRequest) {
   try {
     console.log("=================================");
