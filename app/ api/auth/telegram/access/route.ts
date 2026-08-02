@@ -1,25 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { verifyTelegramInitData } from "@/lib/telegram/verify";
-import { checkMembership } from "@/lib/telegram/checkMembership";
 
 export async function POST(req: NextRequest) {
   try {
     const { initData } = await req.json();
 
-    console.log("========== Telegram Login ==========");
-    console.log("Has initData:", !!initData);
-
-    if (initData) {
-      console.log(initData);
-    }
-
-    console.log("====================================");
-
     if (!initData) {
       return NextResponse.json(
-        { error: "Missing initData" },
-        { status: 400 }
+        {
+          success: false,
+          error: "Missing initData",
+        },
+        {
+          status: 400,
+        }
       );
     }
 
@@ -27,8 +22,13 @@ export async function POST(req: NextRequest) {
 
     if (!botToken) {
       return NextResponse.json(
-        { error: "Missing bot token." },
-        { status: 500 }
+        {
+          success: false,
+          error: "Missing TELEGRAM_BOT_TOKEN",
+        },
+        {
+          status: 500,
+        }
       );
     }
 
@@ -39,8 +39,13 @@ export async function POST(req: NextRequest) {
 
     if (!valid) {
       return NextResponse.json(
-        { error: "Invalid Telegram data." },
-        { status: 401 }
+        {
+          success: false,
+          error: "Invalid Telegram data",
+        },
+        {
+          status: 401,
+        }
       );
     }
 
@@ -50,27 +55,20 @@ export async function POST(req: NextRequest) {
 
     if (!userString) {
       return NextResponse.json(
-        { error: "Missing Telegram user." },
-        { status: 400 }
+        {
+          success: false,
+          error: "Telegram user missing",
+        },
+        {
+          status: 400,
+        }
       );
     }
 
     const telegramUser = JSON.parse(userString);
 
-    const isMember = await checkMembership(
-      "-1003963602715",
-      telegramUser.id
-    );
-
-    console.log("========== Membership ==========");
-    console.log("Telegram User:", telegramUser.id);
-    console.log("Channel:", "-1003963602715");
-    console.log("Member:", isMember);
-    console.log("================================");
-
     return NextResponse.json({
       success: true,
-      member: isMember,
       telegramUser,
     });
 
@@ -80,9 +78,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         success: false,
-        error: "Authentication failed.",
+        error: "Server error",
       },
-      { status: 500 }
+      {
+        status: 500,
+      }
     );
   }
 }
