@@ -75,7 +75,10 @@ export async function POST(req: NextRequest) {
       unlockedCourses.push(course.slug);
     }
 
-    return NextResponse.json({ success: true, user, unlockedCourses });
+    return NextResponse.json({
+    success: true,
+    unlockedCourses,
+    });
   } catch (error) {
     console.error("TELEGRAM LOGIN ERROR", error);
     return NextResponse.json(
