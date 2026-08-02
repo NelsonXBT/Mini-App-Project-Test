@@ -22,6 +22,9 @@ type TelegramData = {
 export default function ResourcesPage() {
   const [tgData, setTgData] = useState<TelegramData | null>(null);
 
+  const [loginResult, setLoginResult] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const tg = window.Telegram?.WebApp;
 
@@ -47,6 +50,46 @@ export default function ResourcesPage() {
     });
   }, []);
 
+  async function verifyLogin() {
+    const tg = window.Telegram?.WebApp;
+
+    if (!tg?.initData) {
+      setLoginResult({
+        success: false,
+        error: "Telegram initData missing.",
+      });
+
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const res = await fetch("/api/auth/telegram/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          initData: tg.initData,
+        }),
+      });
+
+      const json = await res.json();
+
+      setLoginResult(json);
+    } catch (err) {
+      console.error(err);
+
+      setLoginResult({
+        success: false,
+        error: "Request failed.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }
+
   if (!tgData) {
     return (
       <main className="mx-auto max-w-4xl p-6">
@@ -58,7 +101,7 @@ export default function ResourcesPage() {
   }
 
   return (
-    <main className="mx-auto max-w-4xl p-6 space-y-6">
+    <main className="mx-auto max-w-4xl space-y-6 p-6">
 
       <h1 className="text-3xl font-bold text-cyan-400">
         Telegram Integration Test
@@ -138,7 +181,7 @@ export default function ResourcesPage() {
 
       <div className="rounded-xl bg-zinc-900 p-5">
 
-        <h2 className="text-xl font-semibold text-cyan-400 mb-3">
+        <h2 className="mb-3 text-xl font-semibold text-cyan-400">
           Raw Init Data
         </h2>
 
@@ -147,6 +190,28 @@ export default function ResourcesPage() {
           value={tgData.initData ?? ""}
           className="h-48 w-full rounded-lg bg-black p-3 text-xs text-green-400"
         />
+
+      </div>
+
+      <div className="rounded-xl bg-zinc-900 p-5 space-y-4">
+
+        <h2 className="text-xl font-semibold text-cyan-400">
+          Backend Login Test
+        </h2>
+
+        <button
+          onClick={verifyLogin}
+          disabled={loading}
+          className="rounded-lg bg-cyan-500 px-5 py-3 font-semibold text-black transition hover:bg-cyan-400 disabled:opacity-50"
+        >
+          {loading ? "Verifying..." : "Verify Login"}
+        </button>
+
+        {loginResult && (
+          <pre className="overflow-auto rounded-lg bg-black p-4 text-xs text-green-400">
+            {JSON.stringify(loginResult, null, 2)}
+          </pre>
+        )}
 
       </div>
 
