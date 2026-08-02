@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getCourses } from "@/lib/db/courses";
 import CourseCard from "@/components/course/CourseCard";
 
