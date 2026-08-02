@@ -88,7 +88,7 @@ export default function ResourcesPage() {
 
       console.log("STEP 5 - Sending POST request...");
 
-      const res = await fetch("/api/auth/telegram/access", {
+      const res = await fetch("/api/telegram-login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
