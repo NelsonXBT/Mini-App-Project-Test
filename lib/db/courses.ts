@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic";
+
+
 import { prisma } from "@/lib/prisma";
 
 export async function getCourses() {
