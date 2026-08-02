@@ -8,6 +8,16 @@ import { createSession } from "@/lib/telegram/session";
 export async function POST(req: NextRequest) {
   try {
     const { initData } = await req.json();
+  console.log("========== Telegram Login ==========");
+console.log("Has initData:", !!initData);
+
+if (initData) {
+  console.log(initData);
+}
+
+console.log("====================================");
+
+
 
     if (!initData) {
       return NextResponse.json(
