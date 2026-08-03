@@ -3,7 +3,7 @@ import IMEPlayer from "@/components/player/IMEPlayer";
 type VideoPlayerProps = {
   provider: string;
   videoId: string;
-  onEnded: () => void;
+  onEnded?: () => void;
 };
 
 export default function VideoPlayer({

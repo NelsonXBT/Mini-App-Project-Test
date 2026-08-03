@@ -65,9 +65,6 @@ console.dir(lesson, { depth: null });
         <VideoPlayer
           provider={lesson.provider}
           videoId={lesson.videoId}
-          onEnded={() => {
-            console.log("Lesson finished 🎉");
-          }}
         />
 
         <LessonInfo
