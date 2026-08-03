@@ -60,13 +60,16 @@ export default async function LessonPage({
           completed={false}
         />
 
-        <VideoPlayer
+        {/* <VideoPlayer
           provider={lesson.provider}
           videoId={lesson.videoId}
           onEnded={() => {
             console.log("Lesson finished 🎉");
           }}
-        />
+        /> */}
+        <div className="rounded-xl bg-zinc-900 p-8 text-center">
+          Player temporarily disabled
+        </div>
 
         <LessonInfo
           lessonNumber={currentIndex + 1}
