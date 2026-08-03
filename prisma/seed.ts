@@ -16,17 +16,19 @@ async function main() {
 
   // Create Course
   const course = await prisma.course.create({
-    data: {
-      title: "AI Filmmaking Masterclass",
-      slug: "ai-filmmaking-masterclass",
-      description:
-        "Learn how to create professional AI films from idea to final export.",
-      thumbnail:
-        "/thumbnails/coursethumbnail.png",
-      isFree: true,
-      isPublished: true,
-    },
-  });
+  data: {
+    title: "AI Filmmaking Masterclass",
+    slug: "ai-filmmaking-masterclass",
+    description:
+      "Learn how to create professional AI films from idea to final export.",
+    thumbnail: "/thumbnails/coursethumbnail.png",
+    isFree: true,
+    isPublished: true,
+
+    telegramChatId: "-1003963602715",
+    telegramInviteLink: "https://t.me/+mWgnZjYYR3RjZTNk",
+  },
+});
 
   // Create Module
   const module1 = await prisma.module.create({
