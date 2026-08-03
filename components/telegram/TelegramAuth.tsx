@@ -1,28 +1,34 @@
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import SplashScreen from "@/components/common/SplashScreen";
+import NoAccessPage from "@/app/no-access/page";
 
 export default function TelegramAuth({
   children,
 }: {
   children: ReactNode;
 }) {
-  const router = useRouter();
   const [loading, setLoading] = useState(true);
+  const [hasAccess, setHasAccess] = useState(false);
 
   useEffect(() => {
     async function authenticate() {
       const tg = (window as any).Telegram?.WebApp;
 
-      if (!tg) return;
+      if (!tg) {
+        setLoading(false);
+        return;
+      }
 
       tg.ready();
 
       const initData = tg.initData;
 
-      if (!initData) return;
+      if (!initData) {
+        setLoading(false);
+        return;
+      }
 
       try {
         const response = await fetch("/api/telegram-login", {
@@ -39,29 +45,29 @@ export default function TelegramAuth({
 
         console.log("Telegram Auth:", data);
 
-       if (!response.ok || !data.success) {
+        if (!response.ok || !data.success) {
           console.error("Authentication failed:", data);
           setLoading(false);
           return;
         }
 
-        if (!data.hasAccess) {
-          setLoading(false);
-          router.replace("/no-access");
-          return;
-        }
-        setLoading(false);
+        setHasAccess(data.hasAccess);
       } catch (error) {
         console.error("Telegram auth failed:", error);
+      } finally {
         setLoading(false);
       }
     }
 
     authenticate();
-  }, [router]);
+  }, []);
 
   if (loading) {
   return <SplashScreen />;
+}
+
+if (!hasAccess) {
+  return <NoAccessPage />;
 }
 
 return <>{children}</>;
