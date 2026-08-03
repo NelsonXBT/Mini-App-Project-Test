@@ -1,9 +1,12 @@
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+
 import SplashScreen from "@/components/common/SplashScreen";
 import NoAccessPage from "@/app/no-access/page";
 import { useSession } from "@/contexts/SessionContext";
+
 
 export default function TelegramAuth({
   children,
@@ -16,6 +19,8 @@ export default function TelegramAuth({
         hasAccess,
         setSession,
       } = useSession();
+
+      const pathname = usePathname();
 
   useEffect(() => {
     async function authenticate() {
@@ -83,7 +88,15 @@ export default function TelegramAuth({
   return <SplashScreen />;
 }
 
-if (!hasAccess) {
+const publicRoutes = [
+  "/courses",
+];
+
+const isPublicRoute = publicRoutes.some((route) =>
+  pathname.startsWith(route)
+);
+
+if (!hasAccess && !isPublicRoute) {
   return <NoAccessPage />;
 }
 
