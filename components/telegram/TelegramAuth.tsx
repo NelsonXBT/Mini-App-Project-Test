@@ -1,10 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import SplashScreen from "@/components/common/SplashScreen";
 
-export default function TelegramAuth() {
+export default function TelegramAuth({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function authenticate() {
@@ -33,21 +39,30 @@ export default function TelegramAuth() {
 
         console.log("Telegram Auth:", data);
 
-        if (!response.ok || !data.success) {
+       if (!response.ok || !data.success) {
           console.error("Authentication failed:", data);
+          setLoading(false);
           return;
         }
 
         if (!data.hasAccess) {
+          setLoading(false);
           router.replace("/no-access");
+          return;
         }
+        setLoading(false);
       } catch (error) {
         console.error("Telegram auth failed:", error);
+        setLoading(false);
       }
     }
 
     authenticate();
   }, [router]);
 
-  return null;
+  if (loading) {
+  return <SplashScreen />;
+}
+
+return <>{children}</>;
 }

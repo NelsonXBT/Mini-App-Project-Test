@@ -35,23 +35,21 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-black text-white">
         <Script
-          src="https://telegram.org/js/telegram-web-app.js"
-          strategy="beforeInteractive"
-        />
+  src="https://telegram.org/js/telegram-web-app.js"
+  strategy="beforeInteractive"
+/>
 
-        <TelegramAuth />
+<TelegramAuth>
+  <main className="app-main min-h-screen px-5 pt-3 pb-20">
+    <Header />
 
-        
+    <div className="mt-3">
+      {children}
+    </div>
+  </main>
 
-        <main className="app-main min-h-screen px-5 pt-3 pb-20">
-          <Header />
-
-          <div className="mt-3">
-            {children}
-          </div>
-        </main>
-
-        <BottomNavigation />
+  <BottomNavigation />
+</TelegramAuth>
       </body>
     </html>
   );
