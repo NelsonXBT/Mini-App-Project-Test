@@ -1,12 +1,14 @@
 import IMEPlayer from "@/components/player/IMEPlayer";
 
 type VideoPlayerProps = {
+  lessonId: string;
   provider: string;
   videoId: string;
   onEnded?: () => void;
 };
 
 export default function VideoPlayer({
+  lessonId,
   provider,
   videoId,
   onEnded,
@@ -15,9 +17,10 @@ export default function VideoPlayer({
     return (
       <div className="mb-3 overflow-hidden rounded-xl border border-zinc-800 bg-black">
         <IMEPlayer
-        src={videoId}
-        onEnded={onEnded}
-      />
+          lessonId={lessonId}
+          src={videoId}
+          onEnded={onEnded}
+        />
       </div>
     );
   }
