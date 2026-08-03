@@ -135,9 +135,12 @@ export async function POST(req: NextRequest) {
     console.log("========== LOGIN COMPLETE ==========");
 
     return NextResponse.json({
-      success: true,
-      unlockedCourses,
-    });
+  success: true,
+
+  hasAccess: unlockedCourses.length > 0,
+
+  unlockedCourses,
+});
 
   } catch (error) {
     console.error("========== LOGIN FAILED ==========");
