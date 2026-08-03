@@ -22,6 +22,7 @@ async function main() {
     description:
       "Learn how to create professional AI films from idea to final export.",
     thumbnail: "/thumbnails/coursethumbnail.png",
+    purchaseUrl: "https://your-nestuge-link",
     isFree: true,
     isPublished: true,
 
