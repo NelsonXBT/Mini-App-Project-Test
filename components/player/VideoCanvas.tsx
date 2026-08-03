@@ -116,10 +116,14 @@ const VideoCanvas = forwardRef<HTMLVideoElement, Props>(
     }, [src]);
 
     return (
-  <div className="h-64 w-full bg-red-900 text-white flex items-center justify-center">
-    VideoCanvas Loaded
-  </div>
-);
+      <video
+        ref={ref}
+        playsInline
+        preload="metadata"
+        onClick={onClick}
+        className="absolute inset-0 w-full h-full object-contain bg-black"
+        />
+    );
   }
 );
 
