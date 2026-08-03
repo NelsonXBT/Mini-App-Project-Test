@@ -11,8 +11,11 @@ export default function TelegramAuth({
   children: ReactNode;
 }) {
   const [loading, setLoading] = useState(true);
-  const [hasAccess, setHasAccess] = useState(false);
-  const { setSession } = useSession();
+  // const [hasAccess, setHasAccess] = useState(false);
+  const {
+        hasAccess,
+        setSession,
+      } = useSession();
 
   useEffect(() => {
     async function authenticate() {
@@ -65,7 +68,7 @@ export default function TelegramAuth({
           return;
         }
 
-        setHasAccess(data.hasAccess);
+        
       } catch (error) {
         console.error("Telegram auth failed:", error);
       } finally {
