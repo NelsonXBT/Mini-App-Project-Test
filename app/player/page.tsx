@@ -25,10 +25,9 @@ export default async function PlayerPage({
   }
 
   return (
-    <FullscreenPlayer
-      lessonId={lesson.id}
-      src={lesson.videoId}
-      onEnded={() => {}}
-    />
-  );
+  <FullscreenPlayer
+    lessonId={lesson.id}
+    src={lesson.videoId}
+  />
+);
 }
