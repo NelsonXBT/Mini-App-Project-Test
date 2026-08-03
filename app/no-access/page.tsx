@@ -6,8 +6,8 @@ export default function NoAccessPage() {
   return (
     <main className="mx-auto flex min-h-[70vh] max-w-lg flex-col items-center justify-center px-6 text-center">
 
-      <h1 className="text-1xl font-bold text-white">
-        You Just Took a Big Step
+      <h1 className="text-xl font-bold text-white">
+        You just took a big step
       </h1>
 
       <p className="mt-4 text-zinc-400">
