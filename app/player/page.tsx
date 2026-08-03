@@ -8,7 +8,6 @@ export default function PlayerPage() {
     async function enterFullscreen() {
       const tg = (window as any).Telegram?.WebApp;
 
-      // Telegram fullscreen
       if (tg?.requestFullscreen) {
         try {
           await tg.requestFullscreen();
@@ -17,7 +16,6 @@ export default function PlayerPage() {
         }
       }
 
-      // Lock landscape if supported
       try {
         await (
           screen.orientation as ScreenOrientation & {
@@ -25,15 +23,17 @@ export default function PlayerPage() {
           }
         ).lock("landscape");
       } catch {
-        // Ignore if unsupported
+        // Ignore unsupported browsers
       }
     }
 
     enterFullscreen();
   }, []);
 
-  <FullscreenPlayer
-  src="https://vz-4b93e9b4-6e7.b-cdn.net/b46ce3e3-a752-42eb-af1c-a14800d344d9/playlist.m3u8"
-  onEnded={() => {}}
-/>
+  return (
+    <FullscreenPlayer
+      src="https://vz-4b93e9b4-6e7.b-cdn.net/b46ce3e3-a752-42eb-af1c-a14800d344d9/playlist.m3u8"
+      onEnded={() => {}}
+    />
+  );
 }
