@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import FullscreenPlayer from "@/components/player/FullscreenPlayer";
+import FullscreenVideoSection from "@/components/player/FullscreenVideoSection";
 import { getLessonById } from "@/lib/db/lessons";
 
 type Props = {
@@ -25,9 +25,9 @@ export default async function PlayerPage({
   }
 
   return (
-  <FullscreenPlayer
+  <FullscreenVideoSection
     lessonId={lesson.id}
-    src={lesson.videoId}
+    videoId={lesson.videoId}
   />
 );
 }
