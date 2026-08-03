@@ -1,6 +1,6 @@
 export interface IMEPlayerProps {
   src: string;
-  onEnded: () => void;
+  onEnded?: () => void;
   title?: string;
   poster?: string;
 }

@@ -32,9 +32,8 @@ export default function PlayerPage() {
     enterFullscreen();
   }, []);
 
-  return (
-    <FullscreenPlayer
-      src="https://vz-4b93e9b4-6e7.b-cdn.net/b46ce3e3-a752-42eb-af1c-a14800d344d9/playlist.m3u8"
-    />
-  );
+  <FullscreenPlayer
+  src="https://vz-4b93e9b4-6e7.b-cdn.net/b46ce3e3-a752-42eb-af1c-a14800d344d9/playlist.m3u8"
+  onEnded={() => {}}
+/>
 }
