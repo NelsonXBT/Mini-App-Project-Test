@@ -63,6 +63,7 @@ console.dir(lesson, { depth: null });
         />
 
         <LessonVideoSection
+          lessonId={lesson.id}
           provider={lesson.provider}
           videoId={lesson.videoId}
         />

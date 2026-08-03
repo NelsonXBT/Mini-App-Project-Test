@@ -26,6 +26,22 @@ export async function getLesson(courseSlug: string, lessonId: string) {
   });
 }
 
+export async function getLessonById(lessonId: string) {
+  return prisma.lesson.findUnique({
+    where: {
+      id: lessonId,
+    },
+    include: {
+      resources: true,
+      module: {
+        include: {
+          course: true,
+        },
+      },
+    },
+  });
+}
+
 export async function getCourseLessons(courseSlug: string) {
   const course = await prisma.course.findUnique({
     where: {

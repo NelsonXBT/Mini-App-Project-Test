@@ -1,38 +1,33 @@
-"use client";
+import { notFound } from "next/navigation";
 
-import { useEffect } from "react";
 import FullscreenPlayer from "@/components/player/FullscreenPlayer";
+import { getLessonById } from "@/lib/db/lessons";
 
-export default function PlayerPage() {
-  useEffect(() => {
-    async function enterFullscreen() {
-      const tg = (window as any).Telegram?.WebApp;
+type Props = {
+  searchParams: Promise<{
+    lessonId?: string;
+  }>;
+};
 
-      if (tg?.requestFullscreen) {
-        try {
-          await tg.requestFullscreen();
-        } catch (e) {
-          console.log("Telegram fullscreen failed", e);
-        }
-      }
+export default async function PlayerPage({
+  searchParams,
+}: Props) {
+  const { lessonId } = await searchParams;
 
-      try {
-        await (
-          screen.orientation as ScreenOrientation & {
-            lock: (orientation: string) => Promise<void>;
-          }
-        ).lock("landscape");
-      } catch {
-        // Ignore unsupported browsers
-      }
-    }
+  if (!lessonId) {
+    notFound();
+  }
 
-    enterFullscreen();
-  }, []);
+  const lesson = await getLessonById(lessonId);
+
+  if (!lesson) {
+    notFound();
+  }
 
   return (
     <FullscreenPlayer
-      src="https://vz-4b93e9b4-6e7.b-cdn.net/b46ce3e3-a752-42eb-af1c-a14800d344d9/playlist.m3u8"
+      lessonId={lesson.id}
+      src={lesson.videoId}
       onEnded={() => {}}
     />
   );

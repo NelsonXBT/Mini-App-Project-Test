@@ -11,6 +11,7 @@ import PlayerControls from "./PlayerControls";
 import type { IMEPlayerProps } from "./types";
 
 export default function IMEPlayer({
+  lessonId,
   src,
   onEnded,
 }: IMEPlayerProps) {
@@ -207,7 +208,7 @@ const isPlayerPage = pathname === "/player";
   }
 
   async function fullscreen() {
-    router.push("/player");
+  router.push(`/player?lessonId=${lessonId}`);
 }
 
   return (

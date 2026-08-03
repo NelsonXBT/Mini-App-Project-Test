@@ -3,11 +3,13 @@
 import VideoPlayer from "./VideoPlayer";
 
 type LessonVideoSectionProps = {
+  lessonId: string;
   provider: string;
   videoId: string;
 };
 
 export default function LessonVideoSection({
+  lessonId,
   provider,
   videoId,
 }: LessonVideoSectionProps) {
@@ -23,9 +25,10 @@ export default function LessonVideoSection({
 
   return (
     <VideoPlayer
-      provider={provider}
-      videoId={videoId}
-      onEnded={handleEnded}
-    />
+    lessonId={lessonId}
+    provider={provider}
+    videoId={videoId}
+    onEnded={handleEnded}
+/>
   );
 }

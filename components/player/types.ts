@@ -1,4 +1,5 @@
 export interface IMEPlayerProps {
+  lessonId: string;
   src: string;
   onEnded?: () => void;
   title?: string;
