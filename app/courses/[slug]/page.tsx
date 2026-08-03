@@ -1,6 +1,7 @@
 import { getCourse } from "@/lib/db/courses";
 import CourseContent from "@/components/course/CourseContent";
 import CourseProgress from "@/components/course/CourseProgress";
+import CourseGuard from "@/components/guards/CourseGuard";
 
 type Props = {
   params: Promise<{
@@ -29,6 +30,7 @@ export default async function CoursePage({ params }: Props) {
   );
 
   return (
+  <CourseGuard course={course}>
     <main className="space-y-4">
       <div>
         <h1 className="text-2xl font-bold leading-tight">
@@ -47,9 +49,10 @@ export default async function CoursePage({ params }: Props) {
       />
 
       <CourseContent
-    modules={course.modules}
-          courseSlug={course.slug}
+        modules={course.modules}
+        courseSlug={course.slug}
       />
-          </main>
-  );
+    </main>
+  </CourseGuard>
+);
 }
