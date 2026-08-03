@@ -30,15 +30,15 @@ export default function CourseGuard({
         </h1>
 
       <p className="mt-4 text-zinc-400">
-        You haven't enrolled in this course yet.
-        Purchase it to start learning.
+        You do not have access to this course yet.
+        Click the button below to gain access and start learning!
         </p>
 
       <Link
         href={course.purchaseUrl ?? "#"}
         className="mt-8 rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-black"
       >
-        Enroll Now
+        Gain Access Now
       </Link>
     </main>
   );

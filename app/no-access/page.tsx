@@ -11,7 +11,7 @@ export default function NoAccessPage() {
       </h1>
 
       <p className="mt-4 text-zinc-400">
-        It looks like you haven't enrolled in any courses or purchased any packs yet.
+        It looks like you don't have access to any courses or packs yet.
       </p>
 
       <Link
