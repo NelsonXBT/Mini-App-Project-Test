@@ -40,6 +40,8 @@ async function main() {
     },
   });
 
+  
+
   // Create Lesson
   const lesson1 = await prisma.lesson.create({
     data: {
@@ -54,25 +56,75 @@ async function main() {
     },
   });
 
+  const module2 = await prisma.module.create({
+  data: {
+    title: "Story Development",
+    order: 2,
+    courseId: course.id,
+  },
+});
+
+const lesson2 = await prisma.lesson.create({
+  data: {
+    title: "Finding Great AI Film Ideas",
+    description: "Learn how to discover ideas worth turning into AI films.",
+    provider: VideoProvider.bunny,
+    videoId:
+      "https://vz-4b93e9b4-6e7.b-cdn.net/b46ce3e3-a752-42eb-af1c-a14800d344d9/playlist.m3u8",
+    duration: 420,
+    order: 1,
+    moduleId: module2.id,
+  },
+});
+
+const module3 = await prisma.module.create({
+  data: {
+    title: "Character Creation",
+    order: 3,
+    courseId: course.id,
+  },
+});
+
+const lesson3 = await prisma.lesson.create({
+  data: {
+    title: "Creating Consistent Characters",
+    description:
+      "Build AI characters that remain consistent throughout your film.",
+    provider: VideoProvider.bunny,
+    videoId:
+      "https://vz-4b93e9b4-6e7.b-cdn.net/b46ce3e3-a752-42eb-af1c-a14800d344d9/playlist.m3u8",
+    duration: 540,
+    order: 1,
+    moduleId: module3.id,
+  },
+});
+
   // Lesson Resources
   await prisma.resource.createMany({
-    data: [
-      {
-        lessonId: lesson1.id,
-        title: "Course Notes",
-        type: ResourceType.google_doc,
-        url: "https://docs.google.com",
-        sortOrder: 1,
-      },
-      {
-        lessonId: lesson1.id,
-        title: "Official Veo Documentation",
-        type: ResourceType.website,
-        url: "https://deepmind.google/technologies/veo/",
-        sortOrder: 2,
-      },
-    ],
-  });
+  data: [
+    {
+      lessonId: lesson1.id,
+      title: "Course Notes",
+      type: ResourceType.google_doc,
+      url: "https://docs.google.com",
+      sortOrder: 1,
+    },
+    {
+      lessonId: lesson2.id,
+      title: "Story Development Worksheet",
+      type: ResourceType.google_doc,
+      url: "https://docs.google.com",
+      sortOrder: 1,
+    },
+    {
+      lessonId: lesson3.id,
+      title: "Character Prompt Template",
+      type: ResourceType.google_doc,
+      url: "https://docs.google.com",
+      sortOrder: 1,
+    },
+  ],
+});
 
   console.log("✅ Database seeded successfully.");
 }
