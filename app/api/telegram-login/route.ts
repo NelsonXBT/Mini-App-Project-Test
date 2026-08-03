@@ -8,26 +8,46 @@ export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
   try {
-    console.log("TELEGRAM LOGIN ROUTE HIT");
+    console.log("========== TELEGRAM LOGIN ==========");
 
     const { initData } = await req.json();
 
     if (!initData) {
+      console.log("❌ Missing initData");
+
       return NextResponse.json(
-        { success: false, error: "Missing initData." },
+        {
+          success: false,
+          error: "Missing initData.",
+        },
         { status: 400 }
       );
     }
 
+    console.log("✅ initData received");
+
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
+
     if (!botToken) {
       throw new Error("Missing TELEGRAM_BOT_TOKEN");
     }
 
-    const telegramUser = verifyTelegramInitData(initData, botToken);
+    console.log("✅ Bot token found");
+
+    const telegramUser = verifyTelegramInitData(
+      initData,
+      botToken
+    );
+
+    console.log("✅ Telegram verified");
+    console.log(telegramUser);
+
+    console.log("Saving user...");
 
     const user = await prisma.user.upsert({
-      where: { telegramId: BigInt(telegramUser.id) },
+      where: {
+        telegramId: BigInt(telegramUser.id),
+      },
       update: {
         username: telegramUser.username ?? null,
         firstName: telegramUser.first_name,
@@ -43,27 +63,59 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    console.log("✅ User saved");
+
+    console.log("Loading published courses...");
+
     const courses = await prisma.course.findMany({
-      where: { isPublished: true },
+      where: {
+        isPublished: true,
+      },
     });
+
+    console.log("Published courses:", courses.length);
 
     const unlockedCourses: string[] = [];
 
     for (const course of courses) {
-      if (!course.telegramChatId) continue;
+      console.log("--------------------------------");
+      console.log("Course:", course.title);
+      console.log("Slug:", course.slug);
+      console.log("Published:", course.isPublished);
+      console.log("Chat ID:", course.telegramChatId);
+
+      if (!course.telegramChatId) {
+        console.log("⏭ Skipped (No Telegram Chat ID)");
+        continue;
+      }
+
+      console.log("Calling checkMembership()...");
 
       const member = await checkMembership(
         course.telegramChatId,
         telegramUser.id
       );
 
-      if (!member) continue;
+      console.log("Membership result:", member);
+
+      if (!member) {
+        console.log("❌ User not a member");
+        continue;
+      }
+
+      console.log("Creating enrollment...");
 
       await prisma.enrollment.upsert({
         where: {
-          userId_courseId: { userId: user.id, courseId: course.id },
+          userId_courseId: {
+            userId: user.id,
+            courseId: course.id,
+          },
         },
-        update: { status: "ACTIVE", lastVerifiedAt: new Date() },
+        update: {
+          status: "ACTIVE",
+          lastVerifiedAt: new Date(),
+        },
         create: {
           userId: user.id,
           courseId: course.id,
@@ -72,21 +124,36 @@ export async function POST(req: NextRequest) {
         },
       });
 
+      console.log("✅ Enrollment created");
+
       unlockedCourses.push(course.slug);
     }
 
+    console.log("Unlocked Courses:");
+    console.log(unlockedCourses);
+
+    console.log("========== LOGIN COMPLETE ==========");
+
     return NextResponse.json({
-    success: true,
-    unlockedCourses,
+      success: true,
+      unlockedCourses,
     });
+
   } catch (error) {
-    console.error("TELEGRAM LOGIN ERROR", error);
+    console.error("========== LOGIN FAILED ==========");
+    console.error(error);
+
     return NextResponse.json(
       {
         success: false,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error:
+          error instanceof Error
+            ? error.message
+            : "Unknown error",
       },
-      { status: 401 }
+      {
+        status: 401,
+      }
     );
   }
 }
