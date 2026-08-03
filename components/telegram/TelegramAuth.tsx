@@ -17,7 +17,7 @@ export default function TelegramAuth() {
 
       try {
         const response = await fetch(
-          "/api/auth/telegram/login",
+          "/api/telegram-login",
           {
             method: "POST",
             headers: {
