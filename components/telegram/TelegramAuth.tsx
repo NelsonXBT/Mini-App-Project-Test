@@ -11,7 +11,7 @@ export default function TelegramAuth({
   children: ReactNode;
 }) {
   const [loading, setLoading] = useState(true);
-  // const [hasAccess, setHasAccess] = useState(false);
+
   const {
         hasAccess,
         setSession,
