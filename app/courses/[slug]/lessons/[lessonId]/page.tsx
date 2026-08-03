@@ -63,6 +63,9 @@ export default async function LessonPage({
         <VideoPlayer
           provider={lesson.provider}
           videoId={lesson.videoId}
+          onEnded={() => {
+            console.log("Lesson finished 🎉");
+          }}
         />
 
         <LessonInfo

@@ -10,6 +10,7 @@ interface Props {
   onPlay: () => void;
   onPause: () => void;
   onLoading: (loading: boolean) => void;
+  onEnded: () => void;
   onClick?: () => void;
 }
 
@@ -22,6 +23,7 @@ const VideoCanvas = forwardRef<HTMLVideoElement, Props>(
       onPlay,
       onPause,
       onLoading,
+      onEnded,
       onClick,
     },
     ref
@@ -72,6 +74,11 @@ const VideoCanvas = forwardRef<HTMLVideoElement, Props>(
       );
 
       video.addEventListener(
+        "ended",
+        onEnded
+      );
+
+      video.addEventListener(
         "timeupdate",
         update
       );
@@ -86,6 +93,11 @@ const VideoCanvas = forwardRef<HTMLVideoElement, Props>(
         video.removeEventListener(
           "loadedmetadata",
           loaded
+        );
+
+        video.removeEventListener(
+          "ended",
+          onEnded
         );
 
         video.removeEventListener(

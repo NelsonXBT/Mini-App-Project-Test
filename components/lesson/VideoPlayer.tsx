@@ -3,16 +3,21 @@ import IMEPlayer from "@/components/player/IMEPlayer";
 type VideoPlayerProps = {
   provider: string;
   videoId: string;
+  onEnded: () => void;
 };
 
 export default function VideoPlayer({
   provider,
   videoId,
+  onEnded,
 }: VideoPlayerProps) {
   if (provider === "bunny") {
     return (
       <div className="mb-3 overflow-hidden rounded-xl border border-zinc-800 bg-black">
-        <IMEPlayer src={videoId} />
+        <IMEPlayer
+        src={videoId}
+        onEnded={onEnded}
+      />
       </div>
     );
   }

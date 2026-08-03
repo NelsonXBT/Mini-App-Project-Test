@@ -12,6 +12,7 @@ import type { IMEPlayerProps } from "./types";
 
 export default function IMEPlayer({
   src,
+  onEnded,
 }: IMEPlayerProps) {
 const router = useRouter();
 const pathname = usePathname();
@@ -238,6 +239,7 @@ const isPlayerPage = pathname === "/player";
             setControlsVisible(true);
           }}
           onLoading={setLoading}
+          onEnded={onEnded}
           onClick={toggleControls}
         />
 

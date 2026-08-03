@@ -17,6 +17,7 @@ import type { IMEPlayerProps } from "./types";
 
 export default function FullscreenPlayer({
   src,
+  onEnded,
 }: IMEPlayerProps) {
   const router = useRouter();
 
@@ -287,6 +288,7 @@ function forward10() {
           setControlsVisible(true);
         }}
         onLoading={setLoading}
+        onEnded={onEnded}
         onClick={toggleControls}
       />
 
