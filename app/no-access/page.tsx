@@ -1,3 +1,7 @@
+import Link from "next/link";
+
+
+
 export default function NoAccessPage() {
   return (
     <main className="mx-auto flex min-h-[70vh] max-w-lg flex-col items-center justify-center px-6 text-center">
@@ -10,12 +14,12 @@ export default function NoAccessPage() {
         You don't currently have access to any IME Creative Lab products.
       </p>
 
-      <a
-        href="https://YOUR-NESTUGE-LINK"
+      <Link
+        href="/courses"
         className="mt-8 rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-black"
       >
         Browse Courses
-      </a>
+      </Link>
 
     </main>
   );
