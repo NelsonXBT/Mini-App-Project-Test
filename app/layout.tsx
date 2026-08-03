@@ -7,6 +7,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import BottomNavigation from "@/components/layout/BottomNavigation";
 import TelegramAuth from "@/components/telegram/TelegramAuth";
+import { SessionProvider } from "@/contexts/SessionContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,18 +40,19 @@ export default function RootLayout({
   strategy="beforeInteractive"
 />
 
-<TelegramAuth>
-  <main className="app-main min-h-screen px-5 pt-3 pb-20">
-    <Header />
+<SessionProvider>
+  <TelegramAuth>
+    <main className="app-main min-h-screen px-5 pt-3 pb-20">
+      <Header />
 
-    <div className="mt-3">
-      {children}
-    </div>
-  </main>
+      <div className="mt-3">
+        {children}
+      </div>
+    </main>
 
-  <BottomNavigation />
-</TelegramAuth>
-      </body>
+    <BottomNavigation />
+  </TelegramAuth>
+</SessionProvider>      </body>
     </html>
   );
 }

@@ -3,6 +3,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import SplashScreen from "@/components/common/SplashScreen";
 import NoAccessPage from "@/app/no-access/page";
+import { useSession } from "@/contexts/SessionContext";
 
 export default function TelegramAuth({
   children,
@@ -11,6 +12,7 @@ export default function TelegramAuth({
 }) {
   const [loading, setLoading] = useState(true);
   const [hasAccess, setHasAccess] = useState(false);
+  const { setSession } = useSession();
 
   useEffect(() => {
     async function authenticate() {
@@ -44,6 +46,18 @@ export default function TelegramAuth({
         const data = await response.json();
 
         console.log("Telegram Auth:", data);
+
+        setSession({
+            user: data.user ?? null,
+            hasAccess: data.hasAccess,
+            unlockedCourses: data.unlockedCourses ?? [],
+            });
+
+            console.log("Session saved:", {
+              user: data.user,
+              hasAccess: data.hasAccess,
+              unlockedCourses: data.unlockedCourses,
+              });
 
         if (!response.ok || !data.success) {
           console.error("Authentication failed:", data);
