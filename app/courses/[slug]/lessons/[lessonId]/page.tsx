@@ -24,6 +24,8 @@ export default async function LessonPage({
   const { slug, lessonId } = await params;
 
   const lesson = await getLesson(slug, lessonId);
+  console.log("LESSON");
+console.dir(lesson, { depth: null });
 
   if (!lesson) {
     notFound();
