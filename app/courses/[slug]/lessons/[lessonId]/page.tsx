@@ -4,7 +4,7 @@ import { getLesson, getCourseLessons } from "@/lib/db/lessons";
 
 import LessonHeader from "@/components/lesson/LessonHeader";
 import LessonMeta from "@/components/lesson/LessonMeta";
-import VideoPlayer from "@/components/lesson/VideoPlayer";
+import LessonVideoSection from "@/components/lesson/LessonVideoSection";
 import LessonDescription from "@/components/lesson/LessonDescription";
 import LessonNavigation from "@/components/lesson/LessonNavigation";
 import LessonInfo from "@/components/lesson/LessonInfo";
@@ -62,7 +62,7 @@ console.dir(lesson, { depth: null });
           completed={false}
         />
 
-        <VideoPlayer
+        <LessonVideoSection
           provider={lesson.provider}
           videoId={lesson.videoId}
         />
