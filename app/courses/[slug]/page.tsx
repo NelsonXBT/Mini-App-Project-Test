@@ -1,7 +1,12 @@
-import { getCourse } from "@/lib/db/courses";
+
 import CourseContent from "@/components/course/CourseContent";
 import CourseProgress from "@/components/course/CourseProgress";
 import CourseGuard from "@/components/guards/CourseGuard";
+
+import {
+  getCourse,
+  getCourseProgress,
+} from "@/lib/db/courses";
 
 type Props = {
   params: Promise<{
@@ -13,6 +18,21 @@ export default async function CoursePage({ params }: Props) {
   const { slug } = await params;
 
   const course = await getCourse(slug);
+
+if (!course) {
+  return (
+    <main>
+      <h1 className="text-2xl font-bold">
+        Course not found
+      </h1>
+    </main>
+  );
+}
+
+const courseProgress = await getCourseProgress(course.id);
+
+console.log("COURSE PROGRESS");
+console.dir(courseProgress, { depth: null });
 
   if (!course) {
     return (
