@@ -256,6 +256,14 @@ async function saveCurrentProgress() {
   });
 }
 
+      useEffect(() => {
+        registerPlayer(saveCurrentProgress);
+
+        return () => {
+          registerPlayer(async () => {});
+        };
+      }, []);
+
 
   async function fullscreen() {
   await saveAndNavigate(
@@ -296,9 +304,6 @@ async function saveCurrentProgress() {
 
             saveCurrentProgress();
 
-            useEffect(() => {
-              registerPlayer(saveCurrentProgress);
-            }, []);
           }}
           onLoading={setLoading}
           onEnded={onEnded}
