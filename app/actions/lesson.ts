@@ -17,12 +17,12 @@ export async function completeLesson(lessonId: string) {
         lessonId,
       },
     },
-    update: {
-      completed: true,
-      progress: 100,
-      currentTime: 0,
-      lastWatchedAt: new Date(),
-    },
+        update: {
+        completed: true,
+        progress: 100,
+        currentTime: 0,
+        lastWatchedAt: new Date(),
+        },
     create: {
       userId: user.id,
       lessonId,

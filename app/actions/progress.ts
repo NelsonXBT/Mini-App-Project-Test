@@ -34,7 +34,6 @@ type SaveLessonProgressInput = {
             currentTime,
             progress,
             completed,
-            completedAt: completed ? new Date() : null,
             lastWatchedAt: new Date(),
             },
                 create: {
