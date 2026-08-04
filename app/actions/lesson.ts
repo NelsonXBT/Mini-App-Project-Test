@@ -21,7 +21,6 @@ export async function completeLesson(lessonId: string) {
       completed: true,
       progress: 100,
       currentTime: 0,
-      completedAt: new Date(),
       lastWatchedAt: new Date(),
     },
     create: {
@@ -30,6 +29,7 @@ export async function completeLesson(lessonId: string) {
       completed: true,
       progress: 100,
       currentTime: 0,
+      completedAt: new Date(),
       lastWatchedAt: new Date(),
     },
   });
