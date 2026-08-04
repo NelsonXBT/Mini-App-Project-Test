@@ -92,26 +92,41 @@ export async function getCourseProgress(
     };
   }
 
-  const completedLessons =
-    await prisma.lessonProgress.count({
-      where: {
-        userId: user.id,
-        completed: true,
-        lessonId: {
-          in: lessons.map(
-            (lesson) => lesson.id
-          ),
-        },
+  const lessonProgress =
+  await prisma.lessonProgress.findMany({
+    where: {
+      userId: user.id,
+      lessonId: {
+        in: lessons.map(
+          (lesson) => lesson.id
+        ),
       },
-    });
+    },
+    select: {
+      progress: true,
+      completed: true,
+    },
+  });
 
-  return {
-    totalLessons,
-    completedLessons,
-    progress: Math.round(
-      (completedLessons / totalLessons) * 100
-    ),
-  };
+const completedLessons =
+  lessonProgress.filter(
+    (lesson) => lesson.completed
+  ).length;
+
+const totalProgress =
+  lessonProgress.reduce(
+    (sum, lesson) => sum + lesson.progress,
+    0
+  );
+
+return {
+  totalLessons,
+  completedLessons,
+  progress: Math.round(
+    totalProgress / totalLessons
+  ),
+};
+
 }
 
 
