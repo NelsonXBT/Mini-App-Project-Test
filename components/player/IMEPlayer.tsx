@@ -161,22 +161,36 @@ const isPlayerPage = pathname === "/player";
     }, [showRotateOverlay]);
 
 
-useEffect(() => {
-  return () => {
-    const video = videoRef.current;
+      useEffect(() => {
+        function handlePageHide() {
+          saveProgress();
+        }
 
-    if (!video) return;
+        function handleVisibilityChange() {
+          if (document.visibilityState === "hidden") {
+            saveProgress();
+          }
+        }
 
-    if (!video.duration) return;
+        window.addEventListener("pagehide", handlePageHide);
 
-    saveLessonProgress({
-      lessonId,
-      currentTime: Math.floor(video.currentTime),
-      progress:
-        (video.currentTime / video.duration) * 100,
-    });
-  };
-}, [lessonId]);
+        document.addEventListener(
+          "visibilitychange",
+          handleVisibilityChange
+        );
+
+        return () => {
+          window.removeEventListener(
+            "pagehide",
+            handlePageHide
+          );
+
+          document.removeEventListener(
+            "visibilitychange",
+            handleVisibilityChange
+          );
+        };
+      }, []);
 
 
   function togglePlay() {
