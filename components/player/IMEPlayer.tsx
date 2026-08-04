@@ -8,6 +8,7 @@ import PlayButton from "./PlayButton";
 import VideoCanvas from "./VideoCanvas";
 import PlayerControls from "./PlayerControls";
 import { saveLessonProgress } from "@/app/actions/progress";
+import { saveAndNavigate } from "@/lib/player/navigation";
 
 import type { IMEPlayerProps } from "./types";
 
@@ -259,7 +260,12 @@ async function saveProgress() {
 
 
   async function fullscreen() {
-  router.push(`/player?lessonId=${lessonId}`);
+  await saveAndNavigate(
+    saveProgress,
+    () => {
+      router.push(`/player?lessonId=${lessonId}`);
+    }
+  );
 }
 
   return (
