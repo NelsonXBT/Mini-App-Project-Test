@@ -7,8 +7,9 @@ import LoadingSpinner from "./LoadingSpinner";
 import PlayButton from "./PlayButton";
 import VideoCanvas from "./VideoCanvas";
 import PlayerControls from "./PlayerControls";
-import { saveLessonProgress } from "@/app/actions/progress";
+import { saveProgress } from "@/lib/player/progress";
 import { saveAndNavigate } from "@/lib/player/navigation";
+import { registerPlayer } from "@/lib/player/controller";
 
 import type { IMEPlayerProps } from "./types";
 
@@ -164,12 +165,12 @@ const isPlayerPage = pathname === "/player";
 
       useEffect(() => {
         function handlePageHide() {
-          saveProgress();
+          saveCurrentProgress();
         }
 
         function handleVisibilityChange() {
           if (document.visibilityState === "hidden") {
-            saveProgress();
+            saveCurrentProgress();
           }
         }
 
@@ -243,25 +244,22 @@ const isPlayerPage = pathname === "/player";
   }
 
 
-async function saveProgress() {
+async function saveCurrentProgress() {
   const video = videoRef.current;
 
   if (!video) return;
 
-  if (!video.duration) return;
-
-  await saveLessonProgress({
+  await saveProgress({
     lessonId,
-    currentTime: Math.floor(video.currentTime),
-    progress:
-      (video.currentTime / video.duration) * 100,
+    currentTime: video.currentTime,
+    duration: video.duration,
   });
 }
 
 
   async function fullscreen() {
   await saveAndNavigate(
-    saveProgress,
+    saveCurrentProgress,
     () => {
       router.push(`/player?lessonId=${lessonId}`);
     }
@@ -296,7 +294,11 @@ async function saveProgress() {
             setPlaying(false);
             setControlsVisible(true);
 
-            saveProgress();
+            saveCurrentProgress();
+
+            useEffect(() => {
+              registerPlayer(saveCurrentProgress);
+            }, []);
           }}
           onLoading={setLoading}
           onEnded={onEnded}

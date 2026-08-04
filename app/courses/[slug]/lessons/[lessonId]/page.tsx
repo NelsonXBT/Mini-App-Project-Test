@@ -89,6 +89,7 @@ console.dir(lesson, { depth: null });
         <MarkComplete completed={false} />
 
         <LessonNavigation
+          lessonId={lesson.id}
           courseSlug={slug}
           previousLesson={previousLesson}
           nextLesson={nextLesson}
