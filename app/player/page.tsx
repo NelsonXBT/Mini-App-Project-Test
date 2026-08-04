@@ -26,14 +26,16 @@ export default async function PlayerPage({
   await getLessonProgress(lessonId);
 
   if (!lesson) {
-    notFound();
-  }
+  notFound();
+}
 
+return (
   <FullscreenVideoSection
-  lessonId={lesson.id}
-  videoId={lesson.videoId}
-  startTime={
-    lessonProgress?.currentTime ?? 0
-  }
-/>
+    lessonId={lesson.id}
+    videoId={lesson.videoId}
+    startTime={
+      lessonProgress?.currentTime ?? 0
+    }
+  />
+);
 }
