@@ -19,9 +19,9 @@ import { completeLesson } from "@/app/actions/lesson";
 
 export default function FullscreenPlayer({
   src,
-  startTime,
   onEnded,
 }: IMEPlayerProps) {
+  
   const router = useRouter();
 
   const videoRef =
@@ -278,18 +278,10 @@ function forward10() {
         ref={videoRef}
         src={src}
         onLoaded={(duration) => {
-    setDuration(duration);
-
-      if (
-        videoRef.current &&
-        startTime > 0 &&
-        startTime < duration
-      ) {
-        videoRef.current.currentTime = startTime;
-      }
-
-      setLoading(false);
-      }}
+          setDuration(duration);
+          setLoading(false);
+        }}
+        
         onTimeUpdate={setCurrent}
         onPlay={() => {
           setPlaying(true);

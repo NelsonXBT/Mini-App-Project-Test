@@ -16,7 +16,6 @@ import type { IMEPlayerProps } from "./types";
 export default function IMEPlayer({
   lessonId,
   src,
-  startTime,
   onEnded,
 }: IMEPlayerProps) {
 const router = useRouter();
@@ -267,21 +266,13 @@ async function saveCurrentProgress() {
 
 
     async function fullscreen() {
-      const video = videoRef.current;
-
-      const currentTime = Math.floor(
-        video?.currentTime ?? 0
-      );
-
-      await saveAndNavigate(
-        saveCurrentProgress,
-        () => {
-          router.push(
-            `/player?lessonId=${lessonId}&t=${currentTime}`
-          );
-        }
-      );
+  await saveAndNavigate(
+    saveCurrentProgress,
+    () => {
+      router.push(`/player?lessonId=${lessonId}`);
     }
+    );
+  }
 
   return (
     <>
@@ -299,18 +290,10 @@ async function saveCurrentProgress() {
           ref={videoRef}
           src={src}
           onLoaded={(duration) => {
-            setDuration(duration);
-
-            if (
-              videoRef.current &&
-              startTime > 0 &&
-              startTime < duration
-            ) {
-              videoRef.current.currentTime = startTime;
-            }
-
-            setLoading(false);
-          }}
+              setDuration(duration);
+              setLoading(false);
+            }}
+            
           onTimeUpdate={setCurrent}
           onPlay={() => {
             setPlaying(true);

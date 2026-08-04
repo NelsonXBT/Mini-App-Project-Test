@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import {
   getLesson,
   getCourseLessons,
-  getLessonProgress,
 } from "@/lib/db/lessons";
 
 import LessonHeader from "@/components/lesson/LessonHeader";
@@ -28,8 +27,6 @@ export default async function LessonPage({
   const { slug, lessonId } = await params;
 
   const lesson = await getLesson(slug, lessonId);
-  const lessonProgress =
-  await getLessonProgress(lessonId);
 
   console.log("LESSON");
 console.dir(lesson, { depth: null });
@@ -69,14 +66,11 @@ console.dir(lesson, { depth: null });
           completed={false}
         />
 
-        <LessonVideoSection
-          lessonId={lesson.id}
-          provider={lesson.provider}
-          videoId={lesson.videoId}
-          startTime={
-            lessonProgress?.currentTime ?? 0
-          }
-        />
+       <LessonVideoSection
+        lessonId={lesson.id}
+        provider={lesson.provider}
+        videoId={lesson.videoId}
+      />
 
         <LessonInfo
           lessonNumber={currentIndex + 1}

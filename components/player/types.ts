@@ -3,7 +3,6 @@
 export interface IMEPlayerProps {
   lessonId: string;
   src: string;
-  startTime: number;
   onEnded?: () => void;
   title?: string;
   poster?: string;
