@@ -1,4 +1,6 @@
-import Link from "next/link";
+
+
+import SaveLink from "@/components/common/SaveLink";
 import { ArrowLeft } from "lucide-react";
 
 type LessonHeaderProps = {
@@ -12,13 +14,12 @@ export default function LessonHeader({
 }: LessonHeaderProps) {
   return (
     <header className="mb-6 flex items-center gap-4">
-      <Link
-        href={`/courses/${courseSlug}`}
-        aria-label="Back to course"
-        className="rounded-full p-2 transition hover:bg-zinc-800 hover:text-cyan-400"
-      >
+      <SaveLink
+          href={`/courses/${courseSlug}`}
+          className="rounded-full p-2 transition hover:bg-zinc-800 hover:text-cyan-400"
+        >
         <ArrowLeft className="h-5 w-5" />
-      </Link>
+      </SaveLink>
 
       <h1 className="flex-1 truncate text-lg font-semibold text-white">
         {courseTitle}
