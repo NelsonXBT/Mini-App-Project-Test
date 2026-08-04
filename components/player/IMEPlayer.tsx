@@ -7,6 +7,7 @@ import LoadingSpinner from "./LoadingSpinner";
 import PlayButton from "./PlayButton";
 import VideoCanvas from "./VideoCanvas";
 import PlayerControls from "./PlayerControls";
+import { saveLessonProgress } from "@/app/actions/progress";
 
 import type { IMEPlayerProps } from "./types";
 
@@ -207,6 +208,23 @@ const isPlayerPage = pathname === "/player";
     setVolume(value);
   }
 
+
+async function saveProgress() {
+  const video = videoRef.current;
+
+  if (!video) return;
+
+  if (!video.duration) return;
+
+  await saveLessonProgress({
+    lessonId,
+    currentTime: Math.floor(video.currentTime),
+    progress:
+      (video.currentTime / video.duration) * 100,
+  });
+}
+
+
   async function fullscreen() {
   router.push(`/player?lessonId=${lessonId}`);
 }
@@ -238,6 +256,8 @@ const isPlayerPage = pathname === "/player";
           onPause={() => {
             setPlaying(false);
             setControlsVisible(true);
+
+            saveProgress();
           }}
           onLoading={setLoading}
           onEnded={onEnded}
