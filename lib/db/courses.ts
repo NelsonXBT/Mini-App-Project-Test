@@ -178,26 +178,40 @@ export async function getContinueLearningCourse() {
     0
   );
 
-  const completedLessons =
-    await prisma.lessonProgress.count({
-      where: {
-        userId: user.id,
-        completed: true,
-        lesson: {
-          module: {
-            courseId: course.id,
-          },
+  const lessonProgress =
+  await prisma.lessonProgress.findMany({
+    where: {
+      userId: user.id,
+      lesson: {
+        module: {
+          courseId: course.id,
         },
       },
-    });
+    },
+    select: {
+      progress: true,
+      completed: true,
+    },
+  });
 
-  return {
-    course,
-    lesson: latestProgress.lesson,
-    totalLessons,
-    completedLessons,
-    progress: Math.round(
-      (completedLessons / totalLessons) * 100
-    ),
-  };
+const completedLessons =
+  lessonProgress.filter(
+    (lesson) => lesson.completed
+  ).length;
+
+const totalProgress =
+  lessonProgress.reduce(
+    (sum, lesson) => sum + lesson.progress,
+    0
+  );
+
+return {
+  course,
+  lesson: latestProgress.lesson,
+  totalLessons,
+  completedLessons,
+  progress: Math.round(
+    totalProgress / totalLessons
+  ),
+};
 }
