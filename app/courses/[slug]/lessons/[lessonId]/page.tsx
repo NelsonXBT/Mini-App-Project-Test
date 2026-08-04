@@ -9,7 +9,7 @@ import LessonDescription from "@/components/lesson/LessonDescription";
 import LessonNavigation from "@/components/lesson/LessonNavigation";
 import LessonInfo from "@/components/lesson/LessonInfo";
 import UpNext from "@/components/lesson/UpNext";
-import MarkComplete from "@/components/lesson/MarkComplete";
+
 
 type Props = {
   params: Promise<{
@@ -86,7 +86,6 @@ console.dir(lesson, { depth: null });
           />
         )}
 
-        <MarkComplete completed={false} />
 
         <LessonNavigation
           lessonId={lesson.id}
