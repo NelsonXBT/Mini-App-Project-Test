@@ -1,7 +1,7 @@
 
 
 
-import SaveLink from "@/components/player/SaveLink";
+import SaveLink from "@/components/common/SaveLink";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Prisma } from "@prisma/client";
 
@@ -25,7 +25,7 @@ export default function LessonNavigation({
         {previousLesson ? (
           <SaveLink
             href={`/courses/${courseSlug}/lessons/${previousLesson.id}`}
-            save={() => Promise.resolve()}
+            onBeforeNavigate={() => Promise.resolve()}
             className="flex items-center justify-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm font-medium text-white transition hover:border-cyan-500 hover:text-cyan-400"
           >
             <ChevronLeft size={18} />
@@ -38,7 +38,7 @@ export default function LessonNavigation({
         {nextLesson ? (
           <SaveLink
             href={`/courses/${courseSlug}/lessons/${nextLesson.id}`}
-            save={() => Promise.resolve()}
+            onBeforeNavigate={() => Promise.resolve()}
             className="flex items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 py-3 text-sm font-semibold text-black transition hover:bg-cyan-400"
           >
             Next
