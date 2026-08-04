@@ -1,5 +1,6 @@
 "use client";
 
+import { saveProgress } from "@/lib/player/progress";
 import { useEffect, useRef, useState } from "react";
 import {
   Minimize2,
@@ -18,6 +19,7 @@ import { completeLesson } from "@/app/actions/lesson";
 
 
 export default function FullscreenPlayer({
+  lessonId,
   src,
   onEnded,
 }: IMEPlayerProps) {
@@ -256,6 +258,18 @@ function forward10() {
     setVolume(value);
   }
 
+  async function saveCurrentProgress() {
+  const video = videoRef.current;
+
+  if (!video) return;
+
+  await saveProgress({
+    lessonId,
+    currentTime: video.currentTime,
+    duration: video.duration,
+  });
+}
+
   async function exitPlayer() {
   try {
     screen.orientation.unlock();
@@ -270,7 +284,9 @@ function forward10() {
     } catch {}
   }
 
-  router.back();
+  await saveCurrentProgress();
+
+router.back();
 }  return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
 
@@ -281,7 +297,7 @@ function forward10() {
           setDuration(duration);
           setLoading(false);
         }}
-        
+
         onTimeUpdate={setCurrent}
         onPlay={() => {
           setPlaying(true);
@@ -290,6 +306,8 @@ function forward10() {
         onPause={() => {
           setPlaying(false);
           setControlsVisible(true);
+
+          saveCurrentProgress();
         }}
         onLoading={setLoading}
         onEnded={onEnded}
