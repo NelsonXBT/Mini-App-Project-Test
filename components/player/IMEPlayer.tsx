@@ -160,6 +160,25 @@ const isPlayerPage = pathname === "/player";
     };
     }, [showRotateOverlay]);
 
+
+useEffect(() => {
+  return () => {
+    const video = videoRef.current;
+
+    if (!video) return;
+
+    if (!video.duration) return;
+
+    saveLessonProgress({
+      lessonId,
+      currentTime: Math.floor(video.currentTime),
+      progress:
+        (video.currentTime / video.duration) * 100,
+    });
+  };
+}, [lessonId]);
+
+
   function togglePlay() {
     const video = videoRef.current;
 
