@@ -2,20 +2,19 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ReactNode } from "react";
+
+import { savePlayerProgress } from "@/lib/player/controller";
 
 type SaveLinkProps = {
   href: string;
-  children: ReactNode;
+  children: React.ReactNode;
   className?: string;
-  onBeforeNavigate: () => Promise<void>;
 };
 
 export default function SaveLink({
   href,
   children,
   className,
-  onBeforeNavigate,
 }: SaveLinkProps) {
   const router = useRouter();
 
@@ -25,7 +24,7 @@ export default function SaveLink({
     e.preventDefault();
 
     try {
-      await onBeforeNavigate();
+      await savePlayerProgress();
     } catch (error) {
       console.error(error);
     }

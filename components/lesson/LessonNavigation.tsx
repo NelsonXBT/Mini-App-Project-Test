@@ -24,10 +24,9 @@ export default function LessonNavigation({
       <div className="grid grid-cols-2 gap-3">
         {previousLesson ? (
           <SaveLink
-            href={`/courses/${courseSlug}/lessons/${previousLesson.id}`}
-            onBeforeNavigate={() => Promise.resolve()}
-            className="flex items-center justify-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm font-medium text-white transition hover:border-cyan-500 hover:text-cyan-400"
-          >
+              href={`/courses/${courseSlug}/lessons/${previousLesson.id}`}
+              className="flex items-center justify-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-sm font-medium text-white transition hover:border-cyan-500 hover:text-cyan-400"
+            >
             <ChevronLeft size={18} />
             Previous
           </SaveLink>
@@ -38,7 +37,6 @@ export default function LessonNavigation({
         {nextLesson ? (
           <SaveLink
             href={`/courses/${courseSlug}/lessons/${nextLesson.id}`}
-            onBeforeNavigate={() => Promise.resolve()}
             className="flex items-center justify-center gap-2 rounded-xl bg-cyan-500 px-4 py-3 text-sm font-semibold text-black transition hover:bg-cyan-400"
           >
             Next
