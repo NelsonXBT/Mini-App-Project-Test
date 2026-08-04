@@ -14,6 +14,8 @@ import VideoCanvas from "./VideoCanvas";
 import PlayerControls from "./PlayerControls";
 
 import type { IMEPlayerProps } from "./types";
+import { completeLesson } from "@/app/actions/lesson";
+
 
 export default function FullscreenPlayer({
   src,
