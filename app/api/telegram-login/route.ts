@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
+
+
+import crypto from "crypto";
+import { cookies } from "next/headers";
 import { prisma } from "@/lib/prisma";
 import { verifyTelegramInitData } from "@/lib/telegram/verify";
 import { checkMembership } from "@/lib/telegram/checkMembership";
@@ -42,29 +46,7 @@ export async function POST(req: NextRequest) {
     console.log("✅ Telegram verified");
     console.log(telegramUser);
 
-    console.log("Saving user...");
-
-    const user = await prisma.user.upsert({
-      where: {
-        telegramId: BigInt(telegramUser.id),
-      },
-      update: {
-        username: telegramUser.username ?? null,
-        firstName: telegramUser.first_name,
-        lastName: telegramUser.last_name ?? null,
-        photoUrl: telegramUser.photo_url ?? null,
-      },
-      create: {
-        telegramId: BigInt(telegramUser.id),
-        username: telegramUser.username ?? null,
-        firstName: telegramUser.first_name,
-        lastName: telegramUser.last_name ?? null,
-        photoUrl: telegramUser.photo_url ?? null,
-      },
-    });
-
-    console.log("✅ User saved");
-
+    
     console.log("Loading published courses...");
 
     const courses = await prisma.course.findMany({
@@ -75,7 +57,10 @@ export async function POST(req: NextRequest) {
 
     console.log("Published courses:", courses.length);
 
-    const unlockedCourses: string[] = [];
+    const unlockedCourses: {
+          id: string;
+          slug: string;
+        }[] = [];
 
     for (const course of courses) {
       console.log("--------------------------------");
@@ -103,44 +88,113 @@ export async function POST(req: NextRequest) {
         continue;
       }
 
-      console.log("Creating enrollment...");
-
-      await prisma.enrollment.upsert({
-        where: {
-          userId_courseId: {
-            userId: user.id,
-            courseId: course.id,
-          },
-        },
-        update: {
-          status: "ACTIVE",
-          lastVerifiedAt: new Date(),
-        },
-        create: {
-          userId: user.id,
-          courseId: course.id,
-          status: "ACTIVE",
-          lastVerifiedAt: new Date(),
-        },
+    
+      unlockedCourses.push({
+        id: course.id,
+        slug: course.slug,
       });
+          }
 
-      console.log("✅ Enrollment created");
 
-      unlockedCourses.push(course.slug);
-    }
+if (unlockedCourses.length === 0) {
+  console.log("❌ No accessible courses");
+
+  return NextResponse.json({
+    success: true,
+    hasAccess: false,
+    unlockedCourses: [],
+  });
+}
+
+
+console.log("Saving user...");
+
+    const user = await prisma.user.upsert({
+      where: {
+        telegramId: BigInt(telegramUser.id),
+      },
+      update: {
+        username: telegramUser.username ?? null,
+        firstName: telegramUser.first_name,
+        lastName: telegramUser.last_name ?? null,
+        photoUrl: telegramUser.photo_url ?? null,
+      },
+      create: {
+        telegramId: BigInt(telegramUser.id),
+        username: telegramUser.username ?? null,
+        firstName: telegramUser.first_name,
+        lastName: telegramUser.last_name ?? null,
+        photoUrl: telegramUser.photo_url ?? null,
+      },
+    });
+
+    console.log("✅ User saved");
+
+
+    console.log("Creating enrollments...");
+
+for (const course of unlockedCourses) {
+  await prisma.enrollment.upsert({
+    where: {
+      userId_courseId: {
+        userId: user.id,
+        courseId: course.id,
+      },
+    },
+    update: {
+      status: "ACTIVE",
+      lastVerifiedAt: new Date(),
+    },
+    create: {
+      userId: user.id,
+      courseId: course.id,
+      status: "ACTIVE",
+      lastVerifiedAt: new Date(),
+    },
+  });
+}
+
+console.log("✅ Enrollments created");
+
+
 
     console.log("Unlocked Courses:");
     console.log(unlockedCourses);
 
     console.log("========== LOGIN COMPLETE ==========");
 
-    return NextResponse.json({
-  success: true,
+    const token = crypto.randomUUID();
 
-  hasAccess: unlockedCourses.length > 0,
+const expiresAt = new Date(
+  Date.now() + 30 * 24 * 60 * 60 * 1000
+);
 
-  unlockedCourses,
+await prisma.session.create({
+  data: {
+    token,
+    userId: user.id,
+    expiresAt,
+  },
 });
+
+const cookieStore = await cookies();
+
+cookieStore.set("session", token, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax",
+  expires: expiresAt,
+  path: "/",
+});
+
+
+    return NextResponse.json({
+    success: true,
+    hasAccess: unlockedCourses.length > 0,
+    unlockedCourses: unlockedCourses.map(
+      (course) => course.slug
+      ),
+    });
 
   } catch (error) {
     console.error("========== LOGIN FAILED ==========");

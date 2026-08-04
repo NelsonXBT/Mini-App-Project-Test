@@ -1,6 +1,8 @@
 "use client";
 
 import FullscreenPlayer from "./FullscreenPlayer";
+import { completeLesson } from "@/app/actions/lesson";
+
 
 type FullscreenVideoSectionProps = {
   lessonId: string;
@@ -11,15 +13,11 @@ export default function FullscreenVideoSection({
   lessonId,
   videoId,
 }: FullscreenVideoSectionProps) {
-  function handleEnded() {
-    console.log("Fullscreen lesson finished 🎉");
+  async function handleEnded() {
+  console.log("Fullscreen lesson finished 🎉");
 
-    // Later:
-    // - Mark lesson complete
-    // - Save progress
-    // - Unlock next lesson
-    // - Auto-play next lesson
-  }
+  await completeLesson(lessonId);
+}
 
   return (
     <FullscreenPlayer
