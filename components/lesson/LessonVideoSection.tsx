@@ -1,6 +1,7 @@
 "use client";
 
 import VideoPlayer from "./VideoPlayer";
+import { completeLesson } from "@/app/actions/lesson";
 
 type LessonVideoSectionProps = {
   lessonId: string;
@@ -13,15 +14,11 @@ export default function LessonVideoSection({
   provider,
   videoId,
 }: LessonVideoSectionProps) {
-  function handleEnded() {
-    console.log("Lesson finished 🎉");
+  async function handleEnded() {
+  console.log("Lesson finished 🎉");
 
-    // Later:
-    // - Mark lesson complete
-    // - Save progress
-    // - Unlock next lesson
-    // - Update progress bar
-  }
+  await completeLesson(lessonId);
+}
 
   return (
     <VideoPlayer
