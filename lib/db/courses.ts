@@ -54,3 +54,62 @@ export async function getCourse(slug: string) {
 
   return course;
 }
+
+
+import { getCurrentUser } from "@/lib/auth";
+
+export async function getCourseProgress(
+  courseId: string
+) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return {
+      totalLessons: 0,
+      completedLessons: 0,
+      progress: 0,
+    };
+  }
+
+  const lessons = await prisma.lesson.findMany({
+    where: {
+      module: {
+        courseId,
+      },
+    },
+    select: {
+      id: true,
+    },
+  });
+
+  const totalLessons = lessons.length;
+
+  if (totalLessons === 0) {
+    return {
+      totalLessons: 0,
+      completedLessons: 0,
+      progress: 0,
+    };
+  }
+
+  const completedLessons =
+    await prisma.lessonProgress.count({
+      where: {
+        userId: user.id,
+        completed: true,
+        lessonId: {
+          in: lessons.map(
+            (lesson) => lesson.id
+          ),
+        },
+      },
+    });
+
+  return {
+    totalLessons,
+    completedLessons,
+    progress: Math.round(
+      (completedLessons / totalLessons) * 100
+    ),
+  };
+}
