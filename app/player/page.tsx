@@ -8,14 +8,16 @@ import {
 
 type Props = {
   searchParams: Promise<{
-    lessonId?: string;
+  lessonId?: string;
+  t?: string;
   }>;
 };
 
 export default async function PlayerPage({
   searchParams,
 }: Props) {
-  const { lessonId } = await searchParams;
+  const { lessonId, t } =
+  await searchParams;
 
   if (!lessonId) {
     notFound();
@@ -34,8 +36,10 @@ return (
     lessonId={lesson.id}
     videoId={lesson.videoId}
     startTime={
-      lessonProgress?.currentTime ?? 0
-    }
+  t
+    ? Number(t)
+    : lessonProgress?.currentTime ?? 0
+  }
   />
 );
 }

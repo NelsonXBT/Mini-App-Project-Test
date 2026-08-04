@@ -266,14 +266,22 @@ async function saveCurrentProgress() {
       }, []);
 
 
-  async function fullscreen() {
-  await saveAndNavigate(
-    saveCurrentProgress,
-    () => {
-      router.push(`/player?lessonId=${lessonId}`);
+    async function fullscreen() {
+      const video = videoRef.current;
+
+      const currentTime = Math.floor(
+        video?.currentTime ?? 0
+      );
+
+      await saveAndNavigate(
+        saveCurrentProgress,
+        () => {
+          router.push(
+            `/player?lessonId=${lessonId}&t=${currentTime}`
+          );
+        }
+      );
     }
-  );
-}
 
   return (
     <>
