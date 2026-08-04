@@ -7,11 +7,13 @@ import { completeLesson } from "@/app/actions/lesson";
 type FullscreenVideoSectionProps = {
   lessonId: string;
   videoId: string;
+  startTime: number;
 };
 
 export default function FullscreenVideoSection({
   lessonId,
   videoId,
+  startTime,
 }: FullscreenVideoSectionProps) {
   async function handleEnded() {
   console.log("Fullscreen lesson finished 🎉");
@@ -21,9 +23,10 @@ export default function FullscreenVideoSection({
 
   return (
     <FullscreenPlayer
-      lessonId={lessonId}
-      src={videoId}
-      onEnded={handleEnded}
-    />
+  lessonId={lessonId}
+  src={videoId}
+  startTime={startTime}
+  onEnded={handleEnded}
+  />
   );
 }

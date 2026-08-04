@@ -7,12 +7,14 @@ type LessonVideoSectionProps = {
   lessonId: string;
   provider: string;
   videoId: string;
+  startTime: number;
 };
 
 export default function LessonVideoSection({
   lessonId,
   provider,
   videoId,
+  startTime,
 }: LessonVideoSectionProps) {
   async function handleEnded() {
   console.log("Lesson finished 🎉");
@@ -22,10 +24,11 @@ export default function LessonVideoSection({
 
   return (
     <VideoPlayer
-    lessonId={lessonId}
-    provider={provider}
-    videoId={videoId}
-    onEnded={handleEnded}
+  lessonId={lessonId}
+  provider={provider}
+  videoId={videoId}
+  startTime={startTime}
+  onEnded={handleEnded}
 />
   );
 }

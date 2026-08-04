@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation";
 
 import FullscreenVideoSection from "@/components/player/FullscreenVideoSection";
-import { getLessonById } from "@/lib/db/lessons";
+import {
+  getLessonById,
+  getLessonProgress,
+} from "@/lib/db/lessons";
 
 type Props = {
   searchParams: Promise<{
@@ -19,15 +22,18 @@ export default async function PlayerPage({
   }
 
   const lesson = await getLessonById(lessonId);
+  const lessonProgress =
+  await getLessonProgress(lessonId);
 
   if (!lesson) {
     notFound();
   }
 
-  return (
   <FullscreenVideoSection
-    lessonId={lesson.id}
-    videoId={lesson.videoId}
-  />
-);
+  lessonId={lesson.id}
+  videoId={lesson.videoId}
+  startTime={
+    lessonProgress?.currentTime ?? 0
+  }
+/>
 }

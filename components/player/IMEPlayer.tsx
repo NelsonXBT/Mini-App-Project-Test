@@ -16,6 +16,7 @@ import type { IMEPlayerProps } from "./types";
 export default function IMEPlayer({
   lessonId,
   src,
+  startTime,
   onEnded,
 }: IMEPlayerProps) {
 const router = useRouter();
@@ -291,6 +292,15 @@ async function saveCurrentProgress() {
           src={src}
           onLoaded={(duration) => {
             setDuration(duration);
+
+            if (
+              videoRef.current &&
+              startTime > 0 &&
+              startTime < duration
+            ) {
+              videoRef.current.currentTime = startTime;
+            }
+
             setLoading(false);
           }}
           onTimeUpdate={setCurrent}

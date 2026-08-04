@@ -1,4 +1,6 @@
+
 import { prisma } from "@/lib/prisma";
+import { getCurrentUser } from "@/lib/auth";
 
 export async function getLesson(courseSlug: string, lessonId: string) {
   return prisma.lesson.findFirst({
@@ -66,4 +68,28 @@ export async function getCourseLessons(courseSlug: string) {
   if (!course) return null;
 
   return course.modules.flatMap((module) => module.lessons);
+}
+
+export async function getLessonProgress(
+  lessonId: string
+) {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return null;
+  }
+
+  return prisma.lessonProgress.findUnique({
+    where: {
+      userId_lessonId: {
+        userId: user.id,
+        lessonId,
+      },
+    },
+    select: {
+      currentTime: true,
+      progress: true,
+      completed: true,
+    },
+  });
 }

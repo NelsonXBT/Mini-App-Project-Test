@@ -4,6 +4,7 @@ type VideoPlayerProps = {
   lessonId: string;
   provider: string;
   videoId: string;
+  startTime: number;
   onEnded?: () => void;
 };
 
@@ -11,16 +12,18 @@ export default function VideoPlayer({
   lessonId,
   provider,
   videoId,
+  startTime,
   onEnded,
 }: VideoPlayerProps) {
   if (provider === "bunny") {
     return (
       <div className="mb-3 overflow-hidden rounded-xl border border-zinc-800 bg-black">
         <IMEPlayer
-          lessonId={lessonId}
-          src={videoId}
-          onEnded={onEnded}
-        />
+      lessonId={lessonId}
+      src={videoId}
+      startTime={startTime}
+      onEnded={onEnded}
+    />
       </div>
     );
   }
