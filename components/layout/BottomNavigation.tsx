@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import SaveLink from "@/components/common/SaveLink";
 import { usePathname } from "next/navigation";
 import {
   House,
@@ -52,7 +52,7 @@ if (pathname === "/player") {
             (item.href !== "/" && pathname.startsWith(item.href));
 
           return (
-            <Link
+            <SaveLink
               key={item.href}
               href={item.href}
               className={`flex flex-col items-center gap-0.5 px-4 py-2 transition ${
@@ -66,7 +66,7 @@ if (pathname === "/player") {
               <span className="text-[11px] leading-none">
                 {item.label}
               </span>
-            </Link>
+            </SaveLink>
           );
         })}
       </div>

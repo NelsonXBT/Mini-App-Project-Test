@@ -1,4 +1,7 @@
-import Link from "next/link";
+
+
+import SaveLink from "@/components/common/SaveLink";
+import { savePlayerProgress } from "@/lib/player/controller";
 import { ChevronRight, Clock } from "lucide-react";
 
 type UpNextProps = {
@@ -19,10 +22,10 @@ export default function UpNext({
 
   return (
     <section className="rounded-xl border border-zinc-800 bg-zinc-900">
-      <Link
-        href={href}
-        className="flex items-center justify-between p-4 transition-colors hover:bg-zinc-800/40"
-      >
+      <SaveLink
+            href={href}
+            className="flex items-center justify-between p-4 transition-colors hover:bg-zinc-800/40"
+          >
         <div className="min-w-0 flex-1">
           <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-cyan-400">
             Up Next
@@ -42,7 +45,7 @@ export default function UpNext({
           size={22}
           className="ml-4 shrink-0 text-zinc-500"
         />
-      </Link>
+      </SaveLink>
     </section>
   );
 }
