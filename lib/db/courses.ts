@@ -113,3 +113,76 @@ export async function getCourseProgress(
     ),
   };
 }
+
+
+export async function getContinueLearningCourse() {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    return null;
+  }
+
+  const latestProgress =
+    await prisma.lessonProgress.findFirst({
+      where: {
+        userId: user.id,
+      },
+      orderBy: {
+        lastWatchedAt: "desc",
+      },
+      include: {
+        lesson: {
+          include: {
+            module: {
+              include: {
+                course: {
+                  include: {
+                    modules: {
+                      include: {
+                        lessons: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+  if (!latestProgress) {
+    return null;
+  }
+
+  const course =
+    latestProgress.lesson.module.course;
+
+  const totalLessons = course.modules.reduce(
+    (total, module) => total + module.lessons.length,
+    0
+  );
+
+  const completedLessons =
+    await prisma.lessonProgress.count({
+      where: {
+        userId: user.id,
+        completed: true,
+        lesson: {
+          module: {
+            courseId: course.id,
+          },
+        },
+      },
+    });
+
+  return {
+    course,
+    lesson: latestProgress.lesson,
+    totalLessons,
+    completedLessons,
+    progress: Math.round(
+      (completedLessons / totalLessons) * 100
+    ),
+  };
+}

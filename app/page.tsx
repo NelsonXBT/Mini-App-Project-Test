@@ -1,4 +1,6 @@
 
+import { getContinueLearningCourse } from "@/lib/db/courses";
+
 export const dynamic = "force-dynamic";
 
 import Greeting from "@/components/home/Greeting";
@@ -9,7 +11,11 @@ const user = {
   name: "Nelson",
 };
 
-export default function Home() {
+export default async function Home() {
+
+  const continueLearning =
+  await getContinueLearningCourse();
+  
   return (
     <main className="space-y-5">
       <Greeting name={user.name} />

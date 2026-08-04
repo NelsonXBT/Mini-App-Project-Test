@@ -31,9 +31,6 @@ if (!course) {
 
 const courseProgress = await getCourseProgress(course.id);
 
-console.log("COURSE PROGRESS");
-console.dir(courseProgress, { depth: null });
-
   if (!course) {
     return (
       <main>

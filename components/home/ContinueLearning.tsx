@@ -3,19 +3,20 @@ import Link from "next/link";
 import { getContinueLearningCourse } from "@/lib/db/home";
 
 export default async function ContinueLearning() {
-  const course = await getContinueLearningCourse();
+        const continueLearning =
+        await getContinueLearningCourse();
 
-  if (!course) {
-    return null;
-  }
+      if (!continueLearning) {
+        return null;
+      }
 
-  const firstModule = course.modules[0];
-  const firstLesson = firstModule?.lessons[0];
-
-  const totalLessons = course.modules.reduce(
-    (total, module) => total + module.lessons.length,
-    0
-  );
+      const {
+        course,
+        lesson,
+        totalLessons,
+        completedLessons,
+        progress,
+      } = continueLearning;
 
   return (
     <section className="mt-3">
@@ -40,30 +41,30 @@ export default async function ContinueLearning() {
             </h3>
 
             <p className="mt-2 line-clamp-2 text-sm text-zinc-300">
-              {firstLesson?.title ?? "No lessons yet"}
+              {lesson.title}
             </p>
 
             <p className="mt-2 text-sm text-zinc-500">
-              Lesson 1 of {totalLessons}
+              Lesson {completedLessons + 1} of {totalLessons}
             </p>
 
             <div className="mt-auto flex items-center gap-2 pt-3">
               <div className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-700">
                 <div
                   className="h-full rounded-full bg-cyan-500"
-                  style={{ width: "0%" }}
+                  style={{ width: `${progress}%` }}
                 />
               </div>
 
               <span className="text-sm font-medium text-cyan-400">
-                0%
+                {progress}%
               </span>
             </div>
           </div>
         </div>
 
         <Link
-          href={`/courses/${course.slug}`}
+          href={`/courses/${course.slug}/lessons/${lesson.id}`}
           className="mt-5 block rounded-xl bg-cyan-500 py-3 text-center font-semibold text-black transition hover:bg-cyan-400"
         >
           Continue Lesson
