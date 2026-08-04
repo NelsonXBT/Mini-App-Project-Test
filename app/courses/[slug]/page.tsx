@@ -63,10 +63,10 @@ console.dir(courseProgress, { depth: null });
       </div>
 
       <CourseProgress
-        completed={0}
-        total={totalLessons}
-        progress={0}
-      />
+  completed={courseProgress.completedLessons}
+  total={courseProgress.totalLessons}
+  progress={courseProgress.progress}
+/>
 
       <CourseContent
         modules={course.modules}
