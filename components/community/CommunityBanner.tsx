@@ -15,18 +15,18 @@ export default function CommunityBanner() {
         p-6
       "
     >
-      <h2 className="text-xl font-bold text-white">
+      <h2 className="text-2xl font-bold text-white">
         Join the IME Community
       </h2>
 
-      <p className="mt-2 text-sm leading-6 text-cyan-50/90">
+      <p className="mt-2 max-w-[240px] text-sm leading-5 text-cyan-100/80">
         Connect with fellow creators, ask questions,
         share your work and stay updated with new lessons.
       </p>
 
       <button
         className="
-          mt-5
+          mt-4
           inline-flex
           items-center
           gap-2
