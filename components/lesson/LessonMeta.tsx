@@ -12,15 +12,15 @@ export default function LessonMeta({
       ? `${Math.ceil(duration / 60)} min`
       : "—";
 
-  return (
-    <div className="mt-6 flex gap-6 text-sm text-gray-400">
-      {/* <span>⏱ {formattedDuration}</span> */}
+  // return (
+  //   <div className="mt-6 flex gap-6 text-sm text-gray-400">
+  //     <span>⏱ {formattedDuration}</span>
 
-      {/* <span>
-        {completed
-          ? "✅ Completed"
-          : "⭕ Not Completed"}
-      </span> */}
-    </div>
-  );
+  //     <span>
+  //       {completed
+  //         ? "✅ Completed"
+  //         : "⭕ Not Completed"}
+  //     </span>
+  //   </div>
+  // );
 }
