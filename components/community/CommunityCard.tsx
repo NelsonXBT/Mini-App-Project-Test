@@ -1,10 +1,13 @@
+
+
 import {
   MessageCircle,
-  Megaphone,
+  Users,
   LifeBuoy,
-  Video,
   ChevronRight,
 } from "lucide-react";
+
+
 
 type CommunityCardProps = {
   icon: string;
@@ -18,34 +21,28 @@ export default function CommunityCard({
   description,
 }: CommunityCardProps) {
   const renderIcon = () => {
-    switch (icon) {
-      case "message":
-        return (
-          <MessageCircle className="h-6 w-6 text-cyan-400" />
-        );
+  switch (icon) {
+    case "whatsapp":
+      return (
+        <MessageCircle className="h-6 w-6 text-green-400" />
+      );
 
-      case "megaphone":
-        return (
-          <Megaphone className="h-6 w-6 text-orange-400" />
-        );
+    case "community":
+      return (
+        <Users className="h-6 w-6 text-cyan-400" />
+      );
 
-      case "lifebuoy":
-        return (
-          <LifeBuoy className="h-6 w-6 text-emerald-400" />
-        );
+    case "support":
+      return (
+        <LifeBuoy className="h-6 w-6 text-orange-400" />
+      );
 
-      case "video":
-        return (
-          <Video className="h-6 w-6 text-violet-400" />
-        );
-
-      default:
-        return (
-          <MessageCircle className="h-6 w-6 text-zinc-400" />
-        );
-    }
-  };
-
+    default:
+      return (
+        <Users className="h-6 w-6 text-zinc-400" />
+      );
+  }
+};
   return (
     <button className="flex w-full items-center rounded-xl border border-zinc-800 bg-zinc-900 p-4 transition hover:border-cyan-500 hover:bg-zinc-800">
       <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-800">
