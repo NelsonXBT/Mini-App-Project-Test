@@ -39,58 +39,85 @@ export default function LessonCard({
   return (
     <Link
       href={`/courses/${courseSlug}/lessons/${lesson.id}`}
-      className="block rounded-xl border border-zinc-800 bg-zinc-900 p-4 transition hover:border-cyan-500 hover:bg-zinc-800"
+      className="
+        group
+        block
+        rounded-2xl
+        border
+        border-[var(--border)]
+        bg-[var(--card)]
+        px-4
+        py-4
+        transition-all
+        duration-200
+        hover:border-[var(--primary)]
+        hover:-translate-y-0.5
+      "
     >
       <div className="flex items-center gap-4">
+
         {/* Lesson Number */}
-        <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-zinc-800 text-sm font-bold">
-          <span
-            className={
-              completed
-                ? "text-emerald-400"
-                : "text-cyan-400"
-            }
-          >
-            {lessonNumber}
-          </span>
+
+        <div
+          className="
+            flex
+            h-9
+            w-9
+            items-center
+            justify-center
+            rounded-full
+            bg-[var(--surface-secondary)]
+            text-xs
+            font-semibold
+            text-[var(--text-muted)]
+          "
+        >
+          {lessonNumber}
         </div>
 
-        {/* Lesson Info */}
+        {/* Content */}
+
         <div className="min-w-0 flex-1">
-          <h3 className="truncate font-semibold text-white">
+
+          <h3 className="truncate text-[15px] font-semibold text-[var(--text)]">
             {lesson.title}
           </h3>
 
-          <div className="mt-1 flex items-center gap-2 text-sm text-zinc-400">
-            <Clock3 className="h-4 w-4" />
+          <div className="mt-2 flex items-center gap-2">
 
-            <span>{duration}</span>
+            <Clock3 className="h-3.5 w-3.5 text-[var(--text-muted)]" />
 
-            {completed && (
-              <span
-                className="
-                  ml-2
-                  rounded-full
-                  bg-emerald-500/15
-                  px-2
-                  py-0.5
-                  text-xs
-                  font-medium
-                  text-emerald-400
-                "
-              >
-                Completed
-              </span>
-            )}
+            <span className="text-xs text-[var(--text-muted)]">
+              {duration}
+            </span>
+
           </div>
+
         </div>
 
-        {/* Status Icon */}
+        {/* Status */}
+
         {completed ? (
-          <CheckCircle2 className="h-6 w-6 flex-shrink-0 text-emerald-400" />
+          <CheckCircle2
+            className="
+              h-5
+              w-5
+              text-emerald-500
+            "
+          />
         ) : (
-          <ChevronRight className="h-5 w-5 flex-shrink-0 text-zinc-500" />
+          <ChevronRight
+            className="
+              h-5
+              w-5
+              text-[var(--text-muted)]
+              transition-transform
+              duration-200
+              group-hover:translate-x-0.5
+            "
+          />
         )}
+
       </div>
     </Link>
   );
