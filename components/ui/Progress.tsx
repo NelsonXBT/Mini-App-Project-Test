@@ -12,7 +12,7 @@ export default function Progress({
   return (
     <div
       className={`
-        h-2
+        h-1.5
         w-full
         overflow-hidden
         rounded-full
@@ -25,8 +25,9 @@ export default function Progress({
           h-full
           rounded-full
           bg-[var(--primary)]
-          transition-all
-          duration-500
+          transition-[width]
+          duration-300
+          ease-out
         "
         style={{
           width: `${progress}%`,

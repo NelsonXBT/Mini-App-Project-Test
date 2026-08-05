@@ -16,7 +16,9 @@ export default function FadeIn({
       className={`
         animate-in
         fade-in
-        duration-500
+        slide-in-from-bottom-1
+        duration-300
+        ease-out
         ${className}
       `}
     >

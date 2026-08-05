@@ -8,6 +8,7 @@ type IconTone =
   | "danger";
 
 type IconSize =
+  | "xs"
   | "sm"
   | "md"
   | "lg"
@@ -30,6 +31,7 @@ const toneClasses: Record<IconTone, string> = {
 };
 
 const sizeMap: Record<IconSize, number> = {
+  xs: 14,
   sm: 16,
   md: 20,
   lg: 24,
@@ -54,6 +56,7 @@ export default function Icon({
         ${toneClasses[tone]}
         ${className}
       `}
+      aria-hidden="true"
     />
   );
 }

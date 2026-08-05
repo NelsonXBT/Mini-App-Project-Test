@@ -12,8 +12,9 @@ export default function PageTitle({
   return (
     <h1
       className={`
-        text-4xl
-        font-bold
+        text-[1.75rem]
+        font-semibold
+        leading-tight
         tracking-tight
         text-[var(--text)]
         ${className}

@@ -11,21 +11,22 @@ export default function IconButton({
     <button
       {...props}
       className={`
-        flex
-        h-12
-        w-12
+        inline-flex
+        h-11
+        w-11
         items-center
         justify-center
-        rounded-full
+        rounded-lg
         border
-        border-stone-200
-        bg-white
-        text-stone-600
-        shadow-sm
-        transition-all
+        border-[var(--border)]
+        bg-[var(--card)]
+        text-[var(--text-muted)]
+        transition-colors
         duration-200
-        hover:shadow-md
-        active:scale-95
+        hover:bg-[var(--surface-secondary)]
+        hover:text-[var(--text)]
+        disabled:pointer-events-none
+        disabled:opacity-50
         ${className}
       `}
     >

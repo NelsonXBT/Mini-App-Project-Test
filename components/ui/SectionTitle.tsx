@@ -12,8 +12,9 @@ export default function SectionTitle({
   return (
     <h2
       className={`
-        text-lg
+        text-[1.125rem]
         font-semibold
+        leading-tight
         tracking-tight
         text-[var(--text)]
         ${className}

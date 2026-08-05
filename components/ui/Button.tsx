@@ -25,14 +25,15 @@ export default function Button({
     items-center
     justify-center
     gap-2
-    rounded-[18px]
+    rounded-lg
     px-5
     py-3
     text-sm
-    font-semibold
-    transition-all
+    font-medium
+    transition-colors
     duration-200
-    active:scale-[0.98]
+    disabled:opacity-50
+    disabled:pointer-events-none
   `;
 
   const variants = {
@@ -40,15 +41,14 @@ export default function Button({
       bg-[var(--primary)]
       text-white
       hover:bg-[var(--primary-hover)]
-      shadow-[var(--shadow-button)]
     `,
 
     secondary: `
-      bg-[var(--surface-secondary)]
-      text-[var(--text)]
       border
       border-[var(--border)]
-      hover:bg-[var(--card-hover)]
+      bg-[var(--card)]
+      text-[var(--text)]
+      hover:bg-[var(--surface-secondary)]
     `,
 
     ghost: `
