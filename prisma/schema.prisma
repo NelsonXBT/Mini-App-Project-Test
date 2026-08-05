@@ -82,6 +82,7 @@ model Course {
 
   modules     Module[]
   enrollments Enrollment[]
+  files       CourseFile[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -174,4 +175,21 @@ model Resource {
   sortOrder   Int @default(1)
 
   createdAt   DateTime @default(now())
+}
+
+model CourseFile {
+  id        String @id @default(cuid())
+
+  courseId  String
+  course    Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  title String
+
+  type ResourceType
+
+  url String
+
+  sortOrder Int @default(1)
+
+  createdAt DateTime @default(now())
 }

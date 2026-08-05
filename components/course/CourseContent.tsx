@@ -13,22 +13,17 @@ type Module = Prisma.ModuleGetPayload<{
   };
 }>;
 
-type Resource = {
-  id: string;
-  title: string;
-  files: number;
-  icon: string;
-};
+type CourseFile = Prisma.CourseFileGetPayload<{}>;
 
 type CourseContentProps = {
   modules: Module[];
-  resources?: Resource[];
+  files: CourseFile[];
   courseSlug: string;
 };
 
 export default function CourseContent({
   modules,
-  resources = [],
+  files,
   courseSlug,
 }: CourseContentProps) {
   const [activeTab, setActiveTab] = useState<"lessons" | "files">("lessons");
@@ -61,17 +56,17 @@ export default function CourseContent({
         </div>
       ) : (
         <div className="space-y-3">
-          {resources.length === 0 ? (
+          {files.length === 0 ? (
             <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5 text-center text-sm text-zinc-500">
-              No resources available yet.
+              No files for this course yet.
             </div>
           ) : (
-            resources.map((resource) => (
+            files.map((file) => (
               <FileCard
-                key={resource.id}
-                icon={resource.icon}
-                title={resource.title}
-                files={resource.files}
+                key={file.id}
+                title={file.title}
+                url={file.url}
+                type={file.type}
               />
             ))
           )}

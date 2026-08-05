@@ -64,9 +64,9 @@ const courseProgress = await getCourseProgress(course.id);
   total={courseProgress.totalLessons}
   progress={courseProgress.progress}
 />
-
       <CourseContent
         modules={course.modules}
+        files={course.files}
         courseSlug={course.slug}
       />
     </main>

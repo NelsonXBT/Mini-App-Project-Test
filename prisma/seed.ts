@@ -7,13 +7,13 @@ async function main() {
 
   // Delete old data (correct order)
   await prisma.resource.deleteMany();
-  await prisma.lessonProgress.deleteMany();
-  await prisma.lesson.deleteMany();
-  await prisma.module.deleteMany();
-  await prisma.enrollment.deleteMany();
-  await prisma.course.deleteMany();
-  await prisma.user.deleteMany();
-
+await prisma.courseFile.deleteMany();
+await prisma.lessonProgress.deleteMany();
+await prisma.lesson.deleteMany();
+await prisma.module.deleteMany();
+await prisma.enrollment.deleteMany();
+await prisma.course.deleteMany();
+await prisma.user.deleteMany();
   // Create Course
   const course = await prisma.course.create({
   data: {
@@ -201,6 +201,39 @@ await prisma.lesson.create({
       type: ResourceType.google_doc,
       url: "https://docs.google.com",
       sortOrder: 1,
+    },
+  ],
+});
+
+await prisma.courseFile.createMany({
+  data: [
+    {
+      courseId: course.id,
+      title: "Prompt Collection",
+      type: ResourceType.google_doc,
+      url: "https://docs.google.com",
+      sortOrder: 1,
+    },
+    {
+      courseId: course.id,
+      title: "Scene Templates",
+      type: ResourceType.download,
+      url: "https://example.com/templates.zip",
+      sortOrder: 2,
+    },
+    {
+      courseId: course.id,
+      title: "Sample Videos",
+      type: ResourceType.drive,
+      url: "https://drive.google.com",
+      sortOrder: 3,
+    },
+    {
+      courseId: course.id,
+      title: "Storyboard Guide",
+      type: ResourceType.pdf,
+      url: "https://example.com/storyboard.pdf",
+      sortOrder: 4,
     },
   ],
 });

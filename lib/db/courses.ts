@@ -45,6 +45,12 @@ export async function getCourse(slug: string) {
           },
         },
       },
+
+      files: {
+        orderBy: {
+          sortOrder: "asc",
+        },
+      },
     },
   });
 
