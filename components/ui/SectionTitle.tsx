@@ -1,26 +1,25 @@
-"use client";
-
 import { ReactNode } from "react";
 
-type FadeInProps = {
+type SectionTitleProps = {
   children: ReactNode;
   className?: string;
 };
 
-export default function FadeIn({
+export default function SectionTitle({
   children,
   className = "",
-}: FadeInProps) {
+}: SectionTitleProps) {
   return (
-    <div
+    <h2
       className={`
-        animate-in
-        fade-in
-        duration-500
+        text-lg
+        font-semibold
+        tracking-tight
+        text-[var(--text)]
         ${className}
       `}
     >
       {children}
-    </div>
+    </h2>
   );
 }

@@ -1,20 +1,22 @@
 "use client";
 
-import SaveLink from "@/components/common/SaveLink";
 import { usePathname } from "next/navigation";
 import {
-  House,
   BookOpen,
   FolderOpen,
+  House,
   Users,
 } from "lucide-react";
+
+import SaveLink from "@/components/common/SaveLink";
+import { Icon } from "@/components/ui";
 
 export default function BottomNavigation() {
   const pathname = usePathname();
 
-if (pathname === "/player") {
-  return null;
-}
+  if (pathname === "/player") {
+    return null;
+  }
 
   const navItems = [
     {
@@ -41,29 +43,61 @@ if (pathname === "/player") {
 
   return (
     <nav
-        className="fixed bottom-0 left-0 right-0 border-t border-zinc-800 bg-zinc-950/95 backdrop-blur-sm transition-all duration-300 player-nav"
->
-      <div className="mx-auto flex max-w-md justify-around py-1.5">
+      className="
+        player-nav
+        fixed
+        bottom-4
+        left-1/2
+        z-50
+        w-[calc(100%-24px)]
+        max-w-md
+        -translate-x-1/2
+        rounded-[26px]
+        border
+        border-[var(--border)]
+        bg-[var(--card)]/95
+        shadow-[var(--shadow-card)]
+        backdrop-blur-xl
+        transition-all
+        duration-300
+      "
+    >
+      <div className="flex justify-around px-2 py-2">
         {navItems.map((item) => {
-          const Icon = item.icon;
-
           const active =
             pathname === item.href ||
-            (item.href !== "/" && pathname.startsWith(item.href));
+            (item.href !== "/" &&
+              pathname.startsWith(item.href));
 
           return (
             <SaveLink
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center gap-0.5 px-4 py-2 transition ${
-                active
-                  ? "text-cyan-400"
-                  : "text-zinc-500 hover:text-zinc-300"
-              }`}
+              className={`
+                flex
+                min-w-[68px]
+                flex-col
+                items-center
+                gap-1
+                rounded-2xl
+                px-3
+                py-2
+                transition-all
+                duration-200
+                ${
+                  active
+                    ? "bg-[var(--surface-secondary)] text-[var(--primary)]"
+                    : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                }
+              `}
             >
-              <Icon className="h-5 w-5" />
+              <Icon
+                icon={item.icon}
+                tone={active ? "accent" : "muted"}
+                strokeWidth={active ? 2.4 : 2}
+              />
 
-              <span className="text-[11px] leading-none">
+              <span className="text-[11px] font-medium">
                 {item.label}
               </span>
             </SaveLink>

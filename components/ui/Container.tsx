@@ -1,22 +1,21 @@
-"use client";
-
 import { ReactNode } from "react";
 
-type FadeInProps = {
+type ContainerProps = {
   children: ReactNode;
   className?: string;
 };
 
-export default function FadeIn({
+export default function Container({
   children,
   className = "",
-}: FadeInProps) {
+}: ContainerProps) {
   return (
     <div
       className={`
-        animate-in
-        fade-in
-        duration-500
+        mx-auto
+        w-full
+        max-w-3xl
+        px-5
         ${className}
       `}
     >
