@@ -31,18 +31,21 @@ export default function RootLayout({
 }>) {
   return (
     <html
-  lang="en"
-  suppressHydrationWarning
-  className={`${geistSans.variable} ${geistMono.variable}`}
->
-  <body className="min-h-screen bg-[var(--background)] text-[var(--text)] antialiased">
+      lang="en"
+      className={`${geistSans.variable} ${geistMono.variable} h-full bg-black`}
+    >
+      <body className="min-h-screen bg-black text-white">
+        <Script
+  src="https://telegram.org/js/telegram-web-app.js"
+  strategy="beforeInteractive"
+/>
 
 <SessionProvider>
   <TelegramAuth>
-    <main className="app-main mx-auto min-h-screen max-w-md px-6 pt-5 pb-28">
+    <main className="app-main min-h-screen px-5 pt-3 pb-20">
       <Header />
 
-      <div className="space-y-6">
+      <div className="mt-3">
         {children}
       </div>
     </main>
