@@ -48,28 +48,54 @@ const courseProgress = await getCourseProgress(course.id);
 
   return (
   <CourseGuard course={course}>
-    <main className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-bold leading-tight">
-          {course.title}
-        </h1>
+    <main className="space-y-6">
 
-        <p className="mt-1 text-sm text-zinc-500">
-          {totalLessons} Lesson{totalLessons !== 1 ? "s" : ""}
-        </p>
-      </div>
+  <section className="space-y-3">
 
-      <CourseProgress
-  completed={courseProgress.completedLessons}
-  total={courseProgress.totalLessons}
-  progress={courseProgress.progress}
-/>
-      <CourseContent
-        modules={course.modules}
-        files={course.files}
-        courseSlug={course.slug}
-      />
-    </main>
+    <h1
+      className="
+        text-[2rem]
+        font-semibold
+        leading-tight
+        tracking-tight
+        text-[var(--text)]
+      "
+    >
+      {course.title}
+    </h1>
+
+    <div
+      className="
+        inline-flex
+        items-center
+        rounded-full
+        border
+        border-[var(--border)]
+        bg-[var(--surface-secondary)]
+        px-3
+        py-1
+      "
+    >
+      <span className="text-sm font-medium text-[var(--text-muted)]">
+        {totalLessons} Lesson{totalLessons !== 1 ? "s" : ""}
+      </span>
+    </div>
+
+  </section>
+
+  <CourseProgress
+    completed={courseProgress.completedLessons}
+    total={courseProgress.totalLessons}
+    progress={courseProgress.progress}
+  />
+
+  <CourseContent
+    modules={course.modules}
+    files={course.files}
+    courseSlug={course.slug}
+  />
+
+</main>
   </CourseGuard>
 );
 }
