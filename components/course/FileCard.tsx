@@ -3,10 +3,11 @@
 import Link from "next/link";
 
 import {
+  ChevronRight,
   FileText,
-  Globe,
   Folder,
   GitBranch,
+  Globe,
   NotebookText,
 } from "lucide-react";
 
@@ -26,83 +27,74 @@ export default function FileCard({
   function renderIcon() {
     switch (type) {
       case "pdf":
-        return (
-          <FileText className="h-6 w-6 text-red-400" />
-        );
+        return <FileText className="h-5 w-5 text-red-500" />;
 
       case "google_doc":
-        return (
-          <FileText className="h-6 w-6 text-blue-400" />
-        );
+        return <FileText className="h-5 w-5 text-blue-500" />;
 
       case "drive":
-        return (
-          <Folder className="h-6 w-6 text-green-400" />
-        );
+        return <Folder className="h-5 w-5 text-green-500" />;
 
       case "github":
-        return (
-          <GitBranch className="h-6 w-6 text-white" />
-        );
+        return <GitBranch className="h-5 w-5 text-[var(--text)]" />;
 
       case "notion":
-        return (
-          <NotebookText className="h-6 w-6 text-zinc-100" />
-        );
+        return <NotebookText className="h-5 w-5 text-[var(--text)]" />;
 
       case "website":
-        return (
-          <Globe className="h-6 w-6 text-cyan-400" />
-        );
+        return <Globe className="h-5 w-5 text-[var(--primary)]" />;
 
       case "download":
       default:
-        return (
-          <FileText className="h-6 w-6 text-cyan-400" />
-        );
+        return <FileText className="h-5 w-5 text-[var(--primary)]" />;
     }
   }
 
   return (
-    <div
-  className="
-    flex
-    items-center
-    rounded-xl
-    border
-    border-zinc-800
-    bg-zinc-900
-    p-4
-  "
->
-      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-800">
+    <Link
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="
+        group
+        flex
+        items-center
+        gap-4
+        rounded-xl
+        border
+        border-[var(--border)]
+        bg-[var(--card)]
+        px-5
+        py-4
+        transition-colors
+        hover:bg-[var(--surface-secondary)]
+      "
+    >
+      <div className="shrink-0">
         {renderIcon()}
       </div>
 
-      <div className="ml-4 flex-1">
-        <h3 className="font-medium text-white">
+      <div className="min-w-0 flex-1">
+        <h3 className="truncate text-[15px] font-medium text-[var(--text)]">
           {title}
         </h3>
+
+        <p className="mt-1 text-xs capitalize text-[var(--text-muted)]">
+          {type.replace("_", " ")}
+        </p>
       </div>
 
-      <Link
-  href={url}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="
-    rounded-lg
-    px-3
-    py-1.5
-    text-sm
-    font-semibold
-    text-cyan-400
-    transition
-    hover:bg-cyan-500/10
-  "
->
-  View
-</Link>
-
-</div>
+      <ChevronRight
+        className="
+          h-5
+          w-5
+          shrink-0
+          text-[var(--text-muted)]
+          transition-transform
+          duration-200
+          group-hover:translate-x-0.5
+        "
+      />
+    </Link>
   );
 }
