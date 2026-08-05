@@ -24,47 +24,73 @@ export default function CourseCard({
     0
   );
 
-  return (
-    <Link
-      href={`/courses/${course.slug}`}
-      className="block"
+  
+   return (
+  <Link
+    href={`/courses/${course.slug}`}
+    className="block"
+  >
+    <article
+      className="
+        overflow-hidden
+        rounded-3xl
+        border
+        border-zinc-800
+        bg-zinc-900
+        transition-all
+        duration-300
+        hover:border-cyan-500
+        hover:shadow-[0_0_25px_rgba(6,182,212,.12)]
+      "
     >
-      <article className="rounded-2xl border border-zinc-800 bg-zinc-900 p-3 transition-all duration-300 hover:border-cyan-500 hover:bg-zinc-800">
-        <div className="flex gap-3">
-          {/* Thumbnail */}
-          <div className="relative h-24 w-28 flex-shrink-0 overflow-hidden rounded-xl">
-            <Image
-              src={course.thumbnail ?? "/thumbnails/coursethumbnail.png"}
-              alt={course.title}
-              fill
-              className="object-cover"
-            />
+      {/* Thumbnail */}
+      <div className="relative aspect-video w-full overflow-hidden">
+        <Image
+          src={
+            course.thumbnail ??
+            "/thumbnails/coursethumbnail.png"
+          }
+          alt={course.title}
+          fill
+          className="object-cover object-center"
+        />
+      </div>
+
+      {/* Content */}
+      <div className="p-5">
+        <h2 className="text-2xl font-bold leading-tight text-white">
+          {course.title}
+        </h2>
+
+        <div className="mt-5 flex items-center justify-between">
+
+          <div className="text-sm font-medium text-zinc-400">
+            📖 {lessonCount} Lesson
+            {lessonCount !== 1 ? "s" : ""}
           </div>
 
-          {/* Content */}
-          <div className="flex min-w-0 flex-1 flex-col">
-            <h2 className="line-clamp-2 text-lg font-bold leading-tight text-white">
-              {course.title}
-            </h2>
-
-            <p className="mt-1 line-clamp-2 text-sm leading-5 text-zinc-400">
-              {course.description ?? "No description available."}
-            </p>
-
-            <div className="mt-3 flex items-center justify-between text-xs text-zinc-500">
-              <span>
-                {lessonCount} Lesson{lessonCount !== 1 ? "s" : ""}
-              </span>
-
-              <span>
-                {course.isFree
-                  ? "Free"
-                  : `₦${course.price?.toString() ?? "0"}`}
-              </span>
-            </div>
+          <div
+            className={`
+              rounded-full
+              border
+              px-4
+              py-1.5
+              text-sm
+              font-semibold
+              ${
+                course.isFree
+                  ? "border-cyan-500 text-cyan-400 shadow-[0_0_16px_rgba(6,182,212,.18)]"
+                  : "border-zinc-700 text-zinc-400"
+              }
+            `}
+          >
+            {course.isFree ? "Open" : "Locked"}
           </div>
+
         </div>
-      </article>
-    </Link>
-  );
+      </div>
+    </article>
+  </Link>
+);
+  
 }
