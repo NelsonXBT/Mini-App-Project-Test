@@ -2,7 +2,9 @@ type GreetingProps = {
   name: string;
 };
 
-export default function Greeting({ name }: GreetingProps) {
+export default function Greeting({
+  name,
+}: GreetingProps) {
   const currentHour = new Date().getHours();
 
   let greeting = "Good Evening";
@@ -14,14 +16,14 @@ export default function Greeting({ name }: GreetingProps) {
   }
 
   return (
-    <section>
-      <p className="text-sm text-zinc-400">
+    <section className="space-y-1 pt-2 pb-2">
+      <p className="text-[15px] font-medium text-[var(--text-muted)]">
         {greeting} 👋,
       </p>
 
-      <h1 className="text-2xl font-bold text-white">
+      <h2 className="text-[42px] font-bold leading-none tracking-tight text-[var(--text)]">
         {name}
-      </h1>
+      </h2>
     </section>
   );
 }
