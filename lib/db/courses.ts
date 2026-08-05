@@ -130,9 +130,9 @@ export async function getHomeLearningCard() {
     return null;
   }
 
-  // Check enrolled courses from newest to oldest.
-  // If a course has never been started,
-  // show Start Learning.
+  // ----------------------------
+  // Active enrollments (newest first)
+  // ----------------------------
 
   const enrollments =
     await prisma.enrollment.findMany({
@@ -162,6 +162,10 @@ export async function getHomeLearningCard() {
         },
       },
     });
+
+  // ----------------------------
+  // 1. START LEARNING
+  // ----------------------------
 
   for (const enrollment of enrollments) {
     const lessonIds =
@@ -207,7 +211,9 @@ export async function getHomeLearningCard() {
     }
   }
 
-  // Otherwise continue the latest lesson.
+  // ----------------------------
+  // 2. CONTINUE LEARNING
+  // ----------------------------
 
   const latestProgress =
     await prisma.lessonProgress.findFirst({
@@ -238,58 +244,181 @@ export async function getHomeLearningCard() {
       },
     });
 
-  if (!latestProgress) {
-    return null;
+  if (latestProgress) {
+    const course =
+      latestProgress.lesson.module.course;
+
+    const totalLessons =
+      course.modules.reduce(
+        (sum, module) =>
+          sum + module.lessons.length,
+        0
+      );
+
+    const lessonProgress =
+      await prisma.lessonProgress.findMany({
+        where: {
+          userId: user.id,
+          lesson: {
+            module: {
+              courseId: course.id,
+            },
+          },
+        },
+        select: {
+          progress: true,
+          completed: true,
+        },
+      });
+
+    const completedLessons =
+      lessonProgress.filter(
+        (lesson) => lesson.completed
+      ).length;
+
+    const totalProgress =
+      lessonProgress.reduce(
+        (sum, lesson) =>
+          sum + lesson.progress,
+        0
+      );
+
+    // If course isn't finished, continue learning.
+    if (
+      completedLessons < totalLessons
+    ) {
+      return {
+        mode: "continue",
+
+        course,
+        lesson: latestProgress.lesson,
+
+        totalLessons,
+        completedLessons,
+
+        progress: Math.round(
+          totalProgress / totalLessons
+        ),
+      };
+    }
   }
 
-  const course =
-    latestProgress.lesson.module.course;
+  // ----------------------------
+  // 3. RECOMMENDED COURSE
+  // ----------------------------
 
-  const totalLessons =
-    course.modules.reduce(
-      (sum, module) =>
-        sum + module.lessons.length,
-      0
-    );
-
-  const lessonProgress =
-    await prisma.lessonProgress.findMany({
+  const recommendedCourse =
+    await prisma.course.findFirst({
       where: {
-        userId: user.id,
-        lesson: {
-          module: {
-            courseId: course.id,
+        isPublished: true,
+        enrollments: {
+          none: {
+            userId: user.id,
           },
         },
       },
-      select: {
-        progress: true,
-        completed: true,
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        modules: {
+          orderBy: {
+            order: "asc",
+          },
+          include: {
+            lessons: {
+              orderBy: {
+                order: "asc",
+              },
+            },
+          },
+        },
       },
     });
 
-  const completedLessons =
-    lessonProgress.filter(
-      (lesson) => lesson.completed
-    ).length;
+  if (recommendedCourse) {
+    const firstLesson =
+  recommendedCourse.modules[0]?.lessons[0];
 
-  const totalProgress =
-    lessonProgress.reduce(
-      (sum, lesson) => sum + lesson.progress,
-      0
-    );
+      if (!firstLesson) {
+        return null;
+      }
 
-  return {
-    mode: "continue",
+      return {
+        mode: "recommend",
 
-    course,
-    lesson: latestProgress.lesson,
+        course: recommendedCourse,
+        lesson: firstLesson,
 
-    totalLessons,
-    completedLessons,
+        totalLessons:
+          recommendedCourse.modules.reduce(
+            (sum, module) =>
+              sum + module.lessons.length,
+            0
+          ),
 
-    progress: Math.round(
-      totalProgress / totalLessons
-    ),
-  };
+        completedLessons: 0,
+        progress: 0,
+      };
+        }
+
+  // ----------------------------
+  // 4. FALLBACK
+  // ----------------------------
+
+  if (latestProgress) {
+    const course =
+      latestProgress.lesson.module.course;
+
+    const totalLessons =
+      course.modules.reduce(
+        (sum, module) =>
+          sum + module.lessons.length,
+        0
+      );
+
+    const lessonProgress =
+      await prisma.lessonProgress.findMany({
+        where: {
+          userId: user.id,
+          lesson: {
+            module: {
+              courseId: course.id,
+            },
+          },
+        },
+        select: {
+          progress: true,
+          completed: true,
+        },
+      });
+
+    const completedLessons =
+      lessonProgress.filter(
+        (lesson) => lesson.completed
+      ).length;
+
+    const totalProgress =
+      lessonProgress.reduce(
+        (sum, lesson) =>
+          sum + lesson.progress,
+        0
+      );
+
+    return {
+      mode: "continue",
+
+      course,
+      lesson: latestProgress.lesson,
+
+      totalLessons,
+      completedLessons,
+
+      progress: Math.round(
+        totalProgress / totalLessons
+      ),
+    };
+  }
+
+  return null;
 }
