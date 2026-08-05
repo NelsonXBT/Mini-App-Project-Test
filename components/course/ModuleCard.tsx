@@ -37,16 +37,7 @@ export default function ModuleCard({
   onToggle,
 }: ModuleCardProps) {
   return (
-    <section
-      className="
-        overflow-hidden
-        rounded-xl
-        border
-        border-[var(--border)]
-        bg-[var(--card)]
-      "
-    >
-      {/* Header */}
+    <section className="border-b border-[var(--border)] last:border-b-0">
 
       <button
         onClick={onToggle}
@@ -61,11 +52,7 @@ export default function ModuleCard({
         "
       >
         <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-[var(--text-muted)]">
-            Module
-          </p>
-
-          <h2 className="mt-1 text-xl font-semibold text-[var(--text)]">
+          <h2 className="text-xl font-semibold text-[var(--text)]">
             {module.title}
           </h2>
 
@@ -79,9 +66,9 @@ export default function ModuleCard({
           className={`
             h-5
             w-5
+            text-[var(--text-muted)]
             transition-transform
             duration-300
-            text-[var(--text-muted)]
             ${isExpanded ? "rotate-180" : ""}
           `}
         />
@@ -100,6 +87,7 @@ export default function ModuleCard({
           ))}
         </div>
       )}
+
     </section>
   );
 }

@@ -56,7 +56,15 @@ export default function CourseContent({
       />
 
       {activeTab === "lessons" ? (
-        <div className="space-y-5">
+        <div
+            className="
+              overflow-hidden
+              rounded-xl
+              border
+              border-[var(--border)]
+              bg-[var(--card)]
+            "
+          >
           {modules.map((module) => {
             const currentOffset = lessonOffset;
 
