@@ -123,13 +123,13 @@ export default async function HomeLearningCard() {
     default:
       return (
         <section className="mt-3">
-          <h2 className="mb-4 text-lg font-semibold text-zinc-400">
+          {/* <h2 className="mb-4 text-lg font-semibold text-zinc-400">
               {mode === "start"
                 ? "Start Learning"
                 : mode === "recommend"
                 ? "Recommended For You"
                 : "Continue Learning"}
-            </h2>
+            </h2> */}
 
           <div className="rounded-3xl bg-zinc-900 p-4">
             <div className="flex gap-4">
@@ -146,7 +146,7 @@ export default async function HomeLearningCard() {
               </div>
 
               <div className="flex flex-1 flex-col">
-                {/* <h3 className="line-clamp-2 text-lg font-semibold text-white">
+                <h3 className="line-clamp-2 text-lg font-semibold text-white">
                   {course.title}
                 </h3>
 
@@ -156,7 +156,7 @@ export default async function HomeLearningCard() {
                     : mode === "recommend"
                     ? "Discover something new"
                     : lesson.title}
-                </p> */}
+                </p> 
 
                 {mode === "continue" ? (
                     <p className="mt-2 text-sm text-zinc-500">
