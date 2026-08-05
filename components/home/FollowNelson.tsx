@@ -6,8 +6,6 @@ import {
   FaTiktok,
 } from "react-icons/fa6";
 
-import { Card } from "@/components/ui";
-
 const socials = [
   {
     name: "YouTube",
@@ -33,40 +31,18 @@ const socials = [
 
 export default function FollowNelson() {
   return (
-    <Card className="overflow-hidden p-7">
-
-      <div className="text-center">
-
-        <div
-          className="
-            mx-auto
-            flex
-            h-16
-            w-16
-            items-center
-            justify-center
-            rounded-full
-            bg-[var(--primary)]/10
-            text-xl
-            font-semibold
-            text-[var(--primary)]
-          "
-        >
-          N
-        </div>
-
-        <h2 className="mt-4 text-xl font-semibold text-[var(--text)]">
-          Nelson Edeh
+    <section className="pt-3">
+      <div>
+        <h2 className="text-lg font-semibold text-[var(--text)]">
+          Connect with Nelson
         </h2>
 
         <p className="mt-1 text-sm text-[var(--text-muted)]">
-          AI Filmmaker • Educator • Content Creator
+          Tutorials, updates and behind the scenes.
         </p>
-
       </div>
 
-      <div className="mt-8 grid grid-cols-2 gap-3">
-
+      <div className="mt-6 grid grid-cols-2 gap-x-10 gap-y-5">
         {socials.map((social) => {
           const Icon = social.icon;
 
@@ -75,46 +51,47 @@ export default function FollowNelson() {
               key={social.name}
               href={social.href}
               className="
+                group
                 flex
                 items-center
-                justify-center
-                gap-2
-                rounded-2xl
-                border
-                border-stone-200
-                bg-white
-                py-3
+                gap-3
                 transition-all
                 duration-200
-                hover:-translate-y-0.5
-                hover:border-[var(--primary)]
-                hover:shadow-sm
               "
             >
-              <Icon
+              <div
                 className="
-                  h-5
-                  w-5
-                  text-[var(--primary)]
+                  flex
+                  h-10
+                  w-10
+                  items-center
+                  justify-center
+                  rounded-full
+                  bg-[var(--surface-secondary)]
+                  transition-all
+                  duration-200
+                  group-hover:bg-[var(--primary)]
+                  group-hover:text-white
                 "
-              />
+              >
+                <Icon className="h-5 w-5" />
+              </div>
 
               <span
                 className="
                   text-sm
                   font-medium
                   text-[var(--text)]
+                  transition-colors
+                  group-hover:text-[var(--primary)]
                 "
               >
                 {social.name}
               </span>
-
             </Link>
           );
         })}
-
       </div>
-
-    </Card>
+    </section>
   );
 }
