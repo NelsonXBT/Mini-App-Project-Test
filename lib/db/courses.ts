@@ -130,7 +130,7 @@ return {
 }
 
 
-export async function getContinueLearningCourse() {
+export async function getHomeLearningCard() {
   const user = await getCurrentUser();
 
   if (!user) {
