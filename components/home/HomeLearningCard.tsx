@@ -26,9 +26,9 @@ export default async function HomeLearningCard() {
     case "start":
       return (
         <section className="mt-3">
-          <h2 className="mb-4 text-lg font-semibold text-zinc-400">
+          {/* <h2 className="mb-4 text-lg font-semibold text-zinc-400">
             Start Learning
-          </h2>
+          </h2> */}
 
           <div className="rounded-3xl bg-zinc-900 p-4">
             <div className="flex gap-4">
@@ -150,13 +150,13 @@ export default async function HomeLearningCard() {
                   {course.title}
                 </h3>
 
-                <p className="mt-2 line-clamp-2 text-sm text-zinc-300">
+                {/* <p className="mt-2 line-clamp-2 text-sm text-zinc-300">
                   {mode === "start"
                     ? `${totalLessons} Lessons`
                     : mode === "recommend"
                     ? "Discover something new"
                     : lesson.title}
-                </p>
+                </p> */}
 
                 {mode === "continue" ? (
                     <p className="mt-2 text-sm text-zinc-500">
