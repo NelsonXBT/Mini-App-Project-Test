@@ -1,3 +1,3 @@
 
 
-export { getContinueLearningCourse } from "./courses";
+export { getHomeLearningCard } from "./courses";

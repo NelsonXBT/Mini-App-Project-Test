@@ -1,22 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
-import { getContinueLearningCourse } from "@/lib/db/home";
+import { getHomeLearningCard } from "@/lib/db/home";
 
 export default async function ContinueLearning() {
-        const continueLearning =
-        await getContinueLearningCourse();
+        const learningCard =
+          await getHomeLearningCard();
 
-      if (!continueLearning) {
+      if (!learningCard) {
         return null;
       }
 
       const {
-        course,
-        lesson,
-        totalLessons,
-        completedLessons,
-        progress,
-      } = continueLearning;
+      course,
+      lesson,
+      totalLessons,
+      completedLessons,
+      progress,
+    } = learningCard;
 
   return (
     <section className="mt-3">
