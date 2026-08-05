@@ -10,7 +10,21 @@ export default function CommunityContent() {
 
       {/* Telegram Banner */}
 
-      <div className="overflow-hidden rounded-3xl border border-cyan-900/40 bg-gradient-to-r from-cyan-900/70 to-cyan-700/40 p-5">
+      <div
+        className="
+          overflow-hidden
+          rounded-3xl
+          border
+          border-cyan-900/40
+          bg-gradient-to-r
+          from-cyan-950
+          via-cyan-900/80
+          to-cyan-800/70
+          px-6
+          py-5
+          min-h-[175px]
+        "
+      >
 
         <div className="flex items-start justify-between">
 
@@ -26,7 +40,7 @@ export default function CommunityContent() {
             </p>
           </div>
 
-          <div className="rounded-2xl bg-cyan-500/20 p-3">
+          <div className="rounded-2xl bg-cyan-500/15 p-2.5">
             <Send className="h-7 w-7 text-cyan-300" />
           </div>
 
