@@ -146,11 +146,11 @@ export default async function HomeLearningCard() {
               </div>
 
               <div className="flex flex-1 flex-col">
-                <h3 className="line-clamp-2 text-lg font-semibold text-white">
+                {/* <h3 className="line-clamp-2 text-lg font-semibold text-white">
                   {course.title}
                 </h3>
 
-                {/* <p className="mt-2 line-clamp-2 text-sm text-zinc-300">
+                <p className="mt-2 line-clamp-2 text-sm text-zinc-300">
                   {mode === "start"
                     ? `${totalLessons} Lessons`
                     : mode === "recommend"
