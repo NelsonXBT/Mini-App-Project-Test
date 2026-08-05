@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { BookOpen } from "lucide-react";
 
 import { getHomeLearningCard } from "@/lib/db/home";
 
@@ -30,171 +31,261 @@ export default async function HomeLearningCard() {
             Start Learning
           </h2> */}
 
-          <div className="rounded-3xl bg-zinc-900 p-4">
-            <div className="flex gap-4">
-              <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl">
-                <Image
-                  src={
-                    course.thumbnail ??
-                    "/thumbnails/coursethumbnail.png"
-                  }
-                  alt={course.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
+          <div
+                className="
+                  overflow-hidden
+                  rounded-3xl
+                  border
+                  border-zinc-800
+                  bg-zinc-900
+                  transition-all
+                  duration-300
+                  hover:-translate-y-0.5
+                  hover:border-cyan-500
+                  hover:shadow-[0_0_25px_rgba(6,182,212,.12)]
+                "
+              >
 
-              <div className="flex flex-1 flex-col">
-                <h3 className="line-clamp-2 text-lg font-semibold text-white">
-                  {course.title}
-                </h3>
-
-                <p className="mt-2 text-sm text-zinc-400">
-                  {totalLessons} Lessons
-                </p>
-
-                <div className="mt-auto pt-3">
-                  <span className="text-sm font-medium text-cyan-400">
-                    Ready to begin
-                  </span>
-                </div>
-              </div>
+            {/* Thumbnail */}
+            <div className="relative h-36 w-full overflow-hidden">
+              <Image
+                src={
+                  course.thumbnail ??
+                  "/thumbnails/coursethumbnail.png"
+                }
+                alt={course.title}
+                fill
+                className="object-cover object-center"
+              />
             </div>
 
-            <Link
-              href={`/courses/${course.slug}/lessons/${lesson.id}`}
-              className="mt-5 block rounded-xl bg-cyan-500 py-3 text-center font-semibold text-black transition hover:bg-cyan-400"
-            >
-              Start Learning
-            </Link>
+            <div className="p-4">
+
+              <h3 className="line-clamp-2 text-lg font-semibold text-white">
+                {course.title}
+              </h3>
+
+              <div className="mt-4 flex items-center justify-between">
+
+                <div className="flex items-center gap-2 text-zinc-400">
+                  <BookOpen className="h-5 w-5 text-cyan-400" />
+
+                  <span className="text-sm">
+                    {totalLessons} Lessons
+                  </span>
+                </div>
+
+                <span
+                  className="
+                    rounded-full
+                    border
+                    border-cyan-500
+                    px-3
+                    py-1
+                    text-xs
+                    font-semibold
+                    text-cyan-400
+                    shadow-[0_0_14px_rgba(6,182,212,.18)]
+                  "
+                >
+                  Ready
+                </span>
+
+              </div>
+
+              <Link
+                href={`/courses/${course.slug}/lessons/${lesson.id}`}
+                className="
+                  mt-5
+                  block
+                  rounded-xl
+                  bg-cyan-500
+                  py-3
+                  text-center
+                  font-semibold
+                  text-black
+                "
+              >
+                Start Learning
+              </Link>
+
+            </div>
+
           </div>
         </section>
       );
 
     case "recommend":
           return (
-            <section className="mt-3">
-              <h2 className="mb-4 text-lg font-semibold text-zinc-400">
-                Recommended For You
-              </h2>
+  <section className="mt-3">
 
-              <div className="rounded-3xl bg-zinc-900 p-4">
-                <div className="flex gap-4">
-                  <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl">
-                    <Image
-                      src={
-                        course.thumbnail ??
-                        "/thumbnails/coursethumbnail.png"
-                      }
-                      alt={course.title}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
+    <div
+      className="
+        overflow-hidden
+        rounded-3xl
+        border
+        border-zinc-800
+        bg-zinc-900
+        transition-all
+        duration-300
+        hover:-translate-y-0.5
+        hover:border-cyan-500
+        hover:shadow-[0_0_25px_rgba(6,182,212,.12)]
+      "
+    >
 
-                  <div className="flex flex-1 flex-col">
-                    <h3 className="line-clamp-2 text-lg font-semibold text-white">
-                      {course.title}
-                    </h3>
+      <div className="relative h-36 w-full overflow-hidden">
+        <Image
+          src={
+            course.thumbnail ??
+            "/thumbnails/coursethumbnail.png"
+          }
+          alt={course.title}
+          fill
+          className="object-cover object-center"
+        />
+      </div>
 
-                    <p className="mt-2 text-sm text-zinc-400">
-                      {totalLessons} Lessons
-                    </p>
+      <div className="p-4">
 
-                    <div className="mt-auto pt-3">
-                      <span className="text-sm font-medium text-cyan-400">
-                        Expand your AI filmmaking skills
-                      </span>
-                    </div>
-                  </div>
-                </div>
+        <h3 className="line-clamp-2 text-lg font-semibold text-white">
+          {course.title}
+        </h3>
 
-                <Link
-                  href={`/courses/${course.slug}`}
-                  className="mt-5 block rounded-xl bg-cyan-500 py-3 text-center font-semibold text-black transition hover:bg-cyan-400"
-                >
-                  Explore Course
-                </Link>
-              </div>
-            </section>
-          );
+        <div className="mt-4 flex items-center justify-between">
+
+          <div className="flex items-center gap-2 text-zinc-400">
+            <BookOpen className="h-5 w-5 text-cyan-400" />
+
+            <span className="text-sm">
+              {totalLessons} Lessons
+            </span>
+          </div>
+
+          <span
+            className="
+              rounded-full
+              border
+              border-cyan-500
+              px-3
+              py-1
+              text-xs
+              font-semibold
+              text-cyan-400
+              shadow-[0_0_14px_rgba(6,182,212,.18)]
+            "
+          >
+            New
+          </span>
+
+        </div>
+
+        <Link
+          href={`/courses/${course.slug}`}
+          className="
+            mt-5
+            block
+            rounded-xl
+            bg-cyan-500
+            py-3
+            text-center
+            font-semibold
+            text-black
+          "
+        >
+          Open Course
+        </Link>
+
+      </div>
+
+    </div>
+
+  </section>
+);
 
     case "continue":
     default:
       return (
-        <section className="mt-3">
-          {/* <h2 className="mb-4 text-lg font-semibold text-zinc-400">
-              {mode === "start"
-                ? "Start Learning"
-                : mode === "recommend"
-                ? "Recommended For You"
-                : "Continue Learning"}
-            </h2> */}
+  <section className="mt-3">
 
-          <div className="rounded-3xl bg-zinc-900 p-4">
-            <div className="flex gap-4">
-              <div className="relative h-24 w-24 flex-shrink-0 overflow-hidden rounded-xl">
-                <Image
-                  src={
-                    course.thumbnail ??
-                    "/thumbnails/coursethumbnail.png"
-                  }
-                  alt={course.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
+    <div
+      className="
+        overflow-hidden
+        rounded-3xl
+        border
+        border-zinc-800
+        bg-zinc-900
+        transition-all
+        duration-300
+        hover:-translate-y-0.5
+        hover:border-cyan-500
+        hover:shadow-[0_0_25px_rgba(6,182,212,.12)]
+      "
+    >
 
-              <div className="flex flex-1 flex-col">
-                <h3 className="line-clamp-2 text-lg font-semibold text-white">
-                  {course.title}
-                </h3>
+      <div className="relative h-36 w-full overflow-hidden">
+        <Image
+          src={
+            course.thumbnail ??
+            "/thumbnails/coursethumbnail.png"
+          }
+          alt={course.title}
+          fill
+          className="object-cover object-center"
+        />
+      </div>
 
-                <p className="mt-2 line-clamp-2 text-sm text-zinc-300">
-                  {mode === "start"
-                    ? `${totalLessons} Lessons`
-                    : mode === "recommend"
-                    ? "Discover something new"
-                    : lesson.title}
-                </p> 
+      <div className="p-4">
 
-                {mode === "continue" ? (
-                    <p className="mt-2 text-sm text-zinc-500">
-                      Lesson {completedLessons + 1} of {totalLessons}
-                    </p>
-                  ) : (
-                    <p className="mt-2 text-sm font-medium text-cyan-400">
-                      {mode === "start"
-                        ? "Ready to begin"
-                        : "Available now"}
-                    </p>
-                  )}
+        <h3 className="line-clamp-2 text-lg font-semibold text-white">
+          {course.title}
+        </h3>
 
-                <div className="mt-auto flex items-center gap-2 pt-3">
-                  <div className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-700">
-                    <div
-                      className="h-full rounded-full bg-cyan-500"
-                      style={{
-                        width: `${progress}%`,
-                      }}
-                    />
-                  </div>
+        <div className="mt-4 flex items-center justify-between">
 
-                  <span className="text-sm font-medium text-cyan-400">
-                    {progress}%
-                  </span>
-                </div>
-              </div>
-            </div>
+          <div className="flex items-center gap-2 text-zinc-400">
+            <BookOpen className="h-5 w-5 text-cyan-400" />
 
-            <Link
-              href={`/courses/${course.slug}/lessons/${lesson.id}`}
-              className="mt-5 block rounded-xl bg-cyan-500 py-3 text-center font-semibold text-black transition hover:bg-cyan-400"
-            >
-              Continue Lesson
-            </Link>
+            <span className="text-sm">
+              Lesson {completedLessons + 1} of {totalLessons}
+            </span>
           </div>
-        </section>
-      );
-  }
+
+          <span className="text-sm font-semibold text-cyan-400">
+            {progress}%
+          </span>
+
+        </div>
+
+        <div className="mt-3 h-2 overflow-hidden rounded-full bg-zinc-800">
+          <div
+            className="h-full rounded-full bg-cyan-500"
+            style={{
+              width: `${progress}%`,
+            }}
+          />
+        </div>
+
+        <Link
+          href={`/courses/${course.slug}/lessons/${lesson.id}`}
+          className="
+            mt-5
+            block
+            rounded-xl
+            bg-cyan-500
+            py-3
+            text-center
+            font-semibold
+            text-black
+          "
+        >
+          Continue Lesson
+        </Link>
+
+      </div>
+
+    </div>
+
+  </section>
+);  }
 }
