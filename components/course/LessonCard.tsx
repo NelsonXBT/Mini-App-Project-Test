@@ -21,12 +21,15 @@ type LessonCardProps = {
   lesson: Lesson;
   lessonNumber: number;
   courseSlug: string;
+
+  isLast: boolean;
 };
 
 export default function LessonCard({
   lesson,
   lessonNumber,
   courseSlug,
+  isLast,
 }: LessonCardProps) {
   const duration =
     lesson.duration != null
@@ -39,20 +42,15 @@ export default function LessonCard({
   return (
     <Link
       href={`/courses/${courseSlug}/lessons/${lesson.id}`}
-      className="
+      className={`
         group
         block
-        rounded-2xl
-        border
-        border-[var(--border)]
-        bg-[var(--card)]
-        px-4
+        px-5
         py-4
-        transition-all
-        duration-200
-        hover:border-[var(--primary)]
-        hover:-translate-y-0.5
-      "
+        transition-colors
+        hover:bg-[var(--surface-secondary)]
+        ${!isLast ? "border-b border-[var(--border)]" : ""}
+      `}
     >
       <div className="flex items-center gap-4">
 
@@ -61,8 +59,9 @@ export default function LessonCard({
         <div
           className="
             flex
-            h-9
-            w-9
+            h-8
+            w-8
+            shrink-0
             items-center
             justify-center
             rounded-full
@@ -75,15 +74,15 @@ export default function LessonCard({
           {lessonNumber}
         </div>
 
-        {/* Content */}
+        {/* Lesson Content */}
 
         <div className="min-w-0 flex-1">
 
-          <h3 className="truncate text-[15px] font-semibold text-[var(--text)]">
+          <h3 className="truncate text-[15px] font-medium text-[var(--text)]">
             {lesson.title}
           </h3>
 
-          <div className="mt-2 flex items-center gap-2">
+          <div className="mt-1 flex items-center gap-2">
 
             <Clock3 className="h-3.5 w-3.5 text-[var(--text-muted)]" />
 
@@ -98,18 +97,13 @@ export default function LessonCard({
         {/* Status */}
 
         {completed ? (
-          <CheckCircle2
-            className="
-              h-5
-              w-5
-              text-emerald-500
-            "
-          />
+          <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-500" />
         ) : (
           <ChevronRight
             className="
               h-5
               w-5
+              shrink-0
               text-[var(--text-muted)]
               transition-transform
               duration-200

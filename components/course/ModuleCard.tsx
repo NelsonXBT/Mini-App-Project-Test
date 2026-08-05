@@ -25,7 +25,6 @@ type ModuleCardProps = {
   module: Module;
   courseSlug: string;
   lessonOffset: number;
-
   isExpanded: boolean;
   onToggle: () => void;
 };
@@ -41,7 +40,7 @@ export default function ModuleCard({
     <section
       className="
         overflow-hidden
-        rounded-3xl
+        rounded-xl
         border
         border-[var(--border)]
         bg-[var(--card)]
@@ -57,18 +56,20 @@ export default function ModuleCard({
           items-center
           justify-between
           px-5
-          py-4
+          py-5
           text-left
-          transition-colors
-          hover:bg-[var(--surface-secondary)]
         "
       >
         <div>
-          <h2 className="text-base font-semibold text-[var(--text)]">
+          <p className="text-xs font-medium uppercase tracking-wide text-[var(--text-muted)]">
+            Module
+          </p>
+
+          <h2 className="mt-1 text-xl font-semibold text-[var(--text)]">
             {module.title}
           </h2>
 
-          <p className="mt-1 text-sm text-[var(--text-muted)]">
+          <p className="mt-2 text-sm text-[var(--text-muted)]">
             {module.lessons.length} Lesson
             {module.lessons.length !== 1 ? "s" : ""}
           </p>
@@ -78,24 +79,23 @@ export default function ModuleCard({
           className={`
             h-5
             w-5
-            text-[var(--text-muted)]
             transition-transform
             duration-300
+            text-[var(--text-muted)]
             ${isExpanded ? "rotate-180" : ""}
           `}
         />
       </button>
 
-      {/* Lessons */}
-
       {isExpanded && (
-        <div className="space-y-3 px-4 pb-4">
+        <div className="border-t border-[var(--border)]">
           {module.lessons.map((lesson, index) => (
             <LessonCard
               key={lesson.id}
               lesson={lesson}
               lessonNumber={lessonOffset + index + 1}
               courseSlug={courseSlug}
+              isLast={index === module.lessons.length - 1}
             />
           ))}
         </div>
