@@ -14,7 +14,7 @@ export default function LessonMeta({
 
   return (
     <div className="mt-6 flex gap-6 text-sm text-gray-400">
-      <span>⏱ {formattedDuration}</span>
+      {/* <span>⏱ {formattedDuration}</span> */}
 
       {/* <span>
         {completed
