@@ -38,14 +38,14 @@ export default function CommunityBanner() {
             href="https://t.me/yourcommunity"
             target="_blank"
             className="
-              mt-3
+              mt-5
               inline-flex
               items-center
               gap-2
               rounded-xl
               bg-cyan-500
-              px-4
-              py-2
+              px-5
+              py-2.5
               text-sm
               font-semibold
               text-black
