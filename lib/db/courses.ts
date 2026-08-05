@@ -22,6 +22,8 @@ export async function getCourses() {
 }
 
 export async function getCourse(slug: string) {
+  const user = await getCurrentUser();
+
   console.log("================================");
   console.log("Looking for course slug:", slug);
 
@@ -41,6 +43,18 @@ export async function getCourse(slug: string) {
             },
             include: {
               resources: true,
+
+              progress: user
+                ? {
+                    where: {
+                      userId: user.id,
+                    },
+                    select: {
+                      progress: true,
+                      completed: true,
+                    },
+                  }
+                : false,
             },
           },
         },

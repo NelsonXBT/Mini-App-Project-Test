@@ -9,7 +9,17 @@ import FileCard from "./FileCard";
 
 type Module = Prisma.ModuleGetPayload<{
   include: {
-    lessons: true;
+    lessons: {
+      include: {
+        resources: true;
+        progress: {
+          select: {
+            progress: true;
+            completed: true;
+          };
+        };
+      };
+    };
   };
 }>;
 

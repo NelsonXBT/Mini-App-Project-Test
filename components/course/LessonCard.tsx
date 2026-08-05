@@ -6,7 +6,16 @@ import {
 } from "lucide-react";
 import { Prisma } from "@prisma/client";
 
-type Lesson = Prisma.LessonGetPayload<{}>;
+type Lesson = Prisma.LessonGetPayload<{
+  include: {
+    progress: {
+      select: {
+        progress: true;
+        completed: true;
+      };
+    };
+  };
+}>;
 
 type LessonCardProps = {
   lesson: Lesson;
@@ -20,12 +29,14 @@ export default function LessonCard({
   courseSlug,
 }: LessonCardProps) {
   const duration =
-    lesson.duration != null
-      ? `${Math.ceil(lesson.duration / 60)} min`
-      : "—";
+  lesson.duration != null
+    ? `${Math.floor(lesson.duration / 60)}:${String(
+        lesson.duration % 60
+      ).padStart(2, "0")}`
+    : "—";
 
-  // Progress tracking comes later
-  const completed = false;
+const completed =
+  lesson.progress[0]?.completed ?? false;
 
   return (
     <Link
@@ -34,14 +45,16 @@ export default function LessonCard({
     >
       <div className="flex items-center gap-4">
         <div className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-800 text-sm font-bold">
-          {completed ? (
-            <CheckCircle2 className="h-6 w-6 text-green-400" />
-          ) : (
-            <span className="text-cyan-400">
+            <span
+              className={
+                completed
+                  ? "text-green-400"
+                  : "text-cyan-400"
+              }
+            >
               {lessonNumber}
             </span>
-          )}
-        </div>
+          </div>
 
         <div className="min-w-0 flex-1">
           <h3 className="truncate font-semibold text-white">
@@ -54,22 +67,34 @@ export default function LessonCard({
             <span>{duration}</span>
 
             {completed && (
-              <>
-                <span>•</span>
-
-                <span className="text-green-400">
-                  Completed
-                </span>
-              </>
-            )}
+                  <span
+                    className="
+                      ml-2
+                      rounded-full
+                      bg-emerald-500/15
+                      px-2
+                      py-0.5
+                      text-xs
+                      font-medium
+                      text-emerald-400
+                    "
+                  >
+                    Completed
+                  </span>
+                )}
           </div>
         </div>
-
-        {completed ? (
-          <CheckCircle2 className="h-5 w-5 text-green-400" />
-        ) : (
-          <ChevronRight className="h-5 w-5 text-zinc-500" />
-        )}
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-zinc-800 text-sm font-bold">
+            <span
+              className={
+                completed
+                  ? "text-emerald-400"
+                  : "text-cyan-400"
+              }
+            >
+              {lessonNumber}
+            </span>
+          </div>
       </div>
     </Link>
   );

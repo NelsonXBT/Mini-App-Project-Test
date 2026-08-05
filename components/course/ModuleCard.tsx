@@ -4,7 +4,17 @@ import { Prisma } from "@prisma/client";
 
 type Module = Prisma.ModuleGetPayload<{
   include: {
-    lessons: true;
+    lessons: {
+      include: {
+        resources: true;
+        progress: {
+          select: {
+            progress: true;
+            completed: true;
+          };
+        };
+      };
+    };
   };
 }>;
 
