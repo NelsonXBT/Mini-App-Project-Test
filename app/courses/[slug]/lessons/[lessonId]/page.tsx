@@ -61,10 +61,10 @@ console.dir(lesson, { depth: null });
           courseTitle={lesson.module.course.title}
         />
 
-        <LessonMeta
+        {/* <LessonMeta
           duration={lesson.duration ?? 0}
           completed={false}
-        />
+        /> */}
 
        <LessonVideoSection
         lessonId={lesson.id}
