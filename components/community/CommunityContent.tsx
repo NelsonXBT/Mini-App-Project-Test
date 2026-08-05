@@ -1,30 +1,83 @@
+import Link from "next/link";
+import { ArrowRight, Send } from "lucide-react";
+
 import CommunityCard from "./CommunityCard";
 import { communityItems } from "@/lib/constants/community";
-import CommunityBanner from "./CommunityBanner";
 
 export default function CommunityContent() {
   return (
-  <div className="space-y-6">
+    <div className="space-y-5">
 
-    <CommunityBanner />
+      {/* Telegram Banner */}
 
-    <div>
-      <h2 className="mb-3 text-lg font-semibold text-zinc-400">
-        Community
-      </h2>
+      <div className="overflow-hidden rounded-3xl border border-cyan-900/40 bg-gradient-to-r from-cyan-900/70 to-cyan-700/40 p-5">
 
-      <div className="space-y-3">
-        {communityItems.map((item) => (
-          <CommunityCard
-            key={item.id}
-            icon={item.icon}
-            title={item.title}
-            description={item.description}
-          />
-        ))}
+        <div className="flex items-start justify-between">
+
+          <div>
+            <h2 className="text-xl font-bold text-white">
+              Join Our Telegram Community
+            </h2>
+
+            <p className="mt-2 text-sm leading-6 text-cyan-100/80">
+              Connect with students, ask questions,
+              receive updates and access exclusive
+              announcements.
+            </p>
+          </div>
+
+          <div className="rounded-2xl bg-cyan-500/20 p-3">
+            <Send className="h-7 w-7 text-cyan-300" />
+          </div>
+
+        </div>
+
+        <Link
+          href="https://t.me/yourcommunity"
+          target="_blank"
+          className="
+            mt-5
+            inline-flex
+            items-center
+            gap-2
+            rounded-xl
+            bg-cyan-500
+            px-5
+            py-3
+            font-semibold
+            text-black
+            transition
+            hover:bg-cyan-400
+          "
+        >
+          Join Telegram
+
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+
       </div>
-    </div>
 
-  </div>
-);
+      {/* Community Channels */}
+
+      <div>
+
+        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-zinc-500">
+          Community Channels
+        </h3>
+
+        <div className="space-y-3">
+          {communityItems.map((item) => (
+            <CommunityCard
+              key={item.id}
+              icon={item.icon}
+              title={item.title}
+              description={item.description}
+            />
+          ))}
+        </div>
+
+      </div>
+
+    </div>
+  );
 }
