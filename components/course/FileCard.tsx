@@ -3,7 +3,7 @@
 import Link from "next/link";
 
 import {
-  ChevronRight,
+  ExternalLink,
   FileText,
   Folder,
   GitBranch,
@@ -51,12 +51,8 @@ export default function FileCard({
   }
 
   return (
-    <Link
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
+    <div
       className="
-        group
         flex
         items-center
         gap-4
@@ -66,13 +62,15 @@ export default function FileCard({
         bg-[var(--card)]
         px-5
         py-4
-        transition-colors
-        hover:bg-[var(--surface-secondary)]
       "
     >
+      {/* Icon */}
+
       <div className="shrink-0">
         {renderIcon()}
       </div>
+
+      {/* Content */}
 
       <div className="min-w-0 flex-1">
         <h3 className="truncate text-[15px] font-medium text-[var(--text)]">
@@ -84,17 +82,34 @@ export default function FileCard({
         </p>
       </div>
 
-      <ChevronRight
+      {/* View Button */}
+
+      <Link
+        href={url}
+        target="_blank"
+        rel="noopener noreferrer"
         className="
-          h-5
-          w-5
-          shrink-0
-          text-[var(--text-muted)]
-          transition-transform
+          inline-flex
+          items-center
+          gap-1.5
+          rounded-lg
+          border
+          border-[var(--border)]
+          px-3
+          py-2
+          text-xs
+          font-medium
+          text-[var(--primary)]
+          transition-all
           duration-200
-          group-hover:translate-x-0.5
+          hover:border-[var(--primary)]
+          hover:bg-[var(--surface-secondary)]
         "
-      />
-    </Link>
+      >
+        View
+
+        <ExternalLink className="h-3.5 w-3.5" />
+      </Link>
+    </div>
   );
 }
