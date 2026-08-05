@@ -37,7 +37,21 @@ export default function ModuleCard({
   onToggle,
 }: ModuleCardProps) {
   return (
-    <section className="border-b border-[var(--border)] last:border-b-0">
+   
+   <section
+          className={`
+            border-b
+            border-[var(--border)]
+            transition-colors
+            duration-300
+            last:border-b-0
+            ${
+              isExpanded
+                ? "bg-[var(--surface-secondary)]"
+                : "bg-[var(--card)]"
+            }
+          `}
+        >
 
       <button
         onClick={onToggle}
@@ -52,9 +66,17 @@ export default function ModuleCard({
         "
       >
         <div>
-          <h2 className="text-xl font-semibold text-[var(--text)]">
-            {module.title}
-          </h2>
+          <h2
+              className="
+                text-xl
+                font-semibold
+                uppercase
+                tracking-[0.02em]
+                text-[var(--text)]
+              "
+            >
+              {module.title}
+            </h2>
 
           <p className="mt-2 text-sm text-[var(--text-muted)]">
             {module.lessons.length} Lesson
@@ -66,7 +88,11 @@ export default function ModuleCard({
           className={`
             h-5
             w-5
-            text-[var(--text-muted)]
+            ${
+                isExpanded
+                  ? "text-[var(--primary)]"
+                  : "text-[var(--text-muted)]"
+              }
             transition-transform
             duration-300
             ${isExpanded ? "rotate-180" : ""}
@@ -75,7 +101,17 @@ export default function ModuleCard({
       </button>
 
       {isExpanded && (
-        <div className="border-t border-[var(--border)]">
+        <div
+              className="
+                mx-3
+                mb-3
+                overflow-hidden
+                rounded-lg
+                border
+                border-[var(--border)]
+                bg-[var(--card)]
+              "
+            >
           {module.lessons.map((lesson, index) => (
             <LessonCard
               key={lesson.id}
