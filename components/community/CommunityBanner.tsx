@@ -7,7 +7,7 @@ export default function CommunityBanner() {
       className="
         relative
         overflow-hidden
-        rounded-3xl
+        rounded-2xl
         border
         border-cyan-500/20
         bg-gradient-to-r
@@ -15,54 +15,49 @@ export default function CommunityBanner() {
         via-cyan-900
         to-cyan-800
         px-6
-        py-5
-        shadow-[0_0_18px_rgba(6,182,212,.08)]
+        py-3.5
+        shadow-[0_0_20px_rgba(6,182,212,0.08)]
       "
     >
-      {/* Soft background glow */}
-      <div className="absolute -right-16 -top-12 h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl" />
-      <div className="absolute -left-10 bottom-0 h-24 w-24 rounded-full bg-cyan-300/5 blur-2xl" />
+      {/* Background Glow */}
+      <div className="absolute -top-16 -right-16 h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl" />
+      <div className="absolute -bottom-12 -left-10 h-24 w-24 rounded-full bg-cyan-300/5 blur-2xl" />
 
       <div className="relative">
+        <div className="max-w-full">
 
-        {/* Title */}
+          <h2 className="text-lg font-bold text-white whitespace-nowrap">
+            Join Our Telegram Community
+          </h2>
 
-        <h2 className="text-2xl font-bold tracking-tight text-white">
-          Join Our Telegram Community
-        </h2>
+          <p className="mt-1 text-xs text-cyan-100/80">
+            Connect with creator, get updates and support
+          </p>
 
-        {/* Description */}
+          <Link
+            href="https://t.me/yourcommunity"
+            target="_blank"
+            className="
+              mt-3
+              inline-flex
+              items-center
+              gap-2
+              rounded-xl
+              bg-cyan-500
+              px-4
+              py-2
+              text-sm
+              font-semibold
+              text-black
+              transition
+              hover:bg-cyan-400
+            "
+          >
+            <Send className="h-4 w-4" />
+            Join Telegram
+          </Link>
 
-        <p className="mt-2 max-w-xs text-xs leading-5 text-cyan-100/75">
-          Connect with creators, get updates and support.
-        </p>
-
-        {/* Button */}
-
-        <Link
-          href="https://t.me/yourcommunity"
-          target="_blank"
-          className="
-            mt-4
-            inline-flex
-            items-center
-            gap-2
-            rounded-xl
-            bg-cyan-500
-            px-5
-            py-2.5
-            text-sm
-            font-semibold
-            text-black
-            transition
-            hover:bg-cyan-400
-          "
-        >
-          <Send className="h-4 w-4" />
-
-          Join Telegram
-        </Link>
-
+        </div>
       </div>
     </section>
   );
