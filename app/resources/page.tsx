@@ -1,3 +1,5 @@
+
+
 import ResourceContent from "@/components/resource/ResourceContent";
 
 export default function ResourcesPage() {

@@ -1,3 +1,6 @@
+
+import { Lock } from "lucide-react";
+
 type ResourceTabsProps = {
   activeTab: "packs" | "tools";
   onTabChange: (tab: "packs" | "tools") => void;
@@ -25,15 +28,21 @@ export default function ResourceTabs({
 
 
       <button
-        onClick={() => onTabChange("packs")}
-        className={`flex-1 rounded-lg py-3 text-sm font-semibold transition ${
-          activeTab === "packs"
-            ? "bg-cyan-500 text-black"
-            : "text-zinc-400 hover:text-white"
-        }`}
-      >
-        Packs
-      </button>
+          disabled
+          className="
+            flex items-center justify-center gap-1
+            rounded-xl
+            px-6
+            py-3
+            text-zinc-500
+            cursor-not-allowed
+            opacity-70
+          "
+        >
+          <span>Packs</span>
+
+          <Lock className="h-3.5 w-3.5" />
+        </button>
 
     </div>
   );
