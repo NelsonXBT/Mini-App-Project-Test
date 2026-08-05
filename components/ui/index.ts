@@ -3,6 +3,7 @@ export { default as Button } from "./Button";
 export { default as Card } from "./Card";
 export { default as Container } from "./Container";
 export { default as FadeIn } from "./FadeIn";
+export { default as IconButton } from "./IconButton";
 export { default as PageTitle } from "./PageTitle";
 export { default as Progress } from "./Progress";
 export { default as SectionTitle } from "./SectionTitle";
