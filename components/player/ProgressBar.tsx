@@ -80,12 +80,12 @@ export default function ProgressBar({
         }}
       className="
         relative
-        h-1
+        h-1.5
         w-full
         cursor-pointer
         touch-none
         rounded-full
-        bg-white/20
+        bg-stone-200
       "
     >
       {/* Played */}
@@ -96,7 +96,7 @@ export default function ProgressBar({
           inset-y-0
           left-0
           rounded-full
-          bg-cyan-500
+          bg-[var(--primary)]
         "
         style={{
           width: `${percent}%`,
@@ -107,15 +107,18 @@ export default function ProgressBar({
 
       <div
         className="
-          absolute
-          top-1/2
-          h-2.5
-          w-2.5
-          -translate-x-1/2
-          -translate-y-1/2
-          rounded-full
-          bg-cyan-500
-        "
+            absolute
+            top-1/2
+            h-4
+            w-4
+            -translate-x-1/2
+            -translate-y-1/2
+            rounded-full
+            border-2
+            border-white
+            bg-[var(--primary)]
+            shadow-md
+          "
         style={{
           left: `${percent}%`,
         }}

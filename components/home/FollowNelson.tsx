@@ -34,7 +34,7 @@ export default function FollowNelson() {
     <section className="pt-2">
       <div>
         <h2 className="text-lg font-semibold text-[var(--text)]">
-          Connect with Nelson
+          Connect with Nelson Edeh
         </h2>
 
         <p className="mt-1 text-sm text-[var(--text-muted)]">
