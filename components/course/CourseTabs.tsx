@@ -21,18 +21,20 @@ export default function CourseTabs({
       <button
         onClick={() => onTabChange("lessons")}
         className={`
-          relative
-          flex-1
-          pb-3
-          text-sm
-          font-semibold
-          transition-colors
-          ${
-            activeTab === "lessons"
-              ? "text-[var(--primary)]"
-              : "text-[var(--text-muted)] hover:text-[var(--text)]"
-          }
-        `}
+              relative
+              flex-1
+              pb-3
+              text-[13px]
+              font-semibold
+              uppercase
+              tracking-[0.08em]
+              transition-colors
+              ${
+                activeTab === "lessons"
+                  ? "text-[var(--primary)]"
+                  : "text-[var(--text-muted)] hover:text-[var(--text)]"
+              }
+            `}
       >
         Lessons
 
@@ -54,18 +56,20 @@ export default function CourseTabs({
       <button
         onClick={() => onTabChange("files")}
         className={`
-          relative
-          flex-1
-          pb-3
-          text-sm
-          font-semibold
-          transition-colors
-          ${
-            activeTab === "files"
-              ? "text-[var(--primary)]"
-              : "text-[var(--text-muted)] hover:text-[var(--text)]"
-          }
-        `}
+            relative
+            flex-1
+            pb-3
+            text-[13px]
+            font-semibold
+            uppercase
+            tracking-[0.08em]
+            transition-colors
+            ${
+              activeTab === "files"
+                ? "text-[var(--primary)]"
+                : "text-[var(--text-muted)] hover:text-[var(--text)]"
+            }
+          `}
       >
         Files
 
