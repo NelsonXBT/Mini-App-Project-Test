@@ -11,7 +11,7 @@ import { featuredTools } from "@/lib/constants/featured-tools";
 export default function ResourceContent() {
   const [activeTab, setActiveTab] = useState<
     "packs" | "tools"
-  >("packs");
+  >("tools");
 
   return (
     <>
