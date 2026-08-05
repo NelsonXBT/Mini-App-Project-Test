@@ -31,7 +31,7 @@ const socials = [
 
 export default function FollowNelson() {
   return (
-    <section className="pt-3">
+    <section className="pt-2">
       <div>
         <h2 className="text-lg font-semibold text-[var(--text)]">
           Connect with Nelson
@@ -42,7 +42,7 @@ export default function FollowNelson() {
         </p>
       </div>
 
-      <div className="mt-6 grid grid-cols-2 gap-x-10 gap-y-5">
+      <div className="mt-6 grid grid-cols-2 gap-3">
         {socials.map((social) => {
           const Icon = social.icon;
 
@@ -54,36 +54,37 @@ export default function FollowNelson() {
                 group
                 flex
                 items-center
-                gap-3
+                justify-center
+                gap-2
+                rounded-full
+                border
+                border-[var(--border)]
+                bg-[var(--card)]
+                px-4
+                py-3
                 transition-all
                 duration-200
+                hover:-translate-y-0.5
+                hover:border-[var(--primary)]
+                hover:shadow-sm
               "
             >
-              <div
+              <Icon
                 className="
-                  flex
-                  h-10
-                  w-10
-                  items-center
-                  justify-center
-                  rounded-full
-                  bg-[var(--surface-secondary)]
-                  transition-all
+                  h-4.5
+                  w-4.5
+                  text-[var(--primary)]
+                  transition-transform
                   duration-200
-                  group-hover:bg-[var(--primary)]
-                  group-hover:text-white
+                  group-hover:scale-110
                 "
-              >
-                <Icon className="h-5 w-5" />
-              </div>
+              />
 
               <span
                 className="
                   text-sm
                   font-medium
                   text-[var(--text)]
-                  transition-colors
-                  group-hover:text-[var(--primary)]
                 "
               >
                 {social.name}
