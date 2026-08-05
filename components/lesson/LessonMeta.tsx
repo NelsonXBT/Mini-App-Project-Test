@@ -16,11 +16,11 @@ export default function LessonMeta({
     <div className="mt-6 flex gap-6 text-sm text-gray-400">
       <span>⏱ {formattedDuration}</span>
 
-      <span>
+      {/* <span>
         {completed
           ? "✅ Completed"
           : "⭕ Not Completed"}
-      </span>
+      </span> */}
     </div>
   );
 }
