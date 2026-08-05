@@ -50,38 +50,21 @@ const courseProgress = await getCourseProgress(course.id);
   <CourseGuard course={course}>
     <main className="space-y-6">
 
-  <section className="space-y-3">
+  <section className="pb-1">
 
-    <h1
-      className="
-        text-[2rem]
-        font-semibold
-        leading-tight
-        tracking-tight
-        text-[var(--text)]
-      "
-    >
-      {course.title}
-    </h1>
+  <h1
+    className="
+      text-[1.75rem]
+      font-semibold
+      leading-[1.2]
+      tracking-tight
+      text-[var(--text)]
+    "
+  >
+    {course.title}
+  </h1>
 
-    <div
-      className="
-        inline-flex
-        items-center
-        rounded-full
-        border
-        border-[var(--border)]
-        bg-[var(--surface-secondary)]
-        px-3
-        py-1
-      "
-    >
-      <span className="text-sm font-medium text-[var(--text-muted)]">
-        {totalLessons} Lesson{totalLessons !== 1 ? "s" : ""}
-      </span>
-    </div>
-
-  </section>
+</section>
 
   <CourseProgress
     completed={courseProgress.completedLessons}
