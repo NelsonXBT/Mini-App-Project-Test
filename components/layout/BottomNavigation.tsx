@@ -46,23 +46,29 @@ export default function BottomNavigation() {
       className="
         player-nav
         fixed
-        bottom-4
-        left-1/2
+        bottom-0
+        left-0
+        right-0
         z-50
-        w-[calc(100%-24px)]
-        max-w-md
-        -translate-x-1/2
-        rounded-[26px]
-        border
-        border-[var(--border)]
-        bg-[var(--card)]/95
-        shadow-[var(--shadow-card)]
+        border-t
+        border-stone-200
+        bg-white
         backdrop-blur-xl
         transition-all
         duration-300
       "
     >
-      <div className="flex justify-around px-2 py-2">
+      <div
+            className="
+              mx-auto
+              flex
+              max-w-md
+              justify-around
+              px-3
+              pt-3
+              pb-[calc(env(safe-area-inset-bottom)+12px)]
+            "
+          >
         {navItems.map((item) => {
           const active =
             pathname === item.href ||
@@ -79,15 +85,15 @@ export default function BottomNavigation() {
                 flex-col
                 items-center
                 gap-1
-                rounded-2xl
+                rounded-xl
                 px-3
                 py-2
                 transition-all
                 duration-200
                 ${
                   active
-                    ? "bg-[var(--surface-secondary)] text-[var(--primary)]"
-                    : "text-[var(--text-muted)] hover:text-[var(--text)]"
+                  ? "bg-stone-100 text-[var(--primary)]"
+                  : "text-[var(--text-muted)] hover:text-[var(--text)]"
                 }
               `}
             >
