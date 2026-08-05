@@ -10,27 +10,78 @@ export default function CourseTabs({
   onTabChange,
 }: CourseTabsProps) {
   return (
-    <div className="mb-6 flex rounded-xl bg-zinc-900 p-1">
+    <div
+      className="
+        mb-5
+        flex
+        border-b
+        border-[var(--border)]
+      "
+    >
       <button
         onClick={() => onTabChange("lessons")}
-        className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition ${
-          activeTab === "lessons"
-            ? "bg-cyan-500 text-black"
-            : "text-zinc-400 hover:text-white"
-        }`}
+        className={`
+          relative
+          flex-1
+          pb-3
+          text-sm
+          font-semibold
+          transition-colors
+          ${
+            activeTab === "lessons"
+              ? "text-[var(--primary)]"
+              : "text-[var(--text-muted)] hover:text-[var(--text)]"
+          }
+        `}
       >
         Lessons
+
+        {activeTab === "lessons" && (
+          <span
+            className="
+              absolute
+              bottom-0
+              left-0
+              h-0.5
+              w-full
+              rounded-full
+              bg-[var(--primary)]
+            "
+          />
+        )}
       </button>
 
       <button
         onClick={() => onTabChange("files")}
-        className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition ${
-          activeTab === "files"
-            ? "bg-cyan-500 text-black"
-            : "text-zinc-400 hover:text-white"
-        }`}
+        className={`
+          relative
+          flex-1
+          pb-3
+          text-sm
+          font-semibold
+          transition-colors
+          ${
+            activeTab === "files"
+              ? "text-[var(--primary)]"
+              : "text-[var(--text-muted)] hover:text-[var(--text)]"
+          }
+        `}
       >
         Files
+
+        {activeTab === "files" && (
+          <span
+            className="
+              absolute
+              bottom-0
+              left-0
+              h-0.5
+              w-full
+              rounded-full
+              bg-[var(--primary)]
+            "
+          />
+        )}
       </button>
     </div>
   );
