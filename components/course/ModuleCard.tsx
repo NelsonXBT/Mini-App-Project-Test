@@ -1,6 +1,9 @@
-import { ChevronDown } from "lucide-react";
-import LessonCard from "./LessonCard";
+"use client";
+
 import { Prisma } from "@prisma/client";
+import { ChevronDown } from "lucide-react";
+
+import LessonCard from "./LessonCard";
 
 type Module = Prisma.ModuleGetPayload<{
   include: {
@@ -22,33 +25,81 @@ type ModuleCardProps = {
   module: Module;
   courseSlug: string;
   lessonOffset: number;
+
+  isExpanded: boolean;
+  onToggle: () => void;
 };
 
 export default function ModuleCard({
   module,
   courseSlug,
   lessonOffset,
+  isExpanded,
+  onToggle,
 }: ModuleCardProps) {
   return (
-    <section className="rounded-2xl border border-zinc-800 bg-zinc-900">
-      <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-3">
-        <h2 className="font-semibold text-white">
-          {module.title}
-        </h2>
+    <section
+      className="
+        overflow-hidden
+        rounded-3xl
+        border
+        border-[var(--border)]
+        bg-[var(--card)]
+      "
+    >
+      {/* Header */}
 
-        <ChevronDown className="h-5 w-5 text-zinc-500" />
-      </div>
+      <button
+        onClick={onToggle}
+        className="
+          flex
+          w-full
+          items-center
+          justify-between
+          px-5
+          py-4
+          text-left
+          transition-colors
+          hover:bg-[var(--surface-secondary)]
+        "
+      >
+        <div>
+          <h2 className="text-base font-semibold text-[var(--text)]">
+            {module.title}
+          </h2>
 
-      <div className="space-y-2 p-3">
-        {module.lessons.map((lesson, index) => (
-          <LessonCard
-            key={lesson.id}
-            lesson={lesson}
-            lessonNumber={lessonOffset + index + 1}
-            courseSlug={courseSlug}
-          />
-        ))}
-      </div>
+          <p className="mt-1 text-sm text-[var(--text-muted)]">
+            {module.lessons.length} Lesson
+            {module.lessons.length !== 1 ? "s" : ""}
+          </p>
+        </div>
+
+        <ChevronDown
+          className={`
+            h-5
+            w-5
+            text-[var(--text-muted)]
+            transition-transform
+            duration-300
+            ${isExpanded ? "rotate-180" : ""}
+          `}
+        />
+      </button>
+
+      {/* Lessons */}
+
+      {isExpanded && (
+        <div className="space-y-3 px-4 pb-4">
+          {module.lessons.map((lesson, index) => (
+            <LessonCard
+              key={lesson.id}
+              lesson={lesson}
+              lessonNumber={lessonOffset + index + 1}
+              courseSlug={courseSlug}
+            />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

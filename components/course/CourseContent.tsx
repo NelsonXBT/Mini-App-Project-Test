@@ -36,7 +36,15 @@ export default function CourseContent({
   files,
   courseSlug,
 }: CourseContentProps) {
-  const [activeTab, setActiveTab] = useState<"lessons" | "files">("lessons");
+      const [activeTab, setActiveTab] = useState<"lessons" | "files">("lessons");
+
+    /*
+    * Accordion state.
+    * Only one module can be expanded at a time.
+    */
+    const [expandedModuleId, setExpandedModuleId] = useState<string | null>(
+      modules.length ? modules[0].id : null
+    );
 
   let lessonOffset = 0;
 
@@ -60,6 +68,14 @@ export default function CourseContent({
                 module={module}
                 lessonOffset={currentOffset}
                 courseSlug={courseSlug}
+
+                isExpanded={expandedModuleId === module.id}
+
+                onToggle={() =>
+                  setExpandedModuleId((current) =>
+                    current === module.id ? null : module.id
+                  )
+                }
               />
             );
           })}
