@@ -53,16 +53,16 @@ const courseProgress = await getCourseProgress(course.id);
   <section className="pb-1">
 
   <h1
-    className="
-      text-[1.75rem]
-      font-semibold
-      leading-[1.2]
-      tracking-tight
-      text-[var(--text)]
-    "
-  >
-    {course.title}
-  </h1>
+  className="
+    text-[1.4rem]
+    font-medium
+    leading-[1.2]
+    tracking-[-0.015em]
+    text-[var(--text)]
+  "
+>
+  {course.title}
+</h1>
 
 </section>
 
