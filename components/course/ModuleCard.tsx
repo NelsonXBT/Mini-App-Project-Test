@@ -103,11 +103,8 @@ export default function ModuleCard({
       {isExpanded && (
         <div
               className="
-                mx-3
-                mb-3
                 overflow-hidden
-                rounded-lg
-                border
+                border-t
                 border-[var(--border)]
                 bg-[var(--card)]
               "
