@@ -64,23 +64,17 @@ export default function FileCard({
   }
 
   return (
-    <Link
-      href={url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="
-        flex
-        items-center
-        rounded-xl
-        border
-        border-zinc-800
-        bg-zinc-900
-        p-4
-        transition
-        hover:border-cyan-500
-        hover:bg-zinc-800
-      "
-    >
+    <div
+  className="
+    flex
+    items-center
+    rounded-xl
+    border
+    border-zinc-800
+    bg-zinc-900
+    p-4
+  "
+>
       <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-800">
         {renderIcon()}
       </div>
@@ -91,9 +85,24 @@ export default function FileCard({
         </h3>
       </div>
 
-      <span className="text-sm font-semibold text-cyan-400">
-        View
-      </span>
-    </Link>
+      <Link
+  href={url}
+  target="_blank"
+  rel="noopener noreferrer"
+  className="
+    rounded-lg
+    px-3
+    py-1.5
+    text-sm
+    font-semibold
+    text-cyan-400
+    transition
+    hover:bg-cyan-500/10
+  "
+>
+  View
+</Link>
+
+</div>
   );
 }
