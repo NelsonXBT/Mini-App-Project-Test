@@ -10,27 +10,56 @@ export default function CourseProgress({
   progress,
 }: CourseProgressProps) {
   return (
-    <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-3">
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-zinc-300">
-          Course Progress
-        </span>
+    <section
+      className="
+        rounded-3xl
+        border
+        border-[var(--border)]
+        bg-[var(--card)]
+        p-5
+      "
+    >
+      <div className="flex items-start justify-between">
 
-        <span className="text-sm font-semibold text-cyan-400">
-          {progress}%
-        </span>
-      </div>
+        <div>
+          <p className="text-sm font-medium text-[var(--text-muted)]">
+            Course Progress
+          </p>
 
-      <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-zinc-800">
+          <h3 className="mt-1 text-3xl font-semibold tracking-tight text-[var(--text)]">
+            {progress}%
+          </h3>
+        </div>
+
         <div
-          className="h-full rounded-full bg-cyan-400"
-          style={{ width: `${progress}%` }}
-        />
+          className="
+            rounded-full
+            bg-[var(--surface-secondary)]
+            px-3
+            py-1
+          "
+        >
+          <span className="text-xs font-medium text-[var(--text-muted)]">
+            {completed}/{total} Lessons
+          </span>
+        </div>
+
       </div>
 
-      <p className="mt-2 text-xs text-zinc-500">
+      <div className="mt-5">
+        <div className="h-2 overflow-hidden rounded-full bg-stone-200">
+          <div
+            className="h-full rounded-full bg-[var(--primary)] transition-all duration-500"
+            style={{
+              width: `${progress}%`,
+            }}
+          />
+        </div>
+      </div>
+
+      <p className="mt-4 text-sm text-[var(--text-muted)]">
         {completed} of {total} lessons completed
       </p>
-    </div>
+    </section>
   );
 }
