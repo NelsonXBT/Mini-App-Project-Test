@@ -137,6 +137,75 @@ export async function getHomeLearningCard() {
     return null;
   }
 
+
+const newestEnrollment =
+  await prisma.enrollment.findFirst({
+    where: {
+      userId: user.id,
+      status: "ACTIVE",
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      course: {
+        include: {
+          modules: {
+            orderBy: {
+              order: "asc",
+            },
+            include: {
+              lessons: {
+                orderBy: {
+                  order: "asc",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+
+if (newestEnrollment) {
+  const lessonIds =
+    newestEnrollment.course.modules.flatMap(
+      (module) =>
+        module.lessons.map(
+          (lesson) => lesson.id
+        )
+    );
+
+  const hasStarted =
+    await prisma.lessonProgress.findFirst({
+      where: {
+        userId: user.id,
+        lessonId: {
+          in: lessonIds,
+        },
+      },
+    });
+
+  if (!hasStarted) {
+    const firstLesson =
+      newestEnrollment.course.modules[0]
+        ?.lessons[0];
+
+    if (firstLesson) {
+      return {
+        mode: "start",
+
+        course: newestEnrollment.course,
+        lesson: firstLesson,
+
+        totalLessons: lessonIds.length,
+        completedLessons: 0,
+        progress: 0,
+      };
+    }
+  }
+}
+
   const latestProgress =
     await prisma.lessonProgress.findFirst({
       where: {
@@ -206,8 +275,11 @@ const totalProgress =
   );
 
 return {
+  mode: "continue",
+
   course,
   lesson: latestProgress.lesson,
+
   totalLessons,
   completedLessons,
   progress: Math.round(
