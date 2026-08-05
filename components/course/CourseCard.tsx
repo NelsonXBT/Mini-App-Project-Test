@@ -44,7 +44,7 @@ export default function CourseCard({
       "
     >
       {/* Thumbnail */}
-      <div className="relative aspect-video w-full overflow-hidden">
+      <div className="relative h-44 w-full overflow-hidden">
         <Image
           src={
             course.thumbnail ??
@@ -57,12 +57,12 @@ export default function CourseCard({
       </div>
 
       {/* Content */}
-      <div className="p-5">
-        <h2 className="text-2xl font-bold leading-tight text-white">
+      <div className="p-4">
+        <h2 className="line-clamp-2 text-xl font-bold leading-snug text-white">
           {course.title}
         </h2>
 
-        <div className="mt-5 flex items-center justify-between">
+        <div className="mt-4 flex items-center justify-between">
 
           <div className="text-sm font-medium text-zinc-400">
             📖 {lessonCount} Lesson
@@ -73,9 +73,9 @@ export default function CourseCard({
             className={`
               rounded-full
               border
-              px-4
-              py-1.5
-              text-sm
+              px-3
+              py-1
+              text-xs
               font-semibold
               ${
                 course.isFree
