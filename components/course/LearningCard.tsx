@@ -1,6 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
 import { BookOpen } from "lucide-react";
+
 
 import {
   Badge,
