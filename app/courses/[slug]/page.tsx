@@ -1,5 +1,3 @@
-
-import CourseContent from "@/components/course/CourseContent";
 import CourseProgress from "@/components/course/CourseProgress";
 import CourseLearning from "@/components/course/CourseLearning";
 import CourseGuard from "@/components/guards/CourseGuard";
@@ -20,18 +18,6 @@ export default async function CoursePage({ params }: Props) {
 
   const course = await getCourse(slug);
 
-if (!course) {
-  return (
-    <main>
-      <h1 className="text-2xl font-bold">
-        Course not found
-      </h1>
-    </main>
-  );
-}
-
-const courseProgress = await getCourseProgress(course.id);
-
   if (!course) {
     return (
       <main>
@@ -42,43 +28,23 @@ const courseProgress = await getCourseProgress(course.id);
     );
   }
 
-  const totalLessons = course.modules.reduce(
-    (total, module) => total + module.lessons.length,
-    0
-  );
+  const courseProgress = await getCourseProgress(course.id);
 
   return (
-  <CourseGuard course={course}>
-    <main className="space-y-6">
+    <CourseGuard course={course}>
+      <main className="space-y-6">
 
-  <section className="pb-1">
+        <CourseProgress
+          completed={courseProgress.completedLessons}
+          total={courseProgress.totalLessons}
+          progress={courseProgress.progress}
+        />
 
-  <h1
-  className="
-    text-[1.4rem]
-    font-medium
-    leading-[1.2]
-    tracking-[-0.015em]
-    text-[var(--text)]
-  "
->
-  {course.title}
-</h1>
+        <CourseLearning
+          course={course}
+        />
 
-</section>
-
-  <CourseProgress
-  completed={courseProgress.completedLessons}
-  total={courseProgress.totalLessons}
-  progress={courseProgress.progress}
-/>
-
-<CourseLearning
-  course={course}
-/>
-
-
-</main>
-  </CourseGuard>
-);
+      </main>
+    </CourseGuard>
+  );
 }

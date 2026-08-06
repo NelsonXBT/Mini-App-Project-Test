@@ -1,8 +1,30 @@
-import { Bell } from "lucide-react";
+"use client";
+
+import { Bell, ChevronLeft } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 
 import IconButton from "@/components/ui/IconButton";
 
 export default function Header() {
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const isCourseLearningPage =
+    /^\/courses\/[^/]+$/.test(pathname);
+
+  if (isCourseLearningPage) {
+    return (
+      <header className="mb-5 flex items-center">
+        <IconButton
+          aria-label="Go back"
+          onClick={() => router.back()}
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </IconButton>
+      </header>
+    );
+  }
+
   return (
     <header className="player-header mb-8 flex items-start justify-between">
       <div>
