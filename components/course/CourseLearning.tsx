@@ -27,6 +27,11 @@ export default function CourseLearning({
   const [selectedLesson, setSelectedLesson] =
   useState(lessons[0]);
 
+  console.log(
+  "Selected lesson:",
+  selectedLesson.title
+);
+
   async function handleLessonCompleted() {
   await completeLesson(selectedLesson.id);
 
@@ -36,6 +41,7 @@ export default function CourseLearning({
   return (
     <>
       <VideoPlayer
+        key={selectedLesson.id}
         lessonId={selectedLesson.id}
         provider={selectedLesson.provider}
         videoId={selectedLesson.videoId}
