@@ -16,16 +16,19 @@ export default function PlayButton({
       aria-label={playing ? "Pause video" : "Play video"}
       className="
         flex
-        h-14
-        w-14
+        h-16
+        w-16
         items-center
         justify-center
         rounded-full
-        bg-cyan-500
-        shadow-xl
-        transition-transform
+        border
+        border-white/15
+        bg-black/45
+        text-white
+        backdrop-blur-xl
+        transition-all
         duration-200
-        hover:scale-105
+        hover:bg-black/60
         active:scale-95
         cursor-pointer
         select-none
@@ -33,24 +36,35 @@ export default function PlayButton({
     >
       {playing ? (
         <svg
-          width="18"
-          height="18"
+          width="20"
+          height="20"
           viewBox="0 0 24 24"
-          fill="black"
+          fill="currentColor"
         >
-          <rect x="5" y="4" width="5" height="16" />
-          <rect x="14" y="4" width="5" height="16" />
+          <rect
+            x="5"
+            y="4"
+            width="5"
+            height="16"
+            rx="1"
+          />
+          <rect
+            x="14"
+            y="4"
+            width="5"
+            height="16"
+            rx="1"
+          />
         </svg>
       ) : (
         <svg
-          width="26"
-          height="26"
+          width="28"
+          height="28"
           viewBox="0 0 24 24"
-          fill="black"
+          fill="currentColor"
         >
           <polygon
-            points="6,4 20,12 6,20"
-            transform="translate(1 0)"
+            points="7,4 20,12 7,20"
           />
         </svg>
       )}
