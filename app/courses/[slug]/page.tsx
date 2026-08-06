@@ -1,6 +1,7 @@
 
 import CourseContent from "@/components/course/CourseContent";
 import CourseProgress from "@/components/course/CourseProgress";
+import CourseLearning from "@/components/course/CourseLearning";
 import CourseGuard from "@/components/guards/CourseGuard";
 
 import {
@@ -67,16 +68,15 @@ const courseProgress = await getCourseProgress(course.id);
 </section>
 
   <CourseProgress
-    completed={courseProgress.completedLessons}
-    total={courseProgress.totalLessons}
-    progress={courseProgress.progress}
-  />
+  completed={courseProgress.completedLessons}
+  total={courseProgress.totalLessons}
+  progress={courseProgress.progress}
+/>
 
-  <CourseContent
-    modules={course.modules}
-    files={course.files}
-    courseSlug={course.slug}
-  />
+<CourseLearning
+  course={course}
+/>
+
 
 </main>
   </CourseGuard>

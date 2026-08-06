@@ -29,20 +29,31 @@ type CourseContentProps = {
   modules: Module[];
   files: CourseFile[];
   courseSlug: string;
+
+  selectedLessonId: string;
+
+  onLessonSelect: (
+    lesson: Module["lessons"][number]
+  ) => void;
 };
 
 export default function CourseContent({
   modules,
   files,
   courseSlug,
+  selectedLessonId,
+  onLessonSelect,
 }: CourseContentProps) {
-      const [activeTab, setActiveTab] = useState<"lessons" | "files">("lessons");
+  const [activeTab, setActiveTab] = useState<
+    "lessons" | "files"
+  >("lessons");
 
-    /*
-    * Accordion state.
-    * Only one module can be expanded at a time.
-    */
-    const [expandedModuleId, setExpandedModuleId] = useState<string | null>(
+  /*
+   * Accordion state.
+   * Only one module can be expanded at a time.
+   */
+  const [expandedModuleId, setExpandedModuleId] =
+    useState<string | null>(
       modules.length ? modules[0].id : null
     );
 
@@ -57,18 +68,19 @@ export default function CourseContent({
 
       {activeTab === "lessons" ? (
         <div
-            className="
-              overflow-hidden
-              rounded-xl
-              border
-              border-[var(--border)]
-              bg-[var(--card)]
-            "
-          >
+          className="
+            overflow-hidden
+            rounded-xl
+            border
+            border-[var(--border)]
+            bg-[var(--card)]
+          "
+        >
           {modules.map((module) => {
             const currentOffset = lessonOffset;
 
-            lessonOffset += module.lessons.length;
+            lessonOffset +=
+              module.lessons.length;
 
             return (
               <ModuleCard
@@ -77,11 +89,24 @@ export default function CourseContent({
                 lessonOffset={currentOffset}
                 courseSlug={courseSlug}
 
-                isExpanded={expandedModuleId === module.id}
+                selectedLessonId={
+                  selectedLessonId
+                }
+                onLessonSelect={
+                  onLessonSelect
+                }
+
+                isExpanded={
+                  expandedModuleId ===
+                  module.id
+                }
 
                 onToggle={() =>
-                  setExpandedModuleId((current) =>
-                    current === module.id ? null : module.id
+                  setExpandedModuleId(
+                    (current) =>
+                      current === module.id
+                        ? null
+                        : module.id
                   )
                 }
               />

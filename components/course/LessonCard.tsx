@@ -1,4 +1,5 @@
-import Link from "next/link";
+"use client";
+
 import {
   CheckCircle2,
   ChevronRight,
@@ -23,13 +24,18 @@ type LessonCardProps = {
   courseSlug: string;
 
   isLast: boolean;
+
+  selected: boolean;
+
+  onSelect: () => void;
 };
 
 export default function LessonCard({
   lesson,
   lessonNumber,
-  courseSlug,
   isLast,
+  selected,
+  onSelect,
 }: LessonCardProps) {
   const duration =
     lesson.duration != null
@@ -40,16 +46,28 @@ export default function LessonCard({
     lesson.progress[0]?.completed ?? false;
 
   return (
-    <Link
-      href={`/courses/${courseSlug}/lessons/${lesson.id}`}
+    <button
+      onClick={onSelect}
       className={`
         group
         block
+        w-full
         px-5
         py-4
+        text-left
         transition-colors
-        hover:bg-[var(--surface-secondary)]
-        ${!isLast ? "border-b border-[var(--border)]" : ""}
+
+        ${
+          selected
+            ? "bg-[var(--surface-secondary)]"
+            : "hover:bg-[var(--surface-secondary)]"
+        }
+
+        ${
+          !isLast
+            ? "border-b border-[var(--border)]"
+            : ""
+        }
       `}
     >
       <div className="flex items-center gap-4">
@@ -57,7 +75,7 @@ export default function LessonCard({
         {/* Lesson Number */}
 
         <div
-          className="
+          className={`
             flex
             h-8
             w-8
@@ -65,11 +83,15 @@ export default function LessonCard({
             items-center
             justify-center
             rounded-full
-            bg-[var(--surface-secondary)]
             text-xs
             font-semibold
-            text-[var(--text-muted)]
-          "
+
+            ${
+              selected
+                ? "bg-[var(--primary)] text-white"
+                : "bg-[var(--surface-secondary)] text-[var(--text-muted)]"
+            }
+          `}
         >
           {lessonNumber}
         </div>
@@ -78,7 +100,19 @@ export default function LessonCard({
 
         <div className="min-w-0 flex-1">
 
-          <h3 className="truncate text-[15px] font-medium text-[var(--text)]">
+          <h3
+            className={`
+              truncate
+              text-[15px]
+              font-medium
+
+              ${
+                selected
+                  ? "text-[var(--primary)]"
+                  : "text-[var(--text)]"
+              }
+            `}
+          >
             {lesson.title}
           </h3>
 
@@ -94,25 +128,29 @@ export default function LessonCard({
 
         </div>
 
-        {/* Status */}
+        {/* Right Status */}
 
         {completed ? (
           <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-500" />
         ) : (
           <ChevronRight
-            className="
+            className={`
               h-5
               w-5
               shrink-0
-              text-[var(--text-muted)]
               transition-transform
               duration-200
-              group-hover:translate-x-0.5
-            "
+
+              ${
+                selected
+                  ? "text-[var(--primary)]"
+                  : "text-[var(--text-muted)] group-hover:translate-x-0.5"
+              }
+            `}
           />
         )}
 
       </div>
-    </Link>
+    </button>
   );
 }
