@@ -5,6 +5,7 @@ type VideoPlayerProps = {
   provider: string;
   videoId: string;
   countdown?: number | null;
+  autoPlay?: boolean;
   onEnded?: () => void;
 };
 
@@ -13,6 +14,7 @@ export default function VideoPlayer({
   provider,
   videoId,
   countdown,
+  autoPlay,
   onEnded,
 }: VideoPlayerProps) {
   if (provider === "bunny") {
@@ -30,6 +32,7 @@ export default function VideoPlayer({
         lessonId={lessonId}
         src={videoId}
         countdown={countdown}
+        autoPlay={autoPlay}
         onEnded={onEnded}
       />
       </div>

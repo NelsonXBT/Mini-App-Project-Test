@@ -32,6 +32,8 @@ export default function CourseLearning({
   const [selectedLesson, setSelectedLesson] =
   useState(lessons[0]);
 
+  const [autoPlay, setAutoPlay] = useState(false);
+
   useEffect(() => {
   setCurrentLesson({
     id: selectedLesson.id,
@@ -101,6 +103,7 @@ countdownInterval.current =
     setSharedCountdown(null);
 
     setSelectedLesson(nextLesson);
+    setAutoPlay(true);
 
     router.refresh();
 
@@ -126,6 +129,7 @@ function handleLessonSelect(
   setSharedCountdown(null);
 
   setSelectedLesson(lesson);
+  setAutoPlay(false);
 }
 
 
@@ -139,6 +143,7 @@ function handleLessonSelect(
             provider={selectedLesson.provider}
             videoId={selectedLesson.videoId}
             countdown={countdown}
+            autoPlay={autoPlay}
             onEnded={handleLessonCompleted}
             />
       <div className="player-page-content space-y-6">

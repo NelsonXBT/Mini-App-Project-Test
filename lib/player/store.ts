@@ -9,6 +9,7 @@ type Listener = () => void;
 
 let currentLesson: Lesson | null = null;
 let countdown: number | null = null;
+let isFullscreen: boolean = false;
 
 const listeners = new Set<Listener>();
 
@@ -36,6 +37,17 @@ export function setCountdown(
 
 export function getCountdown() {
   return countdown;
+}
+
+export function setFullscreen(
+  value: boolean
+) {
+  isFullscreen = value;
+  notify();
+}
+
+export function getFullscreen() {
+  return isFullscreen;
 }
 
 export function subscribe(

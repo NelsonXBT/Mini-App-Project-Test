@@ -8,6 +8,7 @@ import PlayButton from "./PlayButton";
 import VideoCanvas from "./VideoCanvas";
 import PlayerControls from "./PlayerControls";
 import { saveProgress } from "@/lib/player/progress";
+import { getFullscreen, setFullscreen } from "@/lib/player/store";
 
 export interface DaluplayerProps {
   lessonId: string;
@@ -16,7 +17,43 @@ export interface DaluplayerProps {
   onEnded?: () => void;
   title?: string;
   poster?: string;
+  autoPlay?: boolean;
   onFullscreenChange?: (isFullscreen: boolean) => void;
+}
+
+/**
+ * When the player unmounts we cannot immediately tell a lesson auto-advance
+ * (CourseLearning swaps key={lessonId}, remounting instantly) from the user
+ * actually leaving the course page. So teardown is deferred briefly and a
+ * remount cancels it. Module scope: it must outlive any single instance.
+ */
+let pendingTeardown: ReturnType<typeof setTimeout> | null = null;
+
+function cancelPendingTeardown() {
+  if (pendingTeardown) {
+    clearTimeout(pendingTeardown);
+    pendingTeardown = null;
+  }
+}
+
+function teardownFullscreen() {
+  document.documentElement.classList.remove("player-fullscreen");
+  document.body.style.overflow = "";
+  document.documentElement.style.overflow = "";
+
+  try {
+    screen.orientation.unlock();
+  } catch {}
+
+  const tg = (window as any).Telegram?.WebApp;
+
+  if (tg?.isFullscreen && tg?.exitFullscreen) {
+    try {
+      tg.exitFullscreen();
+    } catch {}
+  }
+
+  setFullscreen(false);
 }
 
 /**
@@ -39,6 +76,7 @@ export default function Daluplayer({
   onEnded,
   title,
   poster,
+  autoPlay,
   onFullscreenChange,
 }: DaluplayerProps) {
   // Refs
@@ -53,9 +91,10 @@ export default function Daluplayer({
   const [currentTime, setCurrentTime] = useState(0);
   const [volume, setVolume] = useState(1);
 
-  // UI state
+  // UI state. Fullscreen is seeded from the shared store so that remounting
+  // (CourseLearning swaps key={lessonId} on auto-advance) keeps us fullscreen.
   const [controlsVisible, setControlsVisible] = useState(true);
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(getFullscreen);
   const [isMobile, setIsMobile] = useState(false);
   const [showRotateOverlay, setShowRotateOverlay] = useState(false);
 
@@ -171,6 +210,7 @@ export default function Daluplayer({
     }
 
     setIsFullscreen(true);
+    setFullscreen(true); // Sync to store so remounts restore it
     onFullscreenChange?.(true);
   }, [saveCurrentProgress, onFullscreenChange]);
 
@@ -198,6 +238,7 @@ export default function Daluplayer({
     document.documentElement.classList.remove("player-fullscreen");
 
     setIsFullscreen(false);
+    setFullscreen(false); // Sync to store
     setShowRotateOverlay(false);
     onFullscreenChange?.(false);
   }, [saveCurrentProgress, onFullscreenChange]);
@@ -323,6 +364,7 @@ export default function Daluplayer({
         document.documentElement.classList.remove("player-fullscreen");
 
         setIsFullscreen(false);
+        setFullscreen(false);
         setShowRotateOverlay(false);
         onFullscreenChange?.(false);
       }
@@ -343,26 +385,42 @@ export default function Daluplayer({
     };
   }, [onFullscreenChange]);
 
-  // Leave the app in a clean state on unmount. CourseLearning remounts
-  // VideoPlayer via key={selectedLesson.id} on auto-advance, so without this
-  // the html class and Telegram's expanded viewport would stick.
+  // Restore fullscreen UI when remounting in fullscreen mode (lesson auto-switch).
+  // CourseLearning remounts VideoPlayer via key={selectedLesson.id}, so without
+  // this the HTML class and UI would be lost, but Telegram's viewport stays expanded.
   useEffect(() => {
-    return () => {
-      document.documentElement.classList.remove("player-fullscreen");
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
+    if (isFullscreen) {
+      document.documentElement.classList.add("player-fullscreen");
 
-      try {
-        screen.orientation.unlock();
-      } catch {}
-
-      const tg = (window as any).Telegram?.WebApp;
-
-      if (tg?.isFullscreen && tg?.exitFullscreen) {
+      // Re-lock orientation if it was unlocked during unmount
+      (async () => {
         try {
-          tg.exitFullscreen();
+          await (
+            screen.orientation as ScreenOrientation & {
+              lock: (orientation: string) => Promise<void>;
+            }
+          ).lock("landscape");
         } catch {}
+      })();
+    }
+  }, [isFullscreen]);
+
+  // Clean up on unmount. If we're still fullscreen this may just be a lesson
+  // auto-advance remount, so defer teardown — mounting cancels it. If nothing
+  // remounts (user left the course page), the teardown runs and restores the app.
+  useEffect(() => {
+    cancelPendingTeardown();
+
+    return () => {
+      if (!getFullscreen()) {
+        teardownFullscreen();
+        return;
       }
+
+      pendingTeardown = setTimeout(() => {
+        pendingTeardown = null;
+        teardownFullscreen();
+      }, 250);
     };
   }, []);
 
@@ -388,6 +446,13 @@ export default function Daluplayer({
         onLoaded={(videoDuration) => {
           setDuration(videoDuration);
           setLoading(false);
+
+          // Keep the course running hands-free after an auto-advance.
+          // Without this the next lesson lands paused, which in fullscreen
+          // looks like a black screen.
+          if (autoPlay) {
+            videoRef.current?.play().catch(() => {});
+          }
         }}
         onTimeUpdate={setCurrentTime}
         onPlay={() => {
