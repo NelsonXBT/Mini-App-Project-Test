@@ -1,6 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+
+import { completeLesson } from "@/app/actions/lesson";
 
 import CourseContent from "./CourseContent";
 import VideoPlayer from "../lesson/VideoPlayer";
@@ -12,6 +15,7 @@ type CourseLearningProps = {
 export default function CourseLearning({
   course,
 }: CourseLearningProps) {
+    const router = useRouter();
   const lessons = useMemo(
     () =>
       course.modules.flatMap(
@@ -23,13 +27,20 @@ export default function CourseLearning({
   const [selectedLesson, setSelectedLesson] =
   useState(lessons[0]);
 
+  async function handleLessonCompleted() {
+  await completeLesson(selectedLesson.id);
+
+  router.refresh();
+}
+
   return (
     <>
       <VideoPlayer
         lessonId={selectedLesson.id}
         provider={selectedLesson.provider}
         videoId={selectedLesson.videoId}
-      />
+        onEnded={handleLessonCompleted}
+        />
 
       <>
         <h1
