@@ -9,8 +9,6 @@ import CourseContent from "./CourseContent";
 import VideoPlayer from "../lesson/VideoPlayer";
 
 import {
-  setCurrentLesson,
-  setCountdown as setSharedCountdown,
   getFullscreen,
 } from "@/lib/player/store";
 
@@ -36,13 +34,6 @@ export default function CourseLearning({
   const [autoPlay, setAutoPlay] = useState(false);
 
   const playerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-  setCurrentLesson({
-    id: selectedLesson.id,
-    videoId: selectedLesson.videoId,
-  });
-}, [selectedLesson]);
 
   const [countdown, setCountdown] =
   useState<number | null>(null);
@@ -74,8 +65,6 @@ const autoNextTimeout =
       clearTimeout(autoNextTimeout.current);
       autoNextTimeout.current = null;
     }
-
-    setSharedCountdown(null);
   };
 }, []);
 
@@ -111,8 +100,6 @@ async function handleLessonCompleted() {
   // Wait 5 seconds then switch lesson
   setCountdown(5);
 
-  setSharedCountdown(5);
-
 let seconds = 5;
 
 countdownInterval.current =
@@ -121,7 +108,6 @@ countdownInterval.current =
 
   if (seconds > 0) {
     setCountdown(seconds);
-    setSharedCountdown(seconds);
   } else {
     if (countdownInterval.current) {
   clearInterval(countdownInterval.current);
@@ -129,7 +115,6 @@ countdownInterval.current =
 }
 
     setCountdown(null);
-    setSharedCountdown(null);
 
     setSelectedLesson(nextLesson);
     setAutoPlay(true);
@@ -155,7 +140,6 @@ function handleLessonSelect(
   }
 
   setCountdown(null);
-  setSharedCountdown(null);
 
   setSelectedLesson(lesson);
   setAutoPlay(false);

@@ -16,8 +16,6 @@ export interface DaluplayerProps {
   src: string;
   countdown?: number | null;
   onEnded?: () => void;
-  title?: string;
-  poster?: string;
   autoPlay?: boolean;
   onFullscreenChange?: (isFullscreen: boolean) => void;
 }
@@ -75,8 +73,6 @@ export default function Daluplayer({
   src,
   countdown,
   onEnded,
-  title,
-  poster,
   autoPlay,
   onFullscreenChange,
 }: DaluplayerProps) {
@@ -353,8 +349,8 @@ export default function Daluplayer({
     };
   }, [saveCurrentProgress]);
 
-  // Let SaveLink flush progress before it navigates away. IMEPlayer used to
-  // register here; without this, bottom-nav navigation loses the last position.
+  // Let SaveLink flush progress before it navigates away. Without this,
+  // bottom-nav navigation loses the last playback position.
   useEffect(() => {
     registerPlayer(saveCurrentProgress);
 

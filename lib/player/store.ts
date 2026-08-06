@@ -1,61 +1,25 @@
 "use client";
 
-export type Lesson = {
-  id: string;
-  videoId: string;
-};
+/**
+ * Fullscreen state shared across player mounts.
+ *
+ * CourseLearning remounts VideoPlayer via key={selectedLesson.id} on every
+ * lesson change, so Daluplayer's own React state is destroyed each time. This
+ * module-level flag is what lets fullscreen survive an auto-advance: the new
+ * mount seeds itself from here instead of defaulting back to normal mode.
+ *
+ * Read synchronously at mount and on demand — no subscription needed, so there
+ * is deliberately no listener machinery here.
+ */
 
-type Listener = () => void;
-
-let currentLesson: Lesson | null = null;
-let countdown: number | null = null;
 let isFullscreen: boolean = false;
-
-const listeners = new Set<Listener>();
-
-function notify() {
-  listeners.forEach((listener) => listener());
-}
-
-export function setCurrentLesson(
-  lesson: Lesson
-) {
-  currentLesson = lesson;
-  notify();
-}
-
-export function getCurrentLesson() {
-  return currentLesson;
-}
-
-export function setCountdown(
-  value: number | null
-) {
-  countdown = value;
-  notify();
-}
-
-export function getCountdown() {
-  return countdown;
-}
 
 export function setFullscreen(
   value: boolean
 ) {
   isFullscreen = value;
-  notify();
 }
 
 export function getFullscreen() {
   return isFullscreen;
-}
-
-export function subscribe(
-  listener: Listener
-) {
-  listeners.add(listener);
-
-  return () => {
-    listeners.delete(listener);
-  };
 }
