@@ -1,9 +1,11 @@
-
-
 export interface IMEPlayerProps {
   lessonId: string;
   src: string;
+
+  countdown?: number | null;
+
   onEnded?: () => void;
+
   title?: string;
   poster?: string;
 }

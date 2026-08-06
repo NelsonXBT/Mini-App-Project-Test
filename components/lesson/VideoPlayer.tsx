@@ -4,6 +4,7 @@ type VideoPlayerProps = {
   lessonId: string;
   provider: string;
   videoId: string;
+  countdown?: number | null;
   onEnded?: () => void;
 };
 
@@ -11,6 +12,7 @@ export default function VideoPlayer({
   lessonId,
   provider,
   videoId,
+  countdown,
   onEnded,
 }: VideoPlayerProps) {
   if (provider === "bunny") {
@@ -25,10 +27,11 @@ export default function VideoPlayer({
         "
       >
         <IMEPlayer
-          lessonId={lessonId}
-          src={videoId}
-          onEnded={onEnded}
-        />
+        lessonId={lessonId}
+        src={videoId}
+        countdown={countdown}
+        onEnded={onEnded}
+      />
       </div>
     );
   }

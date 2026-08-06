@@ -27,6 +27,9 @@ export default function CourseLearning({
   const [selectedLesson, setSelectedLesson] =
   useState(lessons[0]);
 
+  const [countdown, setCountdown] =
+  useState<number | null>(null);
+
 const autoNextTimeout =
   useRef<NodeJS.Timeout | null>(null);
 
@@ -60,25 +63,39 @@ async function handleLessonCompleted() {
   if (!nextLesson) return;
 
   // Wait 5 seconds then switch lesson
-  autoNextTimeout.current = setTimeout(() => {
+  setCountdown(5);
+
+let seconds = 5;
+
+const interval = setInterval(() => {
+  seconds--;
+
+  if (seconds > 0) {
+    setCountdown(seconds);
+  } else {
+    clearInterval(interval);
+
+    setCountdown(null);
+
     setSelectedLesson(nextLesson);
 
     router.refresh();
 
     autoNextTimeout.current = null;
-  }, 5000);
+  }
+}, 1000);
 }
 
   return (
     <>
       <VideoPlayer
-        key={selectedLesson.id}
-        lessonId={selectedLesson.id}
-        provider={selectedLesson.provider}
-        videoId={selectedLesson.videoId}
-        onEnded={handleLessonCompleted}
-        />
-
+            key={selectedLesson.id}
+            lessonId={selectedLesson.id}
+            provider={selectedLesson.provider}
+            videoId={selectedLesson.videoId}
+            countdown={countdown}
+            onEnded={handleLessonCompleted}
+            />
       <>
         <h1
             className="

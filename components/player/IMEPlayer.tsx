@@ -16,6 +16,7 @@ import type { IMEPlayerProps } from "./types";
 export default function IMEPlayer({
   lessonId,
   src,
+  countdown,
   onEnded,
 }: IMEPlayerProps) {
 const router = useRouter();
@@ -313,6 +314,39 @@ async function saveCurrentProgress() {
         />
 
         {loading && <LoadingSpinner />}
+
+        {countdown !== null && (
+  <div
+    className="
+      absolute
+      inset-0
+      z-40
+      flex
+      items-center
+      justify-center
+      bg-black/15
+      backdrop-blur-sm
+      pointer-events-none
+      transition-opacity
+      duration-300
+    "
+  >
+    <p
+      className="
+        rounded-full
+        bg-black/20
+        px-5
+        py-2.5
+        text-base
+        font-medium
+        tracking-tight
+        text-white
+      "
+    >
+      Next lesson in ({countdown})
+    </p>
+  </div>
+)}
 
         {showRotateOverlay && (
           <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/90">
