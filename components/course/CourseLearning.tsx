@@ -8,6 +8,11 @@ import { completeLesson } from "@/app/actions/lesson";
 import CourseContent from "./CourseContent";
 import VideoPlayer from "../lesson/VideoPlayer";
 
+import {
+  setCurrentLesson,
+  setCountdown as setSharedCountdown,
+} from "@/lib/player/store";
+
 type CourseLearningProps = {
   course: any;
 };
@@ -26,6 +31,13 @@ export default function CourseLearning({
 
   const [selectedLesson, setSelectedLesson] =
   useState(lessons[0]);
+
+  useEffect(() => {
+  setCurrentLesson({
+    id: selectedLesson.id,
+    videoId: selectedLesson.videoId,
+  });
+}, [selectedLesson]);
 
   const [countdown, setCountdown] =
   useState<number | null>(null);
@@ -65,6 +77,8 @@ async function handleLessonCompleted() {
   // Wait 5 seconds then switch lesson
   setCountdown(5);
 
+  setSharedCountdown(5);
+
 let seconds = 5;
 
 const interval = setInterval(() => {
@@ -72,10 +86,12 @@ const interval = setInterval(() => {
 
   if (seconds > 0) {
     setCountdown(seconds);
+    setSharedCountdown(seconds);
   } else {
     clearInterval(interval);
 
     setCountdown(null);
+    setSharedCountdown(null);
 
     setSelectedLesson(nextLesson);
 

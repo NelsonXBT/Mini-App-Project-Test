@@ -3,6 +3,7 @@
 import { saveProgress } from "@/lib/player/progress";
 import { useEffect, useRef, useState } from "react";
 import {
+  LoaderCircle,
   Minimize2,
   RotateCcw,
   RotateCw,
@@ -21,6 +22,7 @@ import { completeLesson } from "@/app/actions/lesson";
 export default function FullscreenPlayer({
   lessonId,
   src,
+  countdown,
   onEnded,
 }: IMEPlayerProps) {
   
@@ -315,6 +317,44 @@ router.back();
       />
 
       {loading && <LoadingSpinner />}
+
+      {countdown !== null && (
+  <div
+    className="
+      absolute
+      inset-0
+      z-40
+      flex
+      flex-col
+      items-center
+      justify-center
+      gap-3
+      bg-black/20
+      backdrop-blur-[1px]
+      pointer-events-none
+    "
+  >
+    <LoaderCircle
+      className="
+        h-8
+        w-8
+        animate-spin
+        text-white
+      "
+    />
+
+    <span
+      className="
+        text-lg
+        font-semibold
+        text-white
+        drop-shadow-lg
+      "
+    >
+      Next lesson in ({countdown})
+    </span>
+  </div>
+)}
 
      {showRotateOverlay && (
         <div
