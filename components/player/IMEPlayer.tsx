@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { LoaderCircle } from "lucide-react";
 
 import LoadingSpinner from "./LoadingSpinner";
 import PlayButton from "./PlayButton";
@@ -317,30 +318,40 @@ async function saveCurrentProgress() {
 
         {countdown !== null && (
   <div
+  className="
+    absolute
+    inset-0
+    z-40
+    flex
+    flex-col
+    items-center
+    justify-center
+    gap-3
+    bg-black/20
+    backdrop-blur-[1px]
+    pointer-events-none
+  "
+>
+  <LoaderCircle
     className="
-      absolute
-      inset-0
-      z-40
-      flex
-      items-center
-      justify-center
-      bg-black/20
-      backdrop-blur-[1px]
-      pointer-events-none
+      h-8
+      w-8
+      animate-spin
+      text-white/80
+    "
+  />
+
+  <span
+    className="
+      text-lg
+      font-semibold
+      text-white
+      drop-shadow-lg
     "
   >
-    <span
-      className="
-        text-white
-        text-2l
-        font-semibold
-        drop-shadow-lg
-        tracking-tight
-      "
-    >
-      Next lesson in ({countdown})
-    </span>
-  </div>
+    Next lesson in ({countdown})
+  </span>
+</div>
 )}
 
         {showRotateOverlay && (
