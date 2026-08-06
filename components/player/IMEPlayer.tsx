@@ -324,27 +324,22 @@ async function saveCurrentProgress() {
       flex
       items-center
       justify-center
-      bg-white/10
-      backdrop-blur-none
+      bg-black/20
+      backdrop-blur-[1px]
       pointer-events-none
-      transition-opacity
-      duration-300
     "
   >
-    <p
+    <span
       className="
-        rounded-full
-        bg-white/40
-        px-5
-        py-2.5
-        text-base
-        font-medium
-        tracking-tight
         text-white
+        text-xl
+        font-semibold
+        drop-shadow-lg
+        tracking-tight
       "
     >
       Next lesson in ({countdown})
-    </p>
+    </span>
   </div>
 )}
 
