@@ -84,8 +84,8 @@ export default function ProgressBar({
         w-full
         cursor-pointer
         touch-none
-        rounded-full
-        bg-stone-200
+        rounded-[var(--radius-pill)]
+        bg-white/25
       "
     >
       {/* Played */}
@@ -95,7 +95,7 @@ export default function ProgressBar({
           absolute
           inset-y-0
           left-0
-          rounded-full
+          rounded-[var(--radius-pill)]
           bg-[var(--primary)]
         "
         style={{
@@ -109,15 +109,14 @@ export default function ProgressBar({
         className="
             absolute
             top-1/2
-            h-4
-            w-4
+            h-3.5
+            w-3.5
             -translate-x-1/2
             -translate-y-1/2
-            rounded-full
+            rounded-[var(--radius-pill)]
             border-2
             border-white
             bg-[var(--primary)]
-            shadow-md
           "
         style={{
           left: `${percent}%`,

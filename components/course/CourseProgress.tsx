@@ -10,12 +10,18 @@ export default function CourseProgress({
   progress,
 }: CourseProgressProps) {
   return (
-    <section className="flex items-center gap-3 pt-1">
+    <section className="flex items-center gap-3">
       {/* Progress Bar */}
 
-      <div className="h-2 flex-1 overflow-hidden rounded-full bg-[var(--border)]">
+      <div
+        className="h-1.5 flex-1 overflow-hidden rounded-[var(--radius-pill)] bg-[var(--surface-secondary)]"
+        role="progressbar"
+        aria-valuenow={progress}
+        aria-valuemin={0}
+        aria-valuemax={100}
+      >
         <div
-          className="h-full rounded-full bg-[var(--primary)] transition-all duration-500"
+          className="h-full rounded-[var(--radius-pill)] bg-[var(--primary)] transition-[width] duration-500 ease-out"
           style={{
             width: `${progress}%`,
           }}
@@ -26,11 +32,12 @@ export default function CourseProgress({
 
       <span
         className="
-          min-w-[42px]
+          min-w-[38px]
           text-right
-          text-sm
+          text-[13px]
           font-semibold
-          text-[var(--text)]
+          tabular-nums
+          text-[var(--text-muted)]
         "
       >
         {progress}%

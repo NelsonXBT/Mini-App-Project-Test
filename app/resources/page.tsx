@@ -1,14 +1,13 @@
-
-
 import ResourceContent from "@/components/resource/ResourceContent";
+import { PageTitle } from "@/components/ui";
 
 export default function ResourcesPage() {
   return (
-    <main className="space-y-4">
+    <main>
       <div className="mx-auto max-w-3xl">
-        <h1 className="mb-4 text-2xl font-bold text-white">
+        <PageTitle className="mb-5">
           Resources
-        </h1>
+        </PageTitle>
 
         <ResourceContent />
       </div>

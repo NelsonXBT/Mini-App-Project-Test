@@ -17,7 +17,7 @@ export default function TimeDisplay({
   duration: number;
 }) {
   return (
-    <span className="text-xs text-white">
+    <span className="text-[11px] font-medium tabular-nums tracking-tight text-white/90">
       {format(current)} / {format(duration)}
     </span>
   );

@@ -10,7 +10,7 @@ const user = {
 
 export default async function Home() {
   return (
-    <main className="space-y-5">
+    <main className="space-y-6">
       <Greeting name={user.name} />
 
       <HomeLearningCard />

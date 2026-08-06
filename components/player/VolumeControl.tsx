@@ -19,7 +19,7 @@ export default function VolumeControl({
       onChange={(e) =>
         onChange(Number(e.target.value))
       }
-      className="w-20 accent-cyan-500"
+      className="w-20 accent-[var(--primary)]"
     />
   );
 }

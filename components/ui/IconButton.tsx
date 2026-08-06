@@ -14,15 +14,18 @@ export default function IconButton({
         inline-flex
         h-11
         w-11
+        shrink-0
         items-center
         justify-center
-        rounded-lg
+        rounded-[var(--radius-control)]
         border
         border-[var(--border)]
         bg-[var(--card)]
         text-[var(--text-muted)]
-        transition-colors
+        transition-all
         duration-200
+        ease-out
+        hover:border-[var(--border-strong)]
         hover:bg-[var(--surface-secondary)]
         hover:text-[var(--text)]
         disabled:pointer-events-none

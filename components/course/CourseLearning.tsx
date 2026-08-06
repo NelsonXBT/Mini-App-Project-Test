@@ -198,13 +198,13 @@ function handleLessonSelect(
               onEnded={handleLessonCompleted}
               />
       </div>
-      <div className="player-page-content space-y-6">
+      <div className="player-page-content space-y-5">
         <h1
             className="
-            text-[1.45rem]
-            font-medium
+            text-[1.375rem]
+            font-semibold
             leading-tight
-            tracking-[-0.015em]
+            tracking-[-0.025em]
             text-[var(--text)]
             "
         >

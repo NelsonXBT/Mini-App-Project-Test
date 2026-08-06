@@ -2,77 +2,65 @@ import Link from "next/link";
 import { Send } from "lucide-react";
 
 export default function CommunityBanner() {
+  /*
+   * Previously a cyan gradient with two blurred glow orbs and a coloured
+   * drop shadow. Reworked to a quiet surface with a single hairline accent,
+   * so the gold CTA is the only thing competing for attention.
+   */
   return (
     <section
-  className="
-    relative
-    overflow-hidden
-    rounded-2xl
-    border
-    border-cyan-400/30
-    bg-gradient-to-r
-    from-[#06394A]
-    via-[#07546A]
-    to-[#0A738D]
-    px-4
-    py-3
+      className="
+        relative
+        overflow-hidden
+        rounded-[var(--radius)]
+        border
+        border-[var(--border)]
+        bg-[var(--card)]
+        p-5
+        shadow-[var(--shadow-card)]
+      "
+    >
+      {/* Accent hairline */}
 
-    shadow-[0_0_35px_rgba(34,211,238,0.18),0_10px_35px_rgba(0,0,0,0.45)]
+      <span
+        className="absolute inset-x-0 top-0 h-px bg-[var(--primary)]/40"
+        aria-hidden="true"
+      />
 
-    before:absolute
-    before:inset-0
-    before:bg-gradient-to-br
-    before:from-white/8
-    before:to-transparent
-    before:pointer-events-none
-  "
->
-      {/* Background Glow */}
-      {/* Background Glow */}
+      <h2 className="text-[1.0625rem] font-semibold leading-snug tracking-[-0.015em] text-[var(--text)]">
+        Join Our Telegram Community
+      </h2>
 
-<div className="absolute -right-10 -top-10 h-44 w-44 rounded-full bg-cyan-300/20 blur-3xl" />
-<div className="absolute -left-12 -bottom-10 h-32 w-32 rounded-full bg-cyan-500/15 blur-3xl" />
+      <p className="mt-1.5 text-[13px] leading-relaxed text-[var(--text-muted)]">
+        Connect with the creator, get updates and support.
+      </p>
 
-      <div className="relative">
-        <div className="max-w-full">
-
-          <h2 className="text-lg font-bold text-white whitespace-nowrap">
-            Join Our Telegram Community
-          </h2>
-
-          <p className="mt-1 text-xs text-cyan-100/80">
-            Connect with creator, get updates and support
-          </p>
-
-          <Link
-            href="https://t.me/yourcommunity"
-            target="_blank"
-            className="
-            mt-5
-            inline-flex
-            items-center
-            gap-2
-            rounded-xl
-            bg-cyan-400
-            px-6
-            py-3
-            text-[15px]
-            font-semibold
-            text-black
-            shadow-lg
-            shadow-cyan-500/40
-            transition-all
-            duration-200
-            hover:bg-cyan-300
-            hover:shadow-cyan-400/60
-            "
-          >
-            <Send className="h-4 w-4" />
-            Join Telegram
-          </Link>
-
-        </div>
-      </div>
+      <Link
+        href="https://t.me/yourcommunity"
+        target="_blank"
+        className="
+          mt-4
+          inline-flex
+          h-11
+          items-center
+          gap-2
+          rounded-[var(--radius-control)]
+          bg-[var(--primary)]
+          px-5
+          text-sm
+          font-medium
+          tracking-tight
+          text-white
+          transition-all
+          duration-200
+          ease-out
+          hover:bg-[var(--primary-hover)]
+          active:scale-[0.98]
+        "
+      >
+        <Send className="h-4 w-4" strokeWidth={1.9} />
+        Join Telegram
+      </Link>
     </section>
   );
 }

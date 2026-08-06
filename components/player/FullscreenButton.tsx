@@ -19,8 +19,8 @@ export default function FullscreenButton({
       onClick={onClick}
       className={
         mobile
-          ? "flex h-9 w-9 items-center justify-center rounded-full bg-black/10 backdrop-blur-md text-white transition hover:bg-black/40 hover:text-white"
-          : "rounded-lg bg-cyan-500 px-4 py-2 text-sm font-semibold text-black"
+          ? "flex h-9 w-9 items-center justify-center rounded-[var(--radius-pill)] bg-black/25 text-white backdrop-blur-sm transition duration-200 ease-out hover:bg-black/40 active:scale-95"
+          : "inline-flex h-11 items-center justify-center rounded-[var(--radius-control)] bg-[var(--primary)] px-4 text-sm font-medium tracking-tight text-white transition-all duration-200 ease-out hover:bg-[var(--primary-hover)] active:scale-[0.98]"
       }
     >
       {isFullscreen ? (

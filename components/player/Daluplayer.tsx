@@ -447,7 +447,7 @@ export default function Daluplayer({
       className={
         isFullscreen
           ? "flex items-center justify-center overflow-hidden bg-black"
-          : "relative aspect-video w-full overflow-hidden rounded-xl bg-black"
+          : "relative aspect-video w-full overflow-hidden rounded-[var(--radius)] bg-black shadow-[var(--shadow-card)]"
       }
     >
       <VideoCanvas

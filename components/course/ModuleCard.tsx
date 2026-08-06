@@ -54,7 +54,8 @@ export default function ModuleCard({
         border-b
         border-[var(--border)]
         transition-colors
-        duration-300
+        duration-200
+        ease-out
         last:border-b-0
         ${
           isExpanded
@@ -70,25 +71,26 @@ export default function ModuleCard({
           w-full
           items-center
           justify-between
+          gap-4
           px-5
-          py-5
+          py-4
           text-left
         "
       >
         <div>
           <h2
             className="
-              text-xl
+              text-[13px]
               font-semibold
               uppercase
-              tracking-[0.02em]
+              tracking-[0.08em]
               text-[var(--text)]
             "
           >
             {module.title}
           </h2>
 
-          <p className="mt-2 text-sm text-[var(--text-muted)]">
+          <p className="mt-1 text-[13px] text-[var(--text-muted)]">
             {module.lessons.length} Lesson
             {module.lessons.length !== 1 ? "s" : ""}
           </p>
@@ -96,10 +98,12 @@ export default function ModuleCard({
 
         <ChevronDown
           className={`
-            h-5
-            w-5
+            h-4.5
+            w-4.5
+            shrink-0
             transition-transform
-            duration-300
+            duration-200
+            ease-out
             ${
               isExpanded
                 ? "rotate-180 text-[var(--primary)]"
@@ -112,6 +116,7 @@ export default function ModuleCard({
       {isExpanded && (
         <div
           className="
+            animate-panel-open
             overflow-hidden
             border-t
             border-[var(--border)]

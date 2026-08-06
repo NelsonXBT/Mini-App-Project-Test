@@ -9,84 +9,66 @@ export default function CourseTabs({
   activeTab,
   onTabChange,
 }: CourseTabsProps) {
+  const tabs = [
+    { id: "lessons" as const, label: "Lessons" },
+    { id: "files" as const, label: "Files" },
+  ];
+
   return (
     <div
       className="
-        mb-5
+        mb-4
         flex
         border-b
         border-[var(--border)]
       "
     >
-      <button
-        onClick={() => onTabChange("lessons")}
-        className={`
+      {tabs.map((tab) => {
+        const active = activeTab === tab.id;
+
+        return (
+          <button
+            key={tab.id}
+            onClick={() => onTabChange(tab.id)}
+            className={`
               relative
               flex-1
               pb-3
-              text-[13px]
+              text-[12px]
               font-semibold
               uppercase
-              tracking-[0.08em]
+              tracking-[0.1em]
               transition-colors
+              duration-200
+              ease-out
               ${
-                activeTab === "lessons"
+                active
                   ? "text-[var(--primary)]"
                   : "text-[var(--text-muted)] hover:text-[var(--text)]"
               }
             `}
-      >
-        Lessons
+          >
+            {tab.label}
 
-        {activeTab === "lessons" && (
-          <span
-            className="
-              absolute
-              bottom-0
-              left-0
-              h-0.5
-              w-full
-              rounded-full
-              bg-[var(--primary)]
-            "
-          />
-        )}
-      </button>
-
-      <button
-        onClick={() => onTabChange("files")}
-        className={`
-            relative
-            flex-1
-            pb-3
-            text-[13px]
-            font-semibold
-            uppercase
-            tracking-[0.08em]
-            transition-colors
-            ${
-              activeTab === "files"
-                ? "text-[var(--primary)]"
-                : "text-[var(--text-muted)] hover:text-[var(--text)]"
-            }
-          `}
-      >
-        Files
-
-        {activeTab === "files" && (
-          <span
-            className="
-              absolute
-              bottom-0
-              left-0
-              h-0.5
-              w-full
-              rounded-full
-              bg-[var(--primary)]
-            "
-          />
-        )}
-      </button>
+            <span
+              className={`
+                absolute
+                bottom-[-1px]
+                left-0
+                h-0.5
+                w-full
+                rounded-[var(--radius-pill)]
+                bg-[var(--primary)]
+                transition-opacity
+                duration-200
+                ease-out
+                ${active ? "opacity-100" : "opacity-0"}
+              `}
+              aria-hidden="true"
+            />
+          </button>
+        );
+      })}
     </div>
   );
 }

@@ -51,16 +51,19 @@ export default function LessonCard({
       onClick={onSelect}
       className={`
         group
+        relative
         block
         w-full
         px-5
-        py-4
+        py-3.5
         text-left
         transition-colors
+        duration-200
+        ease-out
 
         ${
           selected
-            ? "bg-[var(--surface-secondary)]"
+            ? "bg-[var(--primary-soft)]"
             : "hover:bg-[var(--surface-secondary)]"
         }
 
@@ -71,21 +74,34 @@ export default function LessonCard({
         }
       `}
     >
-      <div className="flex items-center gap-4">
+      {/* Selected marker */}
+
+      {selected && (
+        <span
+          className="absolute inset-y-0 left-0 w-0.5 bg-[var(--primary)]"
+          aria-hidden="true"
+        />
+      )}
+
+      <div className="flex items-center gap-3.5">
 
         {/* Lesson Number */}
 
         <div
           className={`
             flex
-            h-8
-            w-8
+            h-7
+            w-7
             shrink-0
             items-center
             justify-center
-            rounded-full
-            text-xs
+            rounded-[var(--radius-pill)]
+            text-[11px]
             font-semibold
+            tabular-nums
+            transition-colors
+            duration-200
+            ease-out
 
             ${
               selected
@@ -104,8 +120,9 @@ export default function LessonCard({
           <h3
             className={`
               truncate
-              text-[15px]
+              text-[14px]
               font-medium
+              tracking-tight
 
               ${
                 selected
@@ -117,11 +134,11 @@ export default function LessonCard({
             {lesson.title}
           </h3>
 
-          <div className="mt-1 flex items-center gap-2">
+          <div className="mt-0.5 flex items-center gap-1.5">
 
-            <Clock3 className="h-3.5 w-3.5 text-[var(--text-muted)]" />
+            <Clock3 className="h-3 w-3 text-[var(--text-subtle)]" />
 
-            <span className="text-xs text-[var(--text-muted)]">
+            <span className="text-[11px] tabular-nums text-[var(--text-subtle)]">
               {duration}
             </span>
 
@@ -132,20 +149,21 @@ export default function LessonCard({
         {/* Right Status */}
 
         {completed ? (
-          <CheckCircle2 className="h-5 w-5 shrink-0 text-emerald-500" />
+          <CheckCircle2 className="h-4.5 w-4.5 shrink-0 text-[var(--success)]" />
         ) : (
           <ChevronRight
             className={`
-              h-5
-              w-5
+              h-4.5
+              w-4.5
               shrink-0
               transition-transform
               duration-200
+              ease-out
 
               ${
                 selected
                   ? "text-[var(--primary)]"
-                  : "text-[var(--text-muted)] group-hover:translate-x-0.5"
+                  : "text-[var(--text-subtle)] group-hover:translate-x-0.5"
               }
             `}
           />

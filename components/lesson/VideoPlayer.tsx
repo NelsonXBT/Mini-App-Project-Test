@@ -24,7 +24,7 @@ export default function VideoPlayer({
       <div
         className="
           overflow-hidden
-          rounded-xl
+          rounded-[var(--radius)]
           border
           border-[var(--border)]
           bg-black
@@ -45,12 +45,13 @@ export default function VideoPlayer({
   return (
     <div
       className="
-        rounded-xl
+        rounded-[var(--radius)]
         border
         border-[var(--border)]
         bg-[var(--card)]
         p-6
         text-center
+        shadow-[var(--shadow-card)]
       "
     >
       <p className="font-medium text-[var(--text)]">

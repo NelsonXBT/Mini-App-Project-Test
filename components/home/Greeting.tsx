@@ -16,12 +16,12 @@ export default function Greeting({
   }
 
   return (
-    <section className="space-y-0.5 py-2">
+    <section className="space-y-1">
       <p className="text-sm font-medium tracking-tight text-[var(--text-muted)]">
         {greeting} 👋
       </p>
 
-      <h2 className="text-4xl font-semibold leading-none tracking-[-0.03em] text-[var(--text)]">
+      <h2 className="text-[1.75rem] font-semibold leading-tight tracking-[-0.025em] text-[var(--text)]">
         {name}
       </h2>
     </section>

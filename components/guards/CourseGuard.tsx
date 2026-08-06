@@ -24,19 +24,37 @@ export default function CourseGuard({
   }
 
   return (
-    <main className="mx-auto flex min-h-[70vh] max-w-lg flex-col items-center justify-center px-6 text-center">
-      <h1 className="text-3xl font-bold text-white">
+    <main className="mx-auto flex min-h-[70vh] max-w-lg flex-col items-center justify-center text-center">
+      <h1 className="text-[1.375rem] font-semibold leading-tight tracking-[-0.025em] text-[var(--text)]">
         {course.title}
-        </h1>
+      </h1>
 
-      <p className="mt-4 text-zinc-400">
+      <p className="mt-3 text-sm leading-relaxed text-[var(--text-muted)]">
         You do not have access to this course yet.
         Click the button below to gain access and start learning!
-        </p>
+      </p>
 
       <Link
         href={course.purchaseUrl ?? "#"}
-        className="mt-8 rounded-xl bg-cyan-500 px-6 py-3 font-semibold text-black"
+        className="
+          mt-7
+          inline-flex
+          h-11
+          items-center
+          justify-center
+          rounded-[var(--radius-control)]
+          bg-[var(--primary)]
+          px-6
+          text-sm
+          font-medium
+          tracking-tight
+          text-white
+          transition-all
+          duration-200
+          ease-out
+          hover:bg-[var(--primary-hover)]
+          active:scale-[0.98]
+        "
       >
         Gain Access Now
       </Link>

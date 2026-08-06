@@ -1,4 +1,3 @@
-
 import { Lock } from "lucide-react";
 
 type ResourceTabsProps = {
@@ -11,43 +10,62 @@ export default function ResourceTabs({
   onTabChange,
 }: ResourceTabsProps) {
   return (
-    <div className="mb-6 flex rounded-xl bg-zinc-900 p-1">
-
-
-
-<button
+    <div
+      className="
+        mb-5
+        flex
+        gap-1
+        rounded-[var(--radius)]
+        border
+        border-[var(--border)]
+        bg-[var(--surface-secondary)]
+        p-1
+      "
+    >
+      <button
         onClick={() => onTabChange("tools")}
-        className={`flex-1 rounded-lg py-3 text-sm font-semibold transition ${
-          activeTab === "tools"
-            ? "bg-cyan-500 text-black"
-            : "text-zinc-400 hover:text-white"
-        }`}
+        className={`
+          flex-1
+          rounded-[var(--radius-control)]
+          py-2.5
+          text-[13px]
+          font-semibold
+          tracking-tight
+          transition-all
+          duration-200
+          ease-out
+          ${
+            activeTab === "tools"
+              ? "bg-[var(--card)] text-[var(--text)] shadow-[var(--shadow-card)]"
+              : "text-[var(--text-muted)] hover:text-[var(--text)]"
+          }
+        `}
       >
         Tools
       </button>
 
-
       <button
-  type="button"
-  disabled
-  className="
-    flex-1
-    flex
-    items-center
-    justify-center
-    gap-1
-    rounded-lg
-    py-3
-    text-sm
-    font-semibold
-    text-zinc-500
-    opacity-70
-    cursor-not-allowed
-  "
->
-  <span>Packs</span>
-  <Lock className="h-3.5 w-3.5" />
-</button>
+        type="button"
+        disabled
+        className="
+          flex
+          flex-1
+          cursor-not-allowed
+          items-center
+          justify-center
+          gap-1.5
+          rounded-[var(--radius-control)]
+          py-2.5
+          text-[13px]
+          font-semibold
+          tracking-tight
+          text-[var(--text-subtle)]
+          opacity-70
+        "
+      >
+        <span>Packs</span>
+        <Lock className="h-3.5 w-3.5" strokeWidth={1.9} />
+      </button>
     </div>
   );
 }

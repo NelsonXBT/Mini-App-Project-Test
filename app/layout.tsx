@@ -32,9 +32,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full bg-black`}
+      className={`${geistSans.variable} ${geistMono.variable} h-full`}
     >
-      <body className="min-h-screen bg-black text-white">
+      <body className="min-h-screen bg-[var(--background)] text-[var(--text)]">
         <Script
   src="https://telegram.org/js/telegram-web-app.js"
   strategy="beforeInteractive"
@@ -42,10 +42,10 @@ export default function RootLayout({
 
 <SessionProvider>
   <TelegramAuth>
-    <main className="app-main min-h-screen px-5 pt-3 pb-20">
+    <main className="app-main min-h-screen px-5 pt-4 pb-28">
       <Header />
 
-      <div className="mt-3">
+      <div>
         {children}
       </div>
     </main>

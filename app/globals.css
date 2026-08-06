@@ -9,24 +9,32 @@
 
   /* ===========================
      COLORS - LIGHT
+
+     Porcelain, not beige. Kept within a couple of points of
+     pure white so the interface reads clean, with just enough
+     warmth to avoid feeling clinical.
   =========================== */
 
-  --background: #f8f6f2;
+  --background: #fafaf9;
   --surface: #ffffff;
-  --surface-secondary: #f4f1eb;
+  --surface-secondary: #f4f4f2;
 
   --card: #ffffff;
-  --card-hover: #fcfaf7;
+  --card-hover: #fbfbfa;
 
-  --text: #1c1c1c;
-  --text-muted: #716d66;
+  --text: #1a1a18;
+  --text-muted: #6b6a66;
+  --text-subtle: #8f8d88;
 
-  --border: #e8e3d8;
+  --border: #e7e5e2;
+  --border-strong: #dbd8d4;
 
   /* Brand Accent */
 
   --primary: #c89b3c;
   --primary-hover: #b88e33;
+  --primary-soft: rgba(200, 155, 60, 0.1);
+  --primary-ring: rgba(200, 155, 60, 0.22);
 
   /* Semantic */
 
@@ -37,29 +45,46 @@
 
   /* ===========================
      Radius
+
+     One shared radius for every surface: cards, sections,
+     video containers, dialogs, progress containers.
+     Controls step down one notch; badges stay pills.
   =========================== */
 
-  --radius-sm: 12px;
-  --radius-md: 18px;
-  --radius-lg: 24px;
+  --radius: 12px;
+  --radius-control: 10px;
+  --radius-pill: 999px;
 
   /* ===========================
      Shadows
+
+     Soft elevation only. No glows.
   =========================== */
 
   --shadow-card:
-    0 2px 8px rgba(0,0,0,.03),
-    0 8px 24px rgba(0,0,0,.04);
+    0 1px 2px rgba(23, 20, 15, 0.03),
+    0 4px 12px rgba(23, 20, 15, 0.03);
 
-  --shadow-button:
-    0 4px 14px rgba(200,155,60,.18);
+  --shadow-raised:
+    0 2px 4px rgba(23, 20, 15, 0.04),
+    0 10px 24px rgba(23, 20, 15, 0.05);
+
+  --shadow-nav: 0 -1px 0 rgba(23, 20, 15, 0.04);
 
   /* ===========================
      Motion
+
+     150-250ms, ease-out. Everything settles quickly.
   =========================== */
 
-  --transition-fast: .18s ease;
-  --transition-normal: .28s ease;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 250ms;
+
+  --transition-fast: var(--duration-fast) var(--ease-out);
+  --transition-normal: var(--duration-normal) var(--ease-out);
 }
 
 /* ==========================================================
@@ -78,24 +103,26 @@
 
   --text: #f5f5f5;
   --text-muted: #a4a4a4;
+  --text-subtle: #8a8a8a;
 
   --border: #2d2d2d;
+  --border-strong: #3a3a3a;
 
   /* Keep Brand Color */
 
   --primary: #c89b3c;
   --primary-hover: #d4a94a;
+  --primary-soft: rgba(200, 155, 60, 0.14);
+  --primary-ring: rgba(200, 155, 60, 0.28);
 
   --success: #46c96b;
   --danger: #ff6d6d;
   --warning: #ebb447;
   --info: #79a5ff;
 
-  --shadow-card:
-    0 4px 16px rgba(0,0,0,.25);
-
-  --shadow-button:
-    0 6px 18px rgba(200,155,60,.22);
+  --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.25);
+  --shadow-raised: 0 8px 28px rgba(0, 0, 0, 0.32);
+  --shadow-nav: 0 -1px 0 rgba(255, 255, 255, 0.04);
 }
 
 /* ==========================================================
@@ -130,14 +157,13 @@ body {
 
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-
-  transition:
-    background var(--transition-normal),
-    color var(--transition-normal);
 }
 
 /* ==========================================================
    TYPOGRAPHY
+
+   Confident, not shouty. Weight carries the hierarchy so
+   headings can stay modest in size.
 ========================================================== */
 
 h1,
@@ -148,13 +174,17 @@ h5,
 h6 {
   color: var(--text);
   margin: 0;
-  font-weight: 700;
-  letter-spacing: -.03em;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  letter-spacing: -0.025em;
 }
 
 p {
   color: var(--text-muted);
-  line-height: 1.65;
+  line-height: 1.6;
 }
 
 /* ==========================================================
@@ -176,19 +206,25 @@ img {
 }
 
 /* ==========================================================
-   BUTTONS
+   INTERACTIVE FEEDBACK
 ========================================================== */
 
 button {
   transition:
     transform var(--transition-fast),
     background var(--transition-fast),
+    border-color var(--transition-fast),
     color var(--transition-fast),
     box-shadow var(--transition-fast);
 }
 
 button:active {
-  transform: scale(.98);
+  transform: scale(0.98);
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 /* ==========================================================
@@ -209,12 +245,79 @@ button:active {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d4cec2;
-  border-radius: 999px;
+  background: #dcdad6;
+  border-radius: var(--radius-pill);
 }
 
 .dark ::-webkit-scrollbar-thumb {
   background: #454545;
+}
+
+/* ==========================================================
+   MOTION PRIMITIVES
+
+   Defined here rather than pulling in an animation plugin.
+========================================================== */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes panel-open {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in var(--duration-normal) var(--ease-out) both;
+}
+
+.animate-rise-in {
+  animation: rise-in var(--duration-slow) var(--ease-out) both;
+}
+
+.animate-panel-open {
+  animation: panel-open var(--duration-normal) var(--ease-out) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  button:active {
+    transform: none;
+  }
 }
 
 /* ==========================================================

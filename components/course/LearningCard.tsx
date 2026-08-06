@@ -53,13 +53,13 @@ export default function LearningCard({
 
       {/* Content */}
 
-      <div className="space-y-5 p-5">
+      <div className="space-y-4 p-5">
 
-        <h2 className="line-clamp-2 text-xl font-semibold leading-tight text-[var(--text)]">
+        <h2 className="line-clamp-2 text-[1.0625rem] font-semibold leading-snug tracking-[-0.015em] text-[var(--text)]">
           {title}
         </h2>
 
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-3">
 
           <div className="flex items-center gap-2">
 
@@ -78,7 +78,7 @@ export default function LearningCard({
           <Badge
             className={
               badgeTone === "accent"
-                ? "bg-[var(--primary)] text-white border-transparent"
+                ? "border-transparent bg-[var(--primary)] text-white"
                 : ""
             }
           >

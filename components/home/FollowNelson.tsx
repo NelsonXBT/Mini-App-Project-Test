@@ -31,9 +31,9 @@ const socials = [
 
 export default function FollowNelson() {
   return (
-    <section className="pt-2">
+    <section>
       <div>
-        <h2 className="text-lg font-semibold text-[var(--text)]">
+        <h2 className="text-[1.0625rem] font-semibold leading-snug tracking-[-0.015em] text-[var(--text)]">
           Connect with Nelson Edeh
         </h2>
 
@@ -42,7 +42,7 @@ export default function FollowNelson() {
         </p>
       </div>
 
-      <div className="mt-6 grid grid-cols-2 gap-3">
+      <div className="mt-4 grid grid-cols-2 gap-3">
         {socials.map((social) => {
           const Icon = social.icon;
 
@@ -53,30 +53,30 @@ export default function FollowNelson() {
               className="
                 group
                 flex
+                h-11
                 items-center
                 justify-center
                 gap-2
-                rounded-full
+                rounded-[var(--radius-control)]
                 border
                 border-[var(--border)]
                 bg-[var(--card)]
                 px-4
-                py-3
+                shadow-[var(--shadow-card)]
                 transition-all
                 duration-200
+                ease-out
                 hover:-translate-y-0.5
-                hover:border-[var(--primary)]
-                hover:shadow-sm
+                hover:border-[var(--border-strong)]
+                hover:shadow-[var(--shadow-raised)]
+                active:scale-[0.98]
               "
             >
               <Icon
                 className="
-                  h-4.5
-                  w-4.5
+                  h-4
+                  w-4
                   text-[var(--primary)]
-                  transition-transform
-                  duration-200
-                  group-hover:scale-110
                 "
               />
 
@@ -84,6 +84,7 @@ export default function FollowNelson() {
                 className="
                   text-sm
                   font-medium
+                  tracking-tight
                   text-[var(--text)]
                 "
               >

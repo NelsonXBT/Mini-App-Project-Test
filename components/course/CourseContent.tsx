@@ -70,11 +70,13 @@ export default function CourseContent({
       {activeTab === "lessons" ? (
         <div
           className="
+            animate-fade-in
             overflow-hidden
-            rounded-xl
+            rounded-[var(--radius)]
             border
             border-[var(--border)]
             bg-[var(--card)]
+            shadow-[var(--shadow-card)]
           "
         >
           {modules.map((module) => {
@@ -115,9 +117,21 @@ export default function CourseContent({
           })}
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="animate-fade-in space-y-3">
           {files.length === 0 ? (
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-5 text-center text-sm text-zinc-500">
+            <div
+              className="
+                rounded-[var(--radius)]
+                border
+                border-dashed
+                border-[var(--border-strong)]
+                bg-[var(--surface-secondary)]
+                p-6
+                text-center
+                text-[13px]
+                text-[var(--text-muted)]
+              "
+            >
               No files for this course yet.
             </div>
           ) : (

@@ -47,9 +47,10 @@ export default function BottomNavigation() {
         right-0
         z-50
         border-t
-        border-stone-200
-        bg-white
+        border-[var(--border)]
+        bg-[var(--surface)]/90
         backdrop-blur-xl
+        shadow-[var(--shadow-nav)]
         transition-all
         duration-300
       "
@@ -61,8 +62,8 @@ export default function BottomNavigation() {
               max-w-md
               justify-around
               px-3
-              pt-3
-              pb-[calc(env(safe-area-inset-bottom)+12px)]
+              pt-2.5
+              pb-[calc(env(safe-area-inset-bottom)+10px)]
             "
           >
         {navItems.map((item) => {
@@ -81,25 +82,26 @@ export default function BottomNavigation() {
                 flex-col
                 items-center
                 gap-1
-                rounded-xl
+                rounded-[var(--radius-control)]
                 px-3
                 py-2
-                transition-all
+                transition-colors
                 duration-200
                 ${
                   active
-                  ? "bg-stone-100 text-[var(--primary)]"
+                  ? "bg-[var(--primary-soft)] text-[var(--primary)]"
                   : "text-[var(--text-muted)] hover:text-[var(--text)]"
                 }
               `}
             >
               <Icon
                 icon={item.icon}
+                size="md"
                 tone={active ? "accent" : "muted"}
-                strokeWidth={active ? 2.4 : 2}
+                strokeWidth={active ? 2.2 : 1.9}
               />
 
-              <span className="text-[11px] font-medium">
+              <span className="text-[11px] font-medium tracking-tight">
                 {item.label}
               </span>
             </SaveLink>

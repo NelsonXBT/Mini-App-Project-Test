@@ -1,13 +1,9 @@
-
 import {
   MessageCircle,
   Users,
-  LifeBuoy,
   ChevronRight,
   MessageSquareText,
 } from "lucide-react";
-
-
 
 type CommunityCardProps = {
   icon: string;
@@ -20,65 +16,90 @@ export default function CommunityCard({
   title,
   description,
 }: CommunityCardProps) {
+  const shared = "h-5 w-5";
+  const stroke = 1.9;
+
   const renderIcon = () => {
-  switch (icon) {
-    case "whatsapp":
+    switch (icon) {
+      case "whatsapp":
+        return <MessageCircle className={`${shared} text-[#3f8f63]`} strokeWidth={stroke} />;
+
+      case "community":
+        return <Users className={`${shared} text-[var(--primary)]`} strokeWidth={stroke} />;
+
+      case "support":
+        return <MessageSquareText className={`${shared} text-[#c47a3d]`} strokeWidth={stroke} />;
+    }
+  };
+
   return (
-    <MessageCircle className="h-6 w-6 text-green-400" />
+    <button
+      className="
+        group
+        flex
+        w-full
+        items-center
+        gap-4
+        rounded-[var(--radius)]
+        border
+        border-[var(--border)]
+        bg-[var(--card)]
+        px-4
+        py-3.5
+        text-left
+        shadow-[var(--shadow-card)]
+        transition-all
+        duration-200
+        ease-out
+        hover:-translate-y-0.5
+        hover:border-[var(--border-strong)]
+        hover:shadow-[var(--shadow-raised)]
+      "
+    >
+      {/* Icon */}
+
+      <div
+        className="
+          flex
+          h-10
+          w-10
+          shrink-0
+          items-center
+          justify-center
+          rounded-[var(--radius-control)]
+          bg-[var(--surface-secondary)]
+        "
+      >
+        {renderIcon()}
+      </div>
+
+      {/* Text */}
+
+      <div className="min-w-0 flex-1">
+        <h3 className="truncate text-[14px] font-medium tracking-tight text-[var(--text)]">
+          {title}
+        </h3>
+
+        <p className="mt-0.5 line-clamp-2 text-[12px] leading-relaxed text-[var(--text-muted)]">
+          {description}
+        </p>
+      </div>
+
+      {/* Arrow */}
+
+      <ChevronRight
+        className="
+          h-4.5
+          w-4.5
+          shrink-0
+          text-[var(--text-subtle)]
+          transition-transform
+          duration-200
+          ease-out
+          group-hover:translate-x-0.5
+        "
+        strokeWidth={1.9}
+      />
+    </button>
   );
-
-case "community":
-  return (
-    <Users className="h-6 w-6 text-cyan-400" />
-  );
-
-case "support":
-  return (
-    <MessageSquareText className="h-6 w-6 text-orange-400" />
-  );
-  }
-};
-  return (
-  <button
-    className="
-      flex
-      w-full
-      items-center
-      rounded-2xl
-      border
-      border-zinc-800
-      bg-zinc-900
-      p-4
-      transition-all
-      duration-300
-      hover:border-cyan-500
-      hover:bg-zinc-800
-      hover:shadow-[0_0_20px_rgba(6,182,212,.10)]
-    "
-  >
-    {/* Icon */}
-
-    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-zinc-800">
-      {renderIcon()}
-    </div>
-
-    {/* Text */}
-
-    <div className="ml-4 flex-1 text-left">
-
-      <h3 className="font-semibold text-white">
-        {title}
-      </h3>
-
-      <p className="mt-1 text-sm leading-5 text-zinc-400">
-        {description}
-      </p>
-
-    </div>
-
-    {/* Arrow */}
-
-    <ChevronRight className="h-5 w-5 text-zinc-600" />
-  </button>
-);
 }

@@ -12,12 +12,14 @@ export default function Card({
   return (
     <div
       className={`
-        rounded-xl
+        rounded-[var(--radius)]
         border
         border-[var(--border)]
         bg-[var(--card)]
-        transition-colors
+        shadow-[var(--shadow-card)]
+        transition-all
         duration-200
+        ease-out
         ${className}
       `}
     >

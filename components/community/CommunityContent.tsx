@@ -5,7 +5,7 @@ import { communityItems } from "@/lib/constants/community";
 
 export default function CommunityContent() {
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
 
       {/* Telegram Banner */}
       <CommunityBanner />
@@ -13,7 +13,7 @@ export default function CommunityContent() {
       {/* Community Channels */}
       <div>
 
-        <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-zinc-500">
+        <h3 className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--text-subtle)]">
           Community Channels
         </h3>
 

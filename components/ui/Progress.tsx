@@ -15,18 +15,22 @@ export default function Progress({
         h-1.5
         w-full
         overflow-hidden
-        rounded-full
+        rounded-[var(--radius-pill)]
         bg-[var(--surface-secondary)]
         ${className}
       `}
+      role="progressbar"
+      aria-valuenow={progress}
+      aria-valuemin={0}
+      aria-valuemax={100}
     >
       <div
         className="
           h-full
-          rounded-full
+          rounded-[var(--radius-pill)]
           bg-[var(--primary)]
           transition-[width]
-          duration-300
+          duration-500
           ease-out
         "
         style={{

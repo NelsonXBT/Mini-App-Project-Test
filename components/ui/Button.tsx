@@ -20,18 +20,27 @@ export default function Button({
   disabled = false,
   type = "button",
 }: ButtonProps) {
+  /*
+   * One height (44px), one radius, one padding scale for every
+   * variant so buttons line up wherever they sit next to each other.
+   * active:scale is set here as well as globally, because the href
+   * form renders an <a> and never picks up the global button rule.
+   */
   const baseStyles = `
     inline-flex
+    h-11
     items-center
     justify-center
     gap-2
-    rounded-lg
+    rounded-[var(--radius-control)]
     px-5
-    py-3
     text-sm
     font-medium
-    transition-colors
+    tracking-tight
+    transition-all
     duration-200
+    ease-out
+    active:scale-[0.98]
     disabled:opacity-50
     disabled:pointer-events-none
   `;
@@ -48,13 +57,15 @@ export default function Button({
       border-[var(--border)]
       bg-[var(--card)]
       text-[var(--text)]
+      hover:border-[var(--border-strong)]
       hover:bg-[var(--surface-secondary)]
     `,
 
     ghost: `
       bg-transparent
-      text-[var(--text)]
+      text-[var(--text-muted)]
       hover:bg-[var(--surface-secondary)]
+      hover:text-[var(--text)]
     `,
   };
 

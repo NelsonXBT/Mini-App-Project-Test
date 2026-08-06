@@ -30,19 +30,19 @@ export default function CourseCard({
   return (
     <Link
       href={`/courses/${course.slug}`}
-      className="block"
+      className="group block"
     >
       <Card
         className="
           overflow-hidden
-          transition-colors
-          duration-200
-          hover:border-[var(--primary)]
+          hover:-translate-y-0.5
+          hover:border-[var(--border-strong)]
+          hover:shadow-[var(--shadow-raised)]
         "
       >
         {/* Thumbnail */}
 
-        <div className="relative h-44 w-full">
+        <div className="relative h-40 w-full overflow-hidden">
           <Image
             src={
               course.thumbnail ??
@@ -60,16 +60,17 @@ export default function CourseCard({
 
           <h2
             className="
-              text-[18px]
+              text-[1.0625rem]
               font-semibold
               leading-snug
+              tracking-[-0.015em]
               text-[var(--text)]
             "
           >
             {course.title}
           </h2>
 
-          <div className="mt-5 flex items-center justify-between">
+          <div className="mt-4 flex items-center justify-between gap-3">
 
             <div className="flex items-center gap-2">
 
@@ -89,18 +90,19 @@ export default function CourseCard({
             <div
               className="
                 inline-flex
+                h-9
                 items-center
-                gap-2
-                rounded-lg
+                gap-1.5
+                rounded-[var(--radius-control)]
                 border
                 border-[var(--border)]
                 px-3
-                py-2
                 text-sm
                 font-medium
                 text-[var(--text)]
                 transition-colors
                 duration-200
+                ease-out
                 group-hover:border-[var(--primary)]
               "
             >
@@ -111,6 +113,10 @@ export default function CourseCard({
                   h-4
                   w-4
                   text-[var(--primary)]
+                  transition-transform
+                  duration-200
+                  ease-out
+                  group-hover:translate-x-0.5
                 "
               />
             </div>
