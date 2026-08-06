@@ -9,6 +9,7 @@ import VideoCanvas from "./VideoCanvas";
 import PlayerControls from "./PlayerControls";
 import { saveProgress } from "@/lib/player/progress";
 import { getFullscreen, setFullscreen } from "@/lib/player/store";
+import { registerPlayer } from "@/lib/player/controller";
 
 export interface DaluplayerProps {
   lessonId: string;
@@ -349,6 +350,16 @@ export default function Daluplayer({
     return () => {
       window.removeEventListener("pagehide", handlePageHide);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [saveCurrentProgress]);
+
+  // Let SaveLink flush progress before it navigates away. IMEPlayer used to
+  // register here; without this, bottom-nav navigation loses the last position.
+  useEffect(() => {
+    registerPlayer(saveCurrentProgress);
+
+    return () => {
+      registerPlayer(async () => {});
     };
   }, [saveCurrentProgress]);
 
