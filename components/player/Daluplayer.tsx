@@ -145,6 +145,9 @@ export default function Daluplayer({
   const enterFullscreen = useCallback(async () => {
     await saveCurrentProgress();
 
+    // Add fullscreen class to hide page content
+    document.documentElement.classList.add("player-fullscreen");
+
     const tg = (window as any).Telegram?.WebApp;
 
     // Request Telegram's native fullscreen (bypasses iframe restrictions)
@@ -190,6 +193,9 @@ export default function Daluplayer({
     }
 
     await saveCurrentProgress();
+
+    // Remove fullscreen class to restore page content
+    document.documentElement.classList.remove("player-fullscreen");
 
     setIsFullscreen(false);
     setShowRotateOverlay(false);
@@ -305,15 +311,76 @@ export default function Daluplayer({
     };
   }, [saveCurrentProgress]);
 
+  // Sync when Telegram itself changes fullscreen state (user swipes down or
+  // uses Telegram's own UI), so our state never drifts from the client's.
+  useEffect(() => {
+    const tg = (window as any).Telegram?.WebApp;
+
+    if (!tg?.onEvent) return;
+
+    const handleChanged = () => {
+      if (tg.isFullscreen === false) {
+        document.documentElement.classList.remove("player-fullscreen");
+
+        setIsFullscreen(false);
+        setShowRotateOverlay(false);
+        onFullscreenChange?.(false);
+      }
+    };
+
+    const handleFailed = () => {
+      // Telegram refused fullscreen (unsupported client / already fullscreen).
+      // Fall back to the in-page fixed overlay, which still works on its own.
+      console.warn("Telegram fullscreenFailed");
+    };
+
+    tg.onEvent("fullscreenChanged", handleChanged);
+    tg.onEvent("fullscreenFailed", handleFailed);
+
+    return () => {
+      tg.offEvent?.("fullscreenChanged", handleChanged);
+      tg.offEvent?.("fullscreenFailed", handleFailed);
+    };
+  }, [onFullscreenChange]);
+
+  // Leave the app in a clean state on unmount. CourseLearning remounts
+  // VideoPlayer via key={selectedLesson.id} on auto-advance, so without this
+  // the html class and Telegram's expanded viewport would stick.
+  useEffect(() => {
+    return () => {
+      document.documentElement.classList.remove("player-fullscreen");
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+
+      try {
+        screen.orientation.unlock();
+      } catch {}
+
+      const tg = (window as any).Telegram?.WebApp;
+
+      if (tg?.isFullscreen && tg?.exitFullscreen) {
+        try {
+          tg.exitFullscreen();
+        } catch {}
+      }
+    };
+  }, []);
+
   return (
     <div
       ref={wrapperRef}
       onMouseMove={showControls}
-      className={`relative overflow-hidden bg-black ${
+      // Inline style guarantees fixed positioning regardless of CSS class order.
+      style={
         isFullscreen
-          ? "fixed inset-0 z-[9999] flex items-center justify-center rounded-none"
-          : "aspect-video w-full rounded-xl"
-      }`}
+          ? { position: "fixed", inset: 0, zIndex: 9999 }
+          : undefined
+      }
+      className={
+        isFullscreen
+          ? "flex items-center justify-center overflow-hidden bg-black"
+          : "relative aspect-video w-full overflow-hidden rounded-xl bg-black"
+      }
     >
       <VideoCanvas
         ref={videoRef}

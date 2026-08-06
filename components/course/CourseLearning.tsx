@@ -131,7 +131,7 @@ function handleLessonSelect(
 
   return (
 
-    
+
     <>
       <VideoPlayer
             key={selectedLesson.id}
@@ -141,7 +141,7 @@ function handleLessonSelect(
             countdown={countdown}
             onEnded={handleLessonCompleted}
             />
-      <>
+      <div className="player-page-content space-y-6">
         <h1
             className="
             text-[1.45rem]
@@ -161,7 +161,7 @@ function handleLessonSelect(
             selectedLessonId={selectedLesson.id}
             onLessonSelect={handleLessonSelect}
         />
-        </>
+        </div>
     </>
   );
 }
