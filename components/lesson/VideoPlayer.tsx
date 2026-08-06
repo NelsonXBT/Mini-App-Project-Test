@@ -1,4 +1,4 @@
-import IMEPlayer from "@/components/player/IMEPlayer";
+import Daluplayer from "@/components/player/Daluplayer";
 
 type VideoPlayerProps = {
   lessonId: string;
@@ -26,7 +26,7 @@ export default function VideoPlayer({
           bg-black
         "
       >
-        <IMEPlayer
+        <Daluplayer
         lessonId={lessonId}
         src={videoId}
         countdown={countdown}

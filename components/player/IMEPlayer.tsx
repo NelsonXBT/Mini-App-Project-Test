@@ -268,24 +268,40 @@ async function saveCurrentProgress() {
       }, []);
 
 
-    async function fullscreen() {
-  await saveAndNavigate(
-    saveCurrentProgress,
-    () => {
-      router.push(`/player?lessonId=${lessonId}`);
-    }
-    );
+   async function fullscreen() {
+  await saveCurrentProgress();
+
+  const tg = (window as any).Telegram?.WebApp;
+
+  if (tg?.requestFullscreen) {
+    try {
+      await tg.requestFullscreen();
+    } catch {}
   }
+
+  try {
+    await (
+      screen.orientation as ScreenOrientation & {
+        lock: (
+          orientation: string
+        ) => Promise<void>;
+      }
+    ).lock("landscape");
+  } catch {}
+
+  setFullscreenRequested(true);
+  setIsFullscreen(true);
+}
 
   return (
     <>
       <div
             ref={wrapperRef}
             className={`relative overflow-hidden bg-black ${
-                showRotateOverlay
-                ? "fixed left-0 right-0 top-12 bottom-0 z-50 rounded-none overflow-hidden touch-none flex items-center justify-center"
-                : "aspect-video w-full rounded-xl"
-            }`}
+                isFullscreen
+                  ? "fixed inset-0 z-[9999] rounded-none flex items-center justify-center"
+                  : "aspect-video w-full rounded-xl"
+              }`}
             onMouseMove={showControls}
             
             >

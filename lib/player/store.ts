@@ -1,6 +1,6 @@
 "use client";
 
-type Lesson = {
+export type Lesson = {
   id: string;
   videoId: string;
 };
@@ -12,14 +12,15 @@ let countdown: number | null = null;
 
 const listeners = new Set<Listener>();
 
+function notify() {
+  listeners.forEach((listener) => listener());
+}
+
 export function setCurrentLesson(
   lesson: Lesson
 ) {
   currentLesson = lesson;
-
-  listeners.forEach((listener) =>
-    listener()
-  );
+  notify();
 }
 
 export function getCurrentLesson() {
@@ -30,10 +31,7 @@ export function setCountdown(
   value: number | null
 ) {
   countdown = value;
-
-  listeners.forEach((listener) =>
-    listener()
-  );
+  notify();
 }
 
 export function getCountdown() {
@@ -46,6 +44,6 @@ export function subscribe(
   listeners.add(listener);
 
   return () => {
-  listeners.delete(listener);
-};
+    listeners.delete(listener);
+  };
 }
