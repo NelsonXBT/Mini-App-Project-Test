@@ -11,6 +11,7 @@ import VideoPlayer from "../lesson/VideoPlayer";
 import {
   setCurrentLesson,
   setCountdown as setSharedCountdown,
+  getFullscreen,
 } from "@/lib/player/store";
 
 type CourseLearningProps = {
@@ -33,6 +34,8 @@ export default function CourseLearning({
   useState(lessons[0]);
 
   const [autoPlay, setAutoPlay] = useState(false);
+
+  const playerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
   setCurrentLesson({
@@ -130,6 +133,18 @@ function handleLessonSelect(
 
   setSelectedLesson(lesson);
   setAutoPlay(false);
+
+  // Bring the player back into view so the student doesn't have to scroll up
+  // from the lesson list. Pointless in fullscreen — the player already fills
+  // the screen. rAF waits for the re-render so we scroll to the settled layout.
+  if (!getFullscreen()) {
+    requestAnimationFrame(() => {
+      playerRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  }
 }
 
 
@@ -137,15 +152,17 @@ function handleLessonSelect(
 
 
     <>
-      <VideoPlayer
-            key={selectedLesson.id}
-            lessonId={selectedLesson.id}
-            provider={selectedLesson.provider}
-            videoId={selectedLesson.videoId}
-            countdown={countdown}
-            autoPlay={autoPlay}
-            onEnded={handleLessonCompleted}
-            />
+      <div ref={playerRef}>
+        <VideoPlayer
+              key={selectedLesson.id}
+              lessonId={selectedLesson.id}
+              provider={selectedLesson.provider}
+              videoId={selectedLesson.videoId}
+              countdown={countdown}
+              autoPlay={autoPlay}
+              onEnded={handleLessonCompleted}
+              />
+      </div>
       <div className="player-page-content space-y-6">
         <h1
             className="
