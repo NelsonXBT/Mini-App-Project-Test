@@ -17,6 +17,7 @@ export interface DaluplayerProps {
   countdown?: number | null;
   onEnded?: () => void;
   autoPlay?: boolean;
+  resumeAt?: number;
   onFullscreenChange?: (isFullscreen: boolean) => void;
 }
 
@@ -74,12 +75,14 @@ export default function Daluplayer({
   countdown,
   onEnded,
   autoPlay,
+  resumeAt,
   onFullscreenChange,
 }: DaluplayerProps) {
   // Refs
   const videoRef = useRef<HTMLVideoElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const controlsTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const didResumeRef = useRef(false);
 
   // Playback state
   const [playing, setPlaying] = useState(false);
@@ -454,11 +457,28 @@ export default function Daluplayer({
           setDuration(videoDuration);
           setLoading(false);
 
+          const video = videoRef.current;
+
+          // Pick playback back up where the student stopped. Only once per
+          // mount, and never within the last 15s — seeking to the tail would
+          // fire "ended" immediately and trip the auto-advance countdown.
+          if (
+            video &&
+            !didResumeRef.current &&
+            resumeAt &&
+            resumeAt > 0 &&
+            resumeAt < videoDuration - 15
+          ) {
+            didResumeRef.current = true;
+            video.currentTime = resumeAt;
+            setCurrentTime(resumeAt);
+          }
+
           // Keep the course running hands-free after an auto-advance.
           // Without this the next lesson lands paused, which in fullscreen
           // looks like a black screen.
           if (autoPlay) {
-            videoRef.current?.play().catch(() => {});
+            video?.play().catch(() => {});
           }
         }}
         onTimeUpdate={setCurrentTime}

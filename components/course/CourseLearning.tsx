@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { completeLesson } from "@/app/actions/lesson";
 
@@ -20,6 +20,8 @@ export default function CourseLearning({
   course,
 }: CourseLearningProps) {
     const router = useRouter();
+    const searchParams = useSearchParams();
+
   const lessons = useMemo(
     () =>
       course.modules.flatMap(
@@ -28,8 +30,30 @@ export default function CourseLearning({
     [course]
   );
 
+  // "Continue Lesson" on the home card links here with ?lesson=<id> so the
+  // student lands on the lesson they left off on. Everything else (including
+  // "Start Learning") has no param and just opens the first lesson.
   const [selectedLesson, setSelectedLesson] =
-  useState(lessons[0]);
+  useState(() => {
+    const requestedId = searchParams.get("lesson");
+
+    return (
+      lessons.find(
+        (lesson: any) => lesson.id === requestedId
+      ) ?? lessons[0]
+    );
+  });
+
+  // Where to pick playback back up for the selected lesson. Skipped once the
+  // lesson is completed, so a finished video doesn't reopen at the very end
+  // and immediately fire "ended" into the auto-advance countdown.
+  const resumeAt = useMemo(() => {
+    const progress = selectedLesson?.progress?.[0];
+
+    if (!progress || progress.completed) return 0;
+
+    return progress.currentTime ?? 0;
+  }, [selectedLesson]);
 
   const [autoPlay, setAutoPlay] = useState(false);
 
@@ -170,6 +194,7 @@ function handleLessonSelect(
               videoId={selectedLesson.videoId}
               countdown={countdown}
               autoPlay={autoPlay}
+              resumeAt={resumeAt}
               onEnded={handleLessonCompleted}
               />
       </div>

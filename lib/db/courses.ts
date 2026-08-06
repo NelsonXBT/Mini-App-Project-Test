@@ -52,6 +52,7 @@ export async function getCourse(slug: string) {
                     select: {
                       progress: true,
                       completed: true,
+                      currentTime: true,
                     },
                   }
                 : false,

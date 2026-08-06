@@ -13,6 +13,7 @@ type Lesson = Prisma.LessonGetPayload<{
       select: {
         progress: true;
         completed: true;
+        currentTime: true;
       };
     };
   };

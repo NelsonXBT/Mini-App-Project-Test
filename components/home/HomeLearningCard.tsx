@@ -35,7 +35,7 @@ export default async function HomeLearningCard() {
         lessonText={`${totalLessons} Lessons`}
         badge="Ready"
         buttonText="Start Learning"
-        buttonHref={`/courses/${course.slug}/lessons/${lesson.id}`}
+        buttonHref={`/courses/${course.slug}`}
       />
     </section>
   );
@@ -72,7 +72,7 @@ default:
         badgeTone="accent"
         progress={progress}
         buttonText="Continue Lesson"
-        buttonHref={`/courses/${course.slug}/lessons/${lesson.id}`}
+        buttonHref={`/courses/${course.slug}?lesson=${lesson.id}`}
       />
     </section>
   ); }

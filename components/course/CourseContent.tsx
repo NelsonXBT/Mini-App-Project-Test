@@ -16,6 +16,7 @@ type Module = Prisma.ModuleGetPayload<{
           select: {
             progress: true;
             completed: true;
+            currentTime: true;
           };
         };
       };
