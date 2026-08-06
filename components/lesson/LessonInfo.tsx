@@ -1,3 +1,5 @@
+import { Badge } from "@/components/ui";
+
 type LessonInfoProps = {
   lessonNumber: number;
   totalLessons: number;
@@ -10,14 +12,24 @@ export default function LessonInfo({
   title,
 }: LessonInfoProps) {
   return (
-    <section className="space-y-2">
-      <p className="text-sm font-medium text-cyan-400">
-        Lesson {lessonNumber}/{totalLessons}
-      </p>
+    <section className="space-y-3">
 
-      <h2 className="text-2xl font-bold leading-tight text-white">
+      <Badge>
+        LESSON {lessonNumber} OF {totalLessons}
+      </Badge>
+
+      <h2
+        className="
+          text-[1.65rem]
+          font-semibold
+          leading-tight
+          tracking-tight
+          text-[var(--text)]
+        "
+      >
         {title}
       </h2>
+
     </section>
   );
 }

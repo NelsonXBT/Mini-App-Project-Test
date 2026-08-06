@@ -13,22 +13,44 @@ export default function VideoPlayer({
   videoId,
   onEnded,
 }: VideoPlayerProps) {
-
   if (provider === "bunny") {
     return (
-      <div className="mb-3 overflow-hidden rounded-xl border border-zinc-800 bg-black">
+      <div
+        className="
+          overflow-hidden
+          rounded-xl
+          border
+          border-[var(--border)]
+          bg-black
+        "
+      >
         <IMEPlayer
-      lessonId={lessonId}
-      src={videoId}
-      onEnded={onEnded}
-    />
+          lessonId={lessonId}
+          src={videoId}
+          onEnded={onEnded}
+        />
       </div>
     );
   }
 
   return (
-    <div className="mb-3 overflow-hidden rounded-xl border border-red-900 bg-red-950 p-6 text-center text-red-300">
-      Unsupported video provider: {provider}
+    <div
+      className="
+        rounded-xl
+        border
+        border-[var(--border)]
+        bg-[var(--card)]
+        p-6
+        text-center
+      "
+    >
+      <p className="font-medium text-[var(--text)]">
+        Unsupported video provider
+      </p>
+
+      <p className="mt-2 text-sm text-[var(--text-muted)]">
+        Provider: {provider}
+      </p>
     </div>
   );
 }

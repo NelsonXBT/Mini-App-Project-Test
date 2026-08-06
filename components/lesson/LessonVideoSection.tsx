@@ -14,19 +14,16 @@ export default function LessonVideoSection({
   provider,
   videoId,
 }: LessonVideoSectionProps) {
-
   async function handleEnded() {
-  console.log("Lesson finished 🎉");
-
-  await completeLesson(lessonId);
-}
+    await completeLesson(lessonId);
+  }
 
   return (
     <VideoPlayer
-  lessonId={lessonId}
-  provider={provider}
-  videoId={videoId}
-  onEnded={handleEnded}
-/>
+      lessonId={lessonId}
+      provider={provider}
+      videoId={videoId}
+      onEnded={handleEnded}
+    />
   );
 }

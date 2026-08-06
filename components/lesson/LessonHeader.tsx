@@ -1,7 +1,7 @@
-
-
 import SaveLink from "@/components/common/SaveLink";
 import { ArrowLeft } from "lucide-react";
+
+import { Icon } from "@/components/ui";
 
 type LessonHeaderProps = {
   courseSlug: string;
@@ -13,15 +13,45 @@ export default function LessonHeader({
   courseTitle,
 }: LessonHeaderProps) {
   return (
-    <header className="mb-6 flex items-center gap-4">
+    <header
+      className="
+        flex
+        items-center
+        gap-4
+      "
+    >
       <SaveLink
-          href={`/courses/${courseSlug}`}
-          className="rounded-full p-2 transition hover:bg-zinc-800 hover:text-cyan-400"
-        >
-        <ArrowLeft className="h-5 w-5" />
+        href={`/courses/${courseSlug}`}
+        className="
+          flex
+          h-10
+          w-10
+          items-center
+          justify-center
+          rounded-lg
+          border
+          border-[var(--border)]
+          bg-[var(--card)]
+          transition-colors
+          duration-200
+          hover:bg-[var(--surface-secondary)]
+        "
+      >
+        <Icon
+          icon={ArrowLeft}
+          size="sm"
+        />
       </SaveLink>
 
-      <h1 className="flex-1 truncate text-lg font-semibold text-white">
+      <h1
+        className="
+          flex-1
+          truncate
+          text-[17px]
+          font-semibold
+          text-[var(--text)]
+        "
+      >
         {courseTitle}
       </h1>
     </header>

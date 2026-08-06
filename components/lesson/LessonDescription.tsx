@@ -1,3 +1,5 @@
+import { SectionTitle } from "@/components/ui";
+
 type LessonDescriptionProps = {
   description: string;
 };
@@ -5,9 +7,21 @@ type LessonDescriptionProps = {
 export default function LessonDescription({
   description,
 }: LessonDescriptionProps) {
+  if (!description.trim()) {
+    return null;
+  }
+
   return (
-    <section className="space-y-2">
-      <p className="text-[15px] leading-6 text-zinc-400">
+    <section className="space-y-3">
+      <SectionTitle>Description</SectionTitle>
+
+      <p
+        className="
+          text-[15px]
+          leading-7
+          text-[var(--text-muted)]
+        "
+      >
         {description}
       </p>
     </section>

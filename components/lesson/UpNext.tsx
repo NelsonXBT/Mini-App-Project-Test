@@ -1,8 +1,7 @@
-
-
 import SaveLink from "@/components/common/SaveLink";
-import { savePlayerProgress } from "@/lib/player/controller";
 import { ChevronRight, Clock } from "lucide-react";
+
+import { Icon, SectionTitle } from "@/components/ui";
 
 type UpNextProps = {
   title: string;
@@ -21,29 +20,66 @@ export default function UpNext({
       : "—";
 
   return (
-    <section className="rounded-xl border border-zinc-800 bg-zinc-900">
-      <SaveLink
-            href={href}
-            className="flex items-center justify-between p-4 transition-colors hover:bg-zinc-800/40"
-          >
-        <div className="min-w-0 flex-1">
-          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-cyan-400">
-            Up Next
-          </p>
+    <section className="space-y-3">
+      <SectionTitle>Up Next</SectionTitle>
 
-          <h3 className="truncate text-base font-semibold text-white transition-colors hover:text-cyan-400">
+      <SaveLink
+        href={href}
+        className="
+          group
+          flex
+          items-center
+          justify-between
+          rounded-xl
+          border
+          border-[var(--border)]
+          bg-[var(--card)]
+          p-5
+          transition-colors
+          duration-200
+          hover:bg-[var(--surface-secondary)]
+        "
+      >
+        <div className="min-w-0 flex-1">
+
+          <h3
+            className="
+              truncate
+              text-[16px]
+              font-semibold
+              text-[var(--text)]
+            "
+          >
             {title}
           </h3>
 
-          <div className="mt-1 flex items-center gap-1 text-sm text-zinc-500">
-            <Clock size={14} />
-            <span>{formattedDuration}</span>
+          <div className="mt-2 flex items-center gap-2">
+
+            <Icon
+              icon={Clock}
+              size="xs"
+              tone="muted"
+            />
+
+            <span className="text-sm text-[var(--text-muted)]">
+              {formattedDuration}
+            </span>
+
           </div>
+
         </div>
 
         <ChevronRight
-          size={22}
-          className="ml-4 shrink-0 text-zinc-500"
+          className="
+            ml-4
+            h-5
+            w-5
+            shrink-0
+            text-[var(--text-muted)]
+            transition-transform
+            duration-200
+            group-hover:translate-x-0.5
+          "
         />
       </SaveLink>
     </section>
