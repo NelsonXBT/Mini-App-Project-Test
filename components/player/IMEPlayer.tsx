@@ -324,7 +324,7 @@ async function saveCurrentProgress() {
       flex
       items-center
       justify-center
-      bg-white/0.15
+      bg-white/10
       backdrop-blur-none
       pointer-events-none
       transition-opacity
@@ -334,7 +334,7 @@ async function saveCurrentProgress() {
     <p
       className="
         rounded-full
-        bg-white/20
+        bg-white/40
         px-5
         py-2.5
         text-base
