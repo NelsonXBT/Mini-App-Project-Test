@@ -16,19 +16,19 @@ export default function PlayButton({
       aria-label={playing ? "Pause video" : "Play video"}
       className="
           flex
-          h-14
-          w-14
+          h-12
+          w-12
           items-center
           justify-center
           rounded-full
           border
           border-white/10
-          bg-black/20
+          bg-white/5
           text-white
           backdrop-blur-md
           transition-all
           duration-200
-          hover:bg-black/30
+          hover:bg-white/10
           active:scale-95
           cursor-pointer
           select-none
