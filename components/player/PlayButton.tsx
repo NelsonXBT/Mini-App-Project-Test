@@ -16,12 +16,12 @@ export default function PlayButton({
       aria-label={playing ? "Pause video" : "Play video"}
       className="
   flex
-  h-16
-  w-16
+  h-14
+  w-14
   items-center
   justify-center
   rounded-full
-  bg-black/[0.30]
+  bg-black/[0.25]
   text-white
   transition-all
   duration-200
@@ -33,8 +33,8 @@ export default function PlayButton({
     >
       {playing ? (
         <svg
-          width="20"
-          height="20"
+          width="22"
+          height="22"
           viewBox="0 0 24 24"
           fill="currentColor"
         >
