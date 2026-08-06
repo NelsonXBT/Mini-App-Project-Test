@@ -45,6 +45,9 @@ export default function CourseLearning({
 const autoNextTimeout =
   useRef<NodeJS.Timeout | null>(null);
 
+  const countdownInterval =
+  useRef<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
   if (autoNextTimeout.current) {
     clearTimeout(autoNextTimeout.current);
@@ -81,14 +84,18 @@ async function handleLessonCompleted() {
 
 let seconds = 5;
 
-const interval = setInterval(() => {
+countdownInterval.current =
+  setInterval(() => {
   seconds--;
 
   if (seconds > 0) {
     setCountdown(seconds);
     setSharedCountdown(seconds);
   } else {
-    clearInterval(interval);
+    if (countdownInterval.current) {
+  clearInterval(countdownInterval.current);
+  countdownInterval.current = null;
+}
 
     setCountdown(null);
     setSharedCountdown(null);
@@ -102,7 +109,29 @@ const interval = setInterval(() => {
 }, 1000);
 }
 
+function handleLessonSelect(
+  lesson: any
+) {
+  if (countdownInterval.current) {
+    clearInterval(countdownInterval.current);
+    countdownInterval.current = null;
+  }
+
+  if (autoNextTimeout.current) {
+    clearTimeout(autoNextTimeout.current);
+    autoNextTimeout.current = null;
+  }
+
+  setCountdown(null);
+  setSharedCountdown(null);
+
+  setSelectedLesson(lesson);
+}
+
+
   return (
+
+    
     <>
       <VideoPlayer
             key={selectedLesson.id}
@@ -130,7 +159,7 @@ const interval = setInterval(() => {
             files={course.files}
             courseSlug={course.slug}
             selectedLessonId={selectedLesson.id}
-            onLessonSelect={setSelectedLesson}
+            onLessonSelect={handleLessonSelect}
         />
         </>
     </>
