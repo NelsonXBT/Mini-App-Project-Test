@@ -24,6 +24,7 @@ const isPlayerPage = pathname === "/player";
 
   const videoRef = useRef<HTMLVideoElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const CONTROLS_TIMEOUT = 2000;
 
   const controlsTimeout =
     useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -60,7 +61,7 @@ const isPlayerPage = pathname === "/player";
   if (playing) {
     controlsTimeout.current = setTimeout(() => {
       setControlsVisible(false);
-    }, 2000);
+   }, CONTROLS_TIMEOUT);
   }
 }
 
@@ -220,7 +221,7 @@ const isPlayerPage = pathname === "/player";
     if (playing) {
       controlsTimeout.current = setTimeout(() => {
         setControlsVisible(false);
-      }, 2000);
+      }, CONTROLS_TIMEOUT);
     }
   }
 }
@@ -281,7 +282,7 @@ async function saveCurrentProgress() {
             className={`relative overflow-hidden bg-black ${
                 showRotateOverlay
                 ? "fixed left-0 right-0 top-12 bottom-0 z-50 rounded-none overflow-hidden touch-none flex items-center justify-center"
-                : "aspect-video w-full rounded-2xl"
+                : "aspect-video w-full rounded-xl"
             }`}
             onMouseMove={showControls}
             
