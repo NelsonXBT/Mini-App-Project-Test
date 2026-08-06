@@ -16,8 +16,8 @@ export default function PlayButton({
       aria-label={playing ? "Pause video" : "Play video"}
       className="
   flex
-  h-12
-  w-12
+  h-16
+  w-16
   items-center
   justify-center
   rounded-full
