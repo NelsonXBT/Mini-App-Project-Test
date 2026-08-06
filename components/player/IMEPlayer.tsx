@@ -325,7 +325,7 @@ async function saveCurrentProgress() {
       items-center
       justify-center
       bg-white/0.15
-      backdrop-blur-sm
+      backdrop-blur-none
       pointer-events-none
       transition-opacity
       duration-300
@@ -334,7 +334,7 @@ async function saveCurrentProgress() {
     <p
       className="
         rounded-full
-        bg-white/0.15
+        bg-white/0.15s
         px-5
         py-2.5
         text-base
