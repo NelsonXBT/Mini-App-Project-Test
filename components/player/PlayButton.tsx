@@ -21,14 +21,12 @@ export default function PlayButton({
           items-center
           justify-center
           rounded-full
-          border
-          border-white/10
-          bg-white/5
+          bg-black/5
           text-white
-          backdrop-blur-md
+          backdrop-blur-sm
           transition-all
           duration-200
-          hover:bg-white/10
+          hover:bg-black/10
           active:scale-95
           cursor-pointer
           select-none
