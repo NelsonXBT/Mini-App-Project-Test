@@ -21,7 +21,7 @@ export default function PlayButton({
   items-center
   justify-center
   rounded-full
-  bg-black/[0.10]
+  bg-black/[0.30]
   text-white
   transition-all
   duration-200
