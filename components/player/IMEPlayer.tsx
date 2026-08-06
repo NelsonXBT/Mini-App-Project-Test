@@ -334,7 +334,7 @@ async function saveCurrentProgress() {
     <p
       className="
         rounded-full
-        bg-white/0.15s
+        bg-white/20
         px-5
         py-2.5
         text-base
