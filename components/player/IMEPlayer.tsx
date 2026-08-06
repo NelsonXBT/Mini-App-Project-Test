@@ -349,7 +349,7 @@ async function saveCurrentProgress() {
       drop-shadow-lg
     "
   >
-    Next lesson in {countdown}
+    Next lesson in ({countdown})
   </span>
 </div>
 )}
