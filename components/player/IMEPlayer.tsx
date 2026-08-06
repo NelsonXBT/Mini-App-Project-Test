@@ -332,7 +332,7 @@ async function saveCurrentProgress() {
     <span
       className="
         text-white
-        text-xl
+        text-2l
         font-semibold
         drop-shadow-lg
         tracking-tight
