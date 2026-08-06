@@ -15,22 +15,21 @@ export default function PlayButton({
       onClick={onClick}
       aria-label={playing ? "Pause video" : "Play video"}
       className="
-          flex
-          h-12
-          w-12
-          items-center
-          justify-center
-          rounded-full
-          bg-black/5
-          text-white
-          backdrop-blur-sm
-          transition-all
-          duration-200
-          hover:bg-black/10
-          active:scale-95
-          cursor-pointer
-          select-none
-        "
+  flex
+  h-12
+  w-12
+  items-center
+  justify-center
+  rounded-full
+  bg-black/[0.01]
+  text-white
+  transition-all
+  duration-200
+  hover:bg-black/[0.02]
+  active:scale-95
+  cursor-pointer
+  select-none
+"
     >
       {playing ? (
         <svg
