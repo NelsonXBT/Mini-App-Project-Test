@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { completeLesson } from "@/app/actions/lesson";
@@ -27,12 +27,46 @@ export default function CourseLearning({
   const [selectedLesson, setSelectedLesson] =
   useState(lessons[0]);
 
+const autoNextTimeout =
+  useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+  if (autoNextTimeout.current) {
+    clearTimeout(autoNextTimeout.current);
+    autoNextTimeout.current = null;
+  }
+}, [selectedLesson.id]);
 
 
-  async function handleLessonCompleted() {
+async function handleLessonCompleted() {
+  // Mark lesson completed
   await completeLesson(selectedLesson.id);
 
-  router.refresh();
+  // Refresh progress/checkmarks
+
+
+  // Find next lesson
+  const currentIndex = lessons.findIndex(
+    (lesson: any) =>
+      lesson.id === selectedLesson.id
+  );
+
+  if (currentIndex === -1) return;
+
+  const nextLesson =
+    lessons[currentIndex + 1];
+
+  // Last lesson? Stop here.
+  if (!nextLesson) return;
+
+  // Wait 5 seconds then switch lesson
+  autoNextTimeout.current = setTimeout(() => {
+    setSelectedLesson(nextLesson);
+
+    router.refresh();
+
+    autoNextTimeout.current = null;
+  }, 5000);
 }
 
   return (
