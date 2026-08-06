@@ -21,11 +21,11 @@ export default function PlayButton({
   items-center
   justify-center
   rounded-full
-  bg-black/[0.01]
+  bg-black/[0.02]
   text-white
   transition-all
   duration-200
-  hover:bg-black/[0.02]
+  hover:bg-black/[0.04]
   active:scale-95
   cursor-pointer
   select-none
