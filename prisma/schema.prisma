@@ -22,11 +22,49 @@ enum ResourceType {
   github
   website
   notion
+  zip
+  link
+  other
 }
 
 enum EnrollmentStatus {
   ACTIVE
   INACTIVE
+}
+
+enum Difficulty {
+  beginner
+  intermediate
+  advanced
+}
+
+enum ActivityType {
+  COURSE_CREATED
+  COURSE_UPDATED
+  COURSE_DELETED
+
+  MODULE_CREATED
+  MODULE_UPDATED
+  MODULE_DELETED
+
+  LESSON_CREATED
+  LESSON_UPDATED
+  LESSON_DELETED
+  LESSON_DUPLICATED
+
+  RESOURCE_CREATED
+  RESOURCE_UPDATED
+  RESOURCE_DELETED
+
+  COURSE_FILE_CREATED
+  COURSE_FILE_UPDATED
+  COURSE_FILE_DELETED
+
+  STUDENT_ENROLLED
+  STUDENT_UNENROLLED
+  PROGRESS_RESET
+
+  SETTINGS_UPDATED
 }
 
 
@@ -37,6 +75,7 @@ model User {
   username    String?
   firstName   String
   lastName    String?
+  email       String?
   photoUrl    String?
   isAdmin     Boolean  @default(false)
 
@@ -67,8 +106,15 @@ model Course {
   title       String
   slug        String   @unique
   description String?
+  shortDescription String?
   thumbnail   String?
   purchaseUrl String?
+
+  // Authored by hand, never derived from lesson durations.
+  manualDuration String?
+
+  instructor  String?
+  difficulty  Difficulty?
 
   isFree      Boolean  @default(true)
   price       Decimal?
@@ -110,6 +156,11 @@ model Lesson {
   provider      VideoProvider
   videoId       String
   duration      Int?
+
+  // Defaults to true so every lesson that existed before this migration
+  // stays visible to students without a backfill.
+  isPublished   Boolean @default(true)
+  isPreview     Boolean @default(false)
 
   order         Int
 
@@ -192,4 +243,77 @@ model CourseFile {
   sortOrder Int @default(1)
 
   createdAt DateTime @default(now())
+}
+
+// ============================================================
+// ADMIN
+//
+// Kept separate from User on purpose: User requires a unique
+// telegramId, so an administrator who never opens the Mini App
+// cannot be represented there.
+// ============================================================
+
+model AdminUser {
+  id           String @id @default(cuid())
+
+  username     String @unique
+  passwordHash String
+
+  name         String?
+
+  lastLoginAt  DateTime?
+
+  sessions     AdminSession[]
+  activities   ActivityLog[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model AdminSession {
+  id        String @id @default(cuid())
+
+  token     String @unique
+
+  adminId   String
+  admin     AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+
+  expiresAt DateTime
+
+  createdAt DateTime @default(now())
+
+  @@index([adminId])
+}
+
+// `summary` is denormalised deliberately. A "Lesson Deleted" entry has to
+// outlive the row it describes, so the feed cannot be derived from the
+// createdAt/updatedAt columns on the content tables.
+model ActivityLog {
+  id         String @id @default(cuid())
+
+  type       ActivityType
+  summary    String
+
+  entityType String?
+  entityId   String?
+
+  actorId    String?
+  actor      AdminUser? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+}
+
+// Single row, addressed by a fixed id.
+model PlatformSettings {
+  id String @id @default("singleton")
+
+  platformName           String  @default("IME Creative Lab")
+  logoUrl                String?
+  supportEmail           String?
+  telegramCommunityUrl   String?
+  defaultCourseThumbnail String?
+
+  updatedAt DateTime @updatedAt
 }

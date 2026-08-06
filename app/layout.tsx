@@ -4,9 +4,6 @@ import Script from "next/script";
 
 import "./globals.css";
 
-import Header from "@/components/layout/Header";
-import BottomNavigation from "@/components/layout/BottomNavigation";
-import TelegramAuth from "@/components/telegram/TelegramAuth";
 import { SessionProvider } from "@/contexts/SessionContext";
 
 const geistSans = Geist({
@@ -24,6 +21,17 @@ export const metadata: Metadata = {
   description: "AI Filmmaking Learning Platform",
 };
 
+/**
+ * Document shell only.
+ *
+ * The student chrome (TelegramAuth, Header, BottomNavigation) lives in
+ * app/(student)/layout.tsx, because a root layout wraps every route — the
+ * admin dashboard would otherwise inherit the Telegram access gate.
+ *
+ * SessionProvider stays here: it is only React context with no Telegram
+ * dependency, and keeping it at the root means the admin tree renders
+ * without a second provider.
+ */
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,23 +44,12 @@ export default function RootLayout({
     >
       <body className="min-h-screen bg-[var(--background)] text-[var(--text)]">
         <Script
-  src="https://telegram.org/js/telegram-web-app.js"
-  strategy="beforeInteractive"
-/>
+          src="https://telegram.org/js/telegram-web-app.js"
+          strategy="beforeInteractive"
+        />
 
-<SessionProvider>
-  <TelegramAuth>
-    <main className="app-main min-h-screen px-5 pt-4 pb-28">
-      <Header />
-
-      <div>
-        {children}
-      </div>
-    </main>
-
-    <BottomNavigation />
-  </TelegramAuth>
-</SessionProvider>      </body>
+        <SessionProvider>{children}</SessionProvider>
+      </body>
     </html>
   );
 }
