@@ -10,31 +10,10 @@ export default function CourseProgress({
   progress,
 }: CourseProgressProps) {
   return (
-    <section
-      className="
-        rounded-xl
-        border
-        border-[var(--border)]
-        bg-[var(--card)]
-        px-5
-        py-4
-      "
-    >
-      {/* Header */}
-
-      <div className="mb-3 flex items-center justify-between">
-        <p className="text-sm font-medium text-[var(--text-muted)]">
-          Course Progress
-        </p>
-
-        <span className="text-base font-semibold text-[var(--text)]">
-          {progress}%
-        </span>
-      </div>
-
+    <section className="flex items-center gap-3 pt-1">
       {/* Progress Bar */}
 
-      <div className="h-2 overflow-hidden rounded-full bg-stone-200">
+      <div className="h-2 flex-1 overflow-hidden rounded-full bg-[var(--border)]">
         <div
           className="h-full rounded-full bg-[var(--primary)] transition-all duration-500"
           style={{
@@ -43,11 +22,19 @@ export default function CourseProgress({
         />
       </div>
 
-      {/* Footer */}
+      {/* Percentage */}
 
-      <p className="mt-3 text-sm text-[var(--text-muted)]">
-        {completed} of {total} lessons completed
-      </p>
+      <span
+        className="
+          min-w-[42px]
+          text-right
+          text-sm
+          font-semibold
+          text-[var(--text)]
+        "
+      >
+        {progress}%
+      </span>
     </section>
   );
 }

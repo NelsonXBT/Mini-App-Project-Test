@@ -31,18 +31,18 @@ export default function CourseLearning({
         videoId={selectedLesson.videoId}
       />
 
-      <div className="space-y-2">
-        <h2 className="text-xl font-semibold text-white">
-          {selectedLesson.title}
-        </h2>
-
-        {selectedLesson.description && (
-          <p className="text-sm leading-6 text-zinc-400">
-            {selectedLesson.description}
-          </p>
-
-          
-        )}
+      <>
+        <h1
+            className="
+            text-[1.45rem]
+            font-medium
+            leading-tight
+            tracking-[-0.015em]
+            text-[var(--text)]
+            "
+        >
+            {course.title}
+        </h1>
 
         <CourseContent
             modules={course.modules}
@@ -50,8 +50,8 @@ export default function CourseLearning({
             courseSlug={course.slug}
             selectedLessonId={selectedLesson.id}
             onLessonSelect={setSelectedLesson}
-            />
-      </div>
+        />
+        </>
     </>
   );
 }
