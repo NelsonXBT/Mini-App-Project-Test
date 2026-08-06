@@ -60,8 +60,34 @@ const autoNextTimeout =
   }
 }, [selectedLesson.id]);
 
+  // Stop the auto-advance countdown if the student leaves the course page
+  // mid-countdown. Otherwise the interval keeps firing against an unmounted
+  // tree and leaves a stale countdown behind in the shared store.
+  useEffect(() => {
+  return () => {
+    if (countdownInterval.current) {
+      clearInterval(countdownInterval.current);
+      countdownInterval.current = null;
+    }
+
+    if (autoNextTimeout.current) {
+      clearTimeout(autoNextTimeout.current);
+      autoNextTimeout.current = null;
+    }
+
+    setSharedCountdown(null);
+  };
+}, []);
+
 
 async function handleLessonCompleted() {
+  // A duplicate "ended" event would otherwise stack a second interval on top
+  // of the running one, double-decrementing the countdown.
+  if (countdownInterval.current) {
+    clearInterval(countdownInterval.current);
+    countdownInterval.current = null;
+  }
+
   // Mark lesson completed
   await completeLesson(selectedLesson.id);
 
