@@ -6,6 +6,8 @@ import {
   FaTiktok,
 } from "react-icons/fa6";
 
+import { PageTitle } from "@/components/ui";
+
 const socials = [
   {
     name: "YouTube",
@@ -32,17 +34,9 @@ const socials = [
 export default function FollowNelson() {
   return (
     <section>
-      <div>
-        <h2 className="text-[1.0625rem] font-semibold leading-snug tracking-[-0.015em] text-[var(--text)]">
-          Connect with Nelson Edeh
-        </h2>
+      <PageTitle as="h2">Connect</PageTitle>
 
-        <p className="mt-1 text-sm text-[var(--text-muted)]">
-          Tutorials, updates and behind the scenes.
-        </p>
-      </div>
-
-      <div className="mt-4 grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-2 gap-2">
         {socials.map((social) => {
           const Icon = social.icon;
 
@@ -51,7 +45,6 @@ export default function FollowNelson() {
               key={social.name}
               href={social.href}
               className="
-                group
                 flex
                 h-11
                 items-center
@@ -61,28 +54,26 @@ export default function FollowNelson() {
                 border
                 border-[var(--border)]
                 bg-[var(--card)]
-                px-4
+                px-3
                 shadow-[var(--shadow-card)]
                 transition-all
                 duration-200
                 ease-out
-                hover:-translate-y-0.5
-                hover:border-[var(--border-strong)]
-                hover:shadow-[var(--shadow-raised)]
                 active:scale-[0.98]
+                active:bg-[var(--surface-secondary)]
               "
             >
               <Icon
                 className="
-                  h-4
-                  w-4
+                  h-[15px]
+                  w-[15px]
                   text-[var(--primary)]
                 "
               />
 
               <span
                 className="
-                  text-sm
+                  text-[13px]
                   font-medium
                   tracking-tight
                   text-[var(--text)]

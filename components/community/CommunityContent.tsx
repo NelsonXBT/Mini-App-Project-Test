@@ -1,11 +1,12 @@
 import CommunityBanner from "./CommunityBanner";
 import CommunityCard from "./CommunityCard";
 
+import { PageTitle } from "@/components/ui";
 import { communityItems } from "@/lib/constants/community";
 
 export default function CommunityContent() {
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
 
       {/* Telegram Banner */}
       <CommunityBanner />
@@ -13,11 +14,9 @@ export default function CommunityContent() {
       {/* Community Channels */}
       <div>
 
-        <h3 className="mb-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--text-subtle)]">
-          Community Channels
-        </h3>
+        <PageTitle as="h2">Community Channels</PageTitle>
 
-        <div className="space-y-3">
+        <div className="space-y-2.5">
           {communityItems.map((item) => (
             <CommunityCard
               key={item.id}

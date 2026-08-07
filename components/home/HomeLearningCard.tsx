@@ -1,7 +1,10 @@
-
 import LearningCard from "@/components/course/LearningCard";
+import { PageTitle } from "@/components/ui";
 
 import { getHomeLearningCard } from "@/lib/db/home";
+
+const FALLBACK_THUMBNAIL =
+  "/thumbnails/coursethumbnail.png";
 
 export default async function HomeLearningCard() {
   const learningCard =
@@ -20,60 +23,55 @@ export default async function HomeLearningCard() {
     progress,
   } = learningCard;
 
-  
+  const isContinue = mode === "continue";
 
-  switch (mode) {
-    case "start":
+  const heading = isContinue
+    ? "Continue Learning"
+    : mode === "start"
+      ? "Pick Up Where You Left Off"
+      : "Recommended For You";
+
+  const badge = isContinue
+    ? `${progress}%`
+    : mode === "start"
+      ? "Ready"
+      : "New";
+
+  const buttonText = isContinue
+    ? "Continue Lesson"
+    : mode === "start"
+      ? "Start Learning"
+      : "Open Course";
+
+  const lessonText = isContinue
+    ? `Lesson ${completedLessons + 1} of ${totalLessons}`
+    : `${totalLessons} Lessons`;
+
+  /*
+   * Only the "continue" card deep-links to a lesson — the other two modes have
+   * no lesson row to resume, so they open the course and let it pick the first.
+   */
+  const buttonHref =
+    isContinue && lesson
+      ? `/courses/${course.slug}?lesson=${lesson.id}`
+      : `/courses/${course.slug}`;
+
   return (
-    <section className="mt-3">
+    <section>
+      <PageTitle as="h2">{heading}</PageTitle>
+
       <LearningCard
         thumbnail={
-          course.thumbnail ??
-          "/thumbnails/coursethumbnail.png"
+          course.thumbnail ?? FALLBACK_THUMBNAIL
         }
         title={course.title}
-        lessonText={`${totalLessons} Lessons`}
-        badge="Ready"
-        buttonText="Start Learning"
-        buttonHref={`/courses/${course.slug}`}
+        lessonText={lessonText}
+        badge={badge}
+        badgeTone={isContinue ? "accent" : undefined}
+        progress={isContinue ? progress : undefined}
+        buttonText={buttonText}
+        buttonHref={buttonHref}
       />
     </section>
   );
-    case "recommend":
-  return (
-    <section className="mt-3">
-      <LearningCard
-        thumbnail={
-          course.thumbnail ??
-          "/thumbnails/coursethumbnail.png"
-        }
-        title={course.title}
-        lessonText={`${totalLessons} Lessons`}
-        badge="New"
-        buttonText="Open Course"
-        buttonHref={`/courses/${course.slug}`}
-      />
-    </section>
-  );
-
-    
-   case "continue":
-default:
-  return (
-    <section className="mt-3">
-      <LearningCard
-        thumbnail={
-          course.thumbnail ??
-          "/thumbnails/coursethumbnail.png"
-        }
-        title={course.title}
-        lessonText={`Lesson ${completedLessons + 1} of ${totalLessons}`}
-        badge={`${progress}%`}
-        badgeTone="accent"
-        progress={progress}
-        buttonText="Continue Lesson"
-        buttonHref={`/courses/${course.slug}?lesson=${lesson.id}`}
-      />
-    </section>
-  ); }
 }

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ReactNode } from "react";
+import { Loader2 } from "lucide-react";
 
 type ButtonProps = {
   children: ReactNode;
@@ -8,6 +9,7 @@ type ButtonProps = {
   className?: string;
   variant?: "primary" | "secondary" | "ghost";
   disabled?: boolean;
+  loading?: boolean;
   type?: "button" | "submit" | "reset";
 };
 
@@ -18,38 +20,46 @@ export default function Button({
   className = "",
   variant = "primary",
   disabled = false,
+  loading = false,
   type = "button",
 }: ButtonProps) {
   /*
-   * One height (44px), one radius, one padding scale for every
-   * variant so buttons line up wherever they sit next to each other.
-   * active:scale is set here as well as globally, because the href
-   * form renders an <a> and never picks up the global button rule.
+   * One height, one radius, one padding scale across variants so buttons
+   * align wherever they sit together.
+   *
+   * The press feedback is set here rather than relying on the global
+   * button:active rule, because the href form renders an <a> and never
+   * picks that rule up.
    */
   const baseStyles = `
     inline-flex
     h-11
+    select-none
     items-center
     justify-center
     gap-2
     rounded-[var(--radius-control)]
     px-5
-    text-sm
+    text-[14px]
     font-medium
     tracking-tight
     transition-all
-    duration-200
+    duration-150
     ease-out
-    active:scale-[0.98]
-    disabled:opacity-50
+    active:scale-[0.97]
     disabled:pointer-events-none
+    disabled:opacity-45
   `;
 
   const variants = {
+    // Inset highlight on top, tighter shadow below: reads as a physical
+    // surface rather than a filled rectangle.
     primary: `
       bg-[var(--primary)]
       text-white
+      shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_1px_2px_rgba(23,20,15,0.16)]
       hover:bg-[var(--primary-hover)]
+      active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.14)]
     `,
 
     secondary: `
@@ -57,24 +67,35 @@ export default function Button({
       border-[var(--border)]
       bg-[var(--card)]
       text-[var(--text)]
+      shadow-[var(--shadow-card)]
       hover:border-[var(--border-strong)]
-      hover:bg-[var(--surface-secondary)]
+      active:bg-[var(--surface-secondary)]
+      active:shadow-none
     `,
 
     ghost: `
       bg-transparent
       text-[var(--text-muted)]
-      hover:bg-[var(--surface-secondary)]
       hover:text-[var(--text)]
+      active:bg-[var(--surface-secondary)]
     `,
   };
 
   const styles = `${baseStyles} ${variants[variant]} ${className}`;
 
+  const content = loading ? (
+    <>
+      <Loader2 className="h-4 w-4 animate-spin" strokeWidth={2.2} />
+      {children}
+    </>
+  ) : (
+    children
+  );
+
   if (href) {
     return (
       <Link href={href} className={styles}>
-        {children}
+        {content}
       </Link>
     );
   }
@@ -82,11 +103,11 @@ export default function Button({
   return (
     <button
       type={type}
-      disabled={disabled}
+      disabled={disabled || loading}
       onClick={onClick}
       className={styles}
     >
-      {children}
+      {content}
     </button>
   );
 }

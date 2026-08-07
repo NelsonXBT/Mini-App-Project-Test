@@ -42,26 +42,33 @@ export default function LearningCard({
 
       {/* Thumbnail */}
 
-      <div className="relative h-44 w-full">
+      <div className="relative h-40 w-full bg-[var(--surface-secondary)]">
         <Image
           src={thumbnail}
           alt={title}
           fill
           className="object-cover"
         />
+
+        {/* Seats the image against the content instead of butting two
+            flat planes together. */}
+        <div
+          className="absolute inset-x-0 bottom-0 h-px bg-[var(--border)]"
+          aria-hidden="true"
+        />
       </div>
 
       {/* Content */}
 
-      <div className="space-y-4 p-5">
+      <div className="space-y-3 p-4">
 
-        <h2 className="line-clamp-2 text-[1.0625rem] font-semibold leading-snug tracking-[-0.015em] text-[var(--text)]">
+        <h2 className="line-clamp-2 text-[1.0625rem] font-semibold leading-snug tracking-[-0.02em] text-[var(--text)]">
           {title}
         </h2>
 
         <div className="flex items-center justify-between gap-3">
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
 
             <Icon
               icon={BookOpen}
@@ -69,7 +76,7 @@ export default function LearningCard({
               size="sm"
             />
 
-            <span className="text-sm text-[var(--text-muted)]">
+            <span className="text-[13px] text-[var(--text-muted)]">
               {lessonText}
             </span>
 

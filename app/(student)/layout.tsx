@@ -20,10 +20,10 @@ export default function StudentLayout({
 }) {
   return (
     <TelegramAuth>
-      <main className="app-main min-h-screen px-5 pt-4 pb-28">
+      <main className="app-main mx-auto min-h-screen w-full max-w-md px-4 pt-3 pb-24 sm:px-5">
         <Header />
 
-        <div>{children}</div>
+        <div className="animate-fade-in">{children}</div>
       </main>
 
       <BottomNavigation />

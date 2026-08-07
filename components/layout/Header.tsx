@@ -14,7 +14,7 @@ export default function Header() {
 
   if (isCourseLearningPage) {
     return (
-      <header className="mb-5 flex items-center">
+      <header className="mb-4 flex items-center">
         <IconButton
           aria-label="Go back"
           onClick={() => router.back()}
@@ -26,19 +26,13 @@ export default function Header() {
   }
 
   return (
-    <header className="player-header mb-7 flex items-start justify-between gap-4">
-      <div>
-        <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-subtle)]">
-          AI Learning Platform
-        </p>
-
-        <h1 className="mt-1.5 text-[1.625rem] font-semibold leading-tight tracking-[-0.025em] text-[var(--text)]">
-          IME Creative Lab
-        </h1>
-      </div>
+    <header className="player-header flex items-center justify-between gap-3 py-1">
+      <h1 className="text-[1.125rem] font-semibold leading-tight tracking-[-0.02em] text-[var(--text)]">
+        IME Creative Lab
+      </h1>
 
       <IconButton aria-label="Notifications">
-        <Bell className="h-5 w-5" />
+        <Bell className="h-[18px] w-[18px]" />
       </IconButton>
     </header>
   );

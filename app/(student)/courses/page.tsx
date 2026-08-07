@@ -9,19 +9,15 @@ export default async function CoursesPage() {
 
   return (
     <main>
-      <div className="mx-auto max-w-5xl">
-        <PageTitle className="mb-5">
-          Explore Courses
-        </PageTitle>
+      <PageTitle>Explore Courses</PageTitle>
 
-        <div className="space-y-4">
-          {courses.map((course) => (
-            <CourseCard
-              key={course.id}
-              course={course}
-            />
-          ))}
-        </div>
+      <div className="space-y-3">
+        {courses.map((course) => (
+          <CourseCard
+            key={course.id}
+            course={course}
+          />
+        ))}
       </div>
     </main>
   );

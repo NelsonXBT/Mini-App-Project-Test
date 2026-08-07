@@ -32,7 +32,7 @@ export default async function CoursePage({ params }: Props) {
 
   return (
     <CourseGuard course={course}>
-      <main className="space-y-6">
+      <main className="space-y-4">
 
         <CourseProgress
           completed={courseProgress.completedLessons}

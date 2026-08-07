@@ -5,6 +5,11 @@ type CardProps = {
   className?: string;
 };
 
+/*
+ * The single card primitive for the whole app. Elevation comes from the
+ * --shadow-card token (hairline ring + soft depth), not from the border, so
+ * cards sit a layer above the background instead of drawing rectangles on it.
+ */
 export default function Card({
   children,
   className = "",

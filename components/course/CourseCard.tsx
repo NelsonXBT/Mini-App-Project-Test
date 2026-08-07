@@ -42,7 +42,7 @@ export default function CourseCard({
       >
         {/* Thumbnail */}
 
-        <div className="relative h-44 w-full overflow-hidden">
+        <div className="relative h-36 w-full overflow-hidden bg-[var(--surface-secondary)]">
           <Image
             src={
               course.thumbnail ??
@@ -53,11 +53,16 @@ export default function CourseCard({
             className="object-cover"
             unoptimized={!course.thumbnail?.startsWith("/")}
           />
+
+          <div
+            className="absolute inset-x-0 bottom-0 h-px bg-[var(--border)]"
+            aria-hidden="true"
+          />
         </div>
 
         {/* Content */}
 
-        <div className="space-y-4 p-5">
+        <div className="space-y-3 p-4">
 
           <h2
             className="
