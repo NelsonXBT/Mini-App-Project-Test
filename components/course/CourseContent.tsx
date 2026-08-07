@@ -49,6 +49,12 @@ export default function CourseContent({
     "lessons" | "files"
   >("lessons");
 
+  const hasFiles = files.length > 0;
+
+  // Guard the panel as well as the tab: if the last file is removed while
+  // the Files tab is open, fall back to lessons rather than render nothing.
+  const showFiles = activeTab === "files" && hasFiles;
+
   /*
    * Accordion state.
    * Only one module can be expanded at a time.
@@ -65,9 +71,10 @@ export default function CourseContent({
       <CourseTabs
         activeTab={activeTab}
         onTabChange={setActiveTab}
+        hasFiles={hasFiles}
       />
 
-      {activeTab === "lessons" ? (
+      {!showFiles ? (
         <div
           className="
             animate-fade-in
@@ -118,32 +125,16 @@ export default function CourseContent({
         </div>
       ) : (
         <div className="animate-fade-in space-y-3">
-          {files.length === 0 ? (
-            <div
-              className="
-                rounded-[var(--radius)]
-                border
-                border-dashed
-                border-[var(--border-strong)]
-                bg-[var(--surface-secondary)]
-                p-6
-                text-center
-                text-[13px]
-                text-[var(--text-muted)]
-              "
-            >
-              No files for this course yet.
-            </div>
-          ) : (
-            files.map((file) => (
-              <FileCard
-                key={file.id}
-                title={file.title}
-                url={file.url}
-                type={file.type}
-              />
-            ))
-          )}
+          {/* Unreachable when empty: the Files tab is not rendered at all
+              unless the course has at least one file. */}
+          {files.map((file) => (
+            <FileCard
+              key={file.id}
+              title={file.title}
+              url={file.url}
+              type={file.type}
+            />
+          ))}
         </div>
       )}
     </>

@@ -3,16 +3,27 @@
 type CourseTabsProps = {
   activeTab: "lessons" | "files";
   onTabChange: (tab: "lessons" | "files") => void;
+  hasFiles?: boolean;
 };
 
 export default function CourseTabs({
   activeTab,
   onTabChange,
+  hasFiles = true,
 }: CourseTabsProps) {
+  /*
+   * With no course files there is nothing behind the Files tab, so it is
+   * dropped rather than left to open an empty panel.
+   */
   const tabs = [
     { id: "lessons" as const, label: "Lessons" },
-    { id: "files" as const, label: "Files" },
+    ...(hasFiles ? [{ id: "files" as const, label: "Files" }] : []),
   ];
+
+  // A single tab is a label, not a choice — hide the bar entirely.
+  if (tabs.length < 2) {
+    return null;
+  }
 
   return (
     <div
