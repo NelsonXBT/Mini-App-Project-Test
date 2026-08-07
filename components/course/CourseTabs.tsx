@@ -29,6 +29,7 @@ export default function CourseTabs({
     <div
       className="
         mb-4
+        mt-1
         flex
         border-b
         border-[var(--border)]
@@ -45,8 +46,8 @@ export default function CourseTabs({
               relative
               flex-1
               pb-3
-              text-[12px]
-              font-semibold
+              text-[12.5px]
+              font-bold
               uppercase
               tracking-[0.1em]
               transition-colors
