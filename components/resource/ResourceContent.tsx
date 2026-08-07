@@ -20,7 +20,7 @@ export default function ResourceContent() {
         onTabChange={setActiveTab}
       />
 
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         {activeTab === "packs"
           ? featuredResources.map((pack) => (
               <ResourceCard
