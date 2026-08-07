@@ -25,6 +25,9 @@ type CourseDetailsFormProps = {
     instructor: string | null;
     manualDuration: string | null;
     difficulty: string | null;
+    telegramChatId: string | null;
+    telegramUsername: string | null;
+    telegramInviteLink: string | null;
     isPublished: boolean;
   };
 };
@@ -50,6 +53,9 @@ export default function CourseDetailsForm({
     instructor: course.instructor ?? "",
     manualDuration: course.manualDuration ?? "",
     difficulty: course.difficulty ?? "",
+    telegramChatId: course.telegramChatId ?? "",
+    telegramUsername: course.telegramUsername ?? "",
+    telegramInviteLink: course.telegramInviteLink ?? "",
     isPublished: course.isPublished,
   });
 
@@ -174,6 +180,68 @@ export default function CourseDetailsForm({
           />
         </FormField>
       </div>
+
+      {/*
+        Access control. These feed the existing membership check — a student
+        must belong to this chat to open the course. Leaving Chat ID empty
+        means the course has no Telegram gate.
+      */}
+      <fieldset className="space-y-4 border-t border-[var(--border)] pt-5">
+        <legend className="sr-only">Telegram access</legend>
+
+        <div>
+          <h3 className="text-[13px] font-semibold text-[var(--text)]">
+            Telegram access
+          </h3>
+          <p className="mt-0.5 text-[13px] text-[var(--text-muted)]">
+            Which channel or group grants access to this course.
+          </p>
+        </div>
+
+        <div className="grid gap-4 sm:grid-cols-2">
+          <FormField
+            label="Channel / group name"
+            htmlFor="telegramUsername"
+            hint="For display, e.g. @dalucamp."
+          >
+            <input
+              id="telegramUsername"
+              value={form.telegramUsername}
+              placeholder="@dalucamp"
+              onChange={(e) => set("telegramUsername", e.target.value)}
+              className={inputClasses}
+            />
+          </FormField>
+
+          <FormField
+            label="Chat ID"
+            htmlFor="telegramChatId"
+            hint="Used for verification, e.g. -1001234567890."
+          >
+            <input
+              id="telegramChatId"
+              value={form.telegramChatId}
+              placeholder="-1001234567890"
+              onChange={(e) => set("telegramChatId", e.target.value)}
+              className={inputClasses}
+            />
+          </FormField>
+        </div>
+
+        <FormField
+          label="Invite link"
+          htmlFor="telegramInviteLink"
+          hint="Optional, for reference."
+        >
+          <input
+            id="telegramInviteLink"
+            value={form.telegramInviteLink}
+            placeholder="https://t.me/+…"
+            onChange={(e) => set("telegramInviteLink", e.target.value)}
+            className={inputClasses}
+          />
+        </FormField>
+      </fieldset>
 
       <div
         className="

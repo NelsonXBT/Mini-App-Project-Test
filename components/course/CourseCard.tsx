@@ -42,7 +42,7 @@ export default function CourseCard({
       >
         {/* Thumbnail */}
 
-        <div className="relative h-40 w-full overflow-hidden">
+        <div className="relative h-44 w-full overflow-hidden">
           <Image
             src={
               course.thumbnail ??
@@ -51,15 +51,17 @@ export default function CourseCard({
             alt={course.title}
             fill
             className="object-cover"
+            unoptimized={!course.thumbnail?.startsWith("/")}
           />
         </div>
 
         {/* Content */}
 
-        <div className="p-5">
+        <div className="space-y-4 p-5">
 
           <h2
             className="
+              line-clamp-2
               text-[1.0625rem]
               font-semibold
               leading-snug
@@ -70,7 +72,7 @@ export default function CourseCard({
             {course.title}
           </h2>
 
-          <div className="mt-4 flex items-center justify-between gap-3">
+          <div className="flex items-center justify-between gap-3">
 
             <div className="flex items-center gap-2">
 

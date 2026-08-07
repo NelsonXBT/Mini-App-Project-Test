@@ -79,6 +79,9 @@ type UpdateCourseInput = {
   instructor: string;
   manualDuration: string;
   difficulty: string;
+  telegramUsername: string;
+  telegramChatId: string;
+  telegramInviteLink: string;
   isPublished: boolean;
 };
 
@@ -100,9 +103,6 @@ export async function updateCourse(
   }
 
   try {
-    // Slug is the student-facing URL key and is unique in the schema, so
-    // check it before writing to return a readable error instead of a
-    // constraint violation.
     const clash = await prisma.course.findFirst({
       where: {
         slug,
@@ -118,11 +118,16 @@ export async function updateCourse(
       };
     }
 
+    /*
+     * Difficulty is a native Postgres enum. An empty string is not a valid
+     * enum value and will cause a DB error even though the column is nullable,
+     * so we map "" → null before the write. Same for the Telegram fields:
+     * empty string means "not configured".
+     */
     const difficulty =
-      input.difficulty &&
-      Object.values(Difficulty).includes(
-        input.difficulty as Difficulty
-      )
+      input.difficulty === "beginner" ||
+      input.difficulty === "intermediate" ||
+      input.difficulty === "advanced"
         ? (input.difficulty as Difficulty)
         : null;
 
@@ -137,6 +142,9 @@ export async function updateCourse(
         instructor: input.instructor.trim() || null,
         manualDuration: input.manualDuration.trim() || null,
         difficulty,
+        telegramChatId: input.telegramChatId.trim() || null,
+        telegramUsername: input.telegramUsername.trim() || null,
+        telegramInviteLink: input.telegramInviteLink.trim() || null,
         isPublished: input.isPublished,
       },
     });

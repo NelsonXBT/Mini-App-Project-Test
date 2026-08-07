@@ -89,6 +89,9 @@ export default async function AdminCourseEditorPage({
             instructor: course.instructor,
             manualDuration: course.manualDuration,
             difficulty: course.difficulty,
+            telegramChatId: course.telegramChatId,
+            telegramUsername: course.telegramUsername,
+            telegramInviteLink: course.telegramInviteLink,
             isPublished: course.isPublished,
           }}
         />
