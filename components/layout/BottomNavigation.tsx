@@ -101,7 +101,7 @@ export default function BottomNavigation() {
                 strokeWidth={active ? 2.2 : 1.9}
               />
 
-              <span className="text-[11.5px] font-semibold tracking-tight">
+              <span className="text-[13px] font-bold tracking-tight">
                 {item.label}
               </span>
             </SaveLink>

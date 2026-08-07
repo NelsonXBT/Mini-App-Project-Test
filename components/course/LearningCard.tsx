@@ -82,13 +82,7 @@ export default function LearningCard({
 
           </div>
 
-          <Badge
-            className={
-              badgeTone === "accent"
-                ? "border-transparent bg-[var(--primary)] text-white"
-                : ""
-            }
-          >
+          <Badge tone={badgeTone}>
             {badge}
           </Badge>
 

@@ -29,7 +29,7 @@ export default function CourseTabs({
     <div
       className="
         mb-4
-        mt-1
+        mt-3
         flex
         border-b
         border-[var(--border)]

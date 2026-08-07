@@ -80,8 +80,8 @@ export default function ModuleCard({
         <div>
           <h2
             className="
-              text-[13.5px]
-              font-bold
+              text-[15.5px]
+              font-extrabold
               uppercase
               tracking-[0.08em]
               text-[var(--text)]
