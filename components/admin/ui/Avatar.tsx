@@ -1,3 +1,5 @@
+"use client";
+
 type AvatarProps = {
   name: string;
   photoUrl?: string | null;
@@ -8,6 +10,10 @@ type AvatarProps = {
  * Telegram photo URLs expire, so a broken image has to degrade to initials
  * rather than a torn-image icon. Plain <img> is used because the host is
  * arbitrary and would otherwise need allow-listing in next.config.
+ *
+ * Must stay a Client Component: the onError fallback below is a function, and
+ * this renders from RecentStudents, which is an async Server Component. Passing
+ * a handler across that boundary throws at render time.
  */
 export default function Avatar({
   name,
