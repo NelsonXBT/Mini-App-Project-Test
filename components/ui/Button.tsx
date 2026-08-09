@@ -54,10 +54,14 @@ export default function Button({
   const variants = {
     // Inset highlight on top, tighter shadow below: reads as a physical
     // surface rather than a filled rectangle.
+    //
+    // text-white is marked !important because the href form renders an <a>,
+    // and the base link reset (`color: inherit`) would otherwise leave the
+    // label inheriting the card's dark text on the oxblood fill.
     primary: `
       bg-[var(--primary)]
-      text-white
-      shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_1px_2px_rgba(23,20,15,0.16)]
+      !text-white
+      shadow-[inset_0_1px_0_rgba(255,255,255,0.16),0_1px_2px_rgba(28,18,18,0.18)]
       hover:bg-[var(--primary-hover)]
       active:shadow-[inset_0_1px_2px_rgba(0,0,0,0.14)]
     `,

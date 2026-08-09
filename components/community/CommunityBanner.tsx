@@ -50,7 +50,7 @@ export default function CommunityBanner() {
           text-sm
           font-medium
           tracking-tight
-          text-white
+          !text-white
           transition-all
           duration-200
           ease-out

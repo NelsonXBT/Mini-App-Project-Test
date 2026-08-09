@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 
 export const SETTINGS_ID = "singleton";
 
-export const DEFAULT_PLATFORM_NAME = "IME Creative Lab";
+export const DEFAULT_PLATFORM_NAME = "Nadi Academy";
 
 /**
  * Reads the single settings row, creating it on first access so callers never

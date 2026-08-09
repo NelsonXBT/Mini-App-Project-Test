@@ -211,34 +211,51 @@ body {
    headings can stay modest in size.
 ========================================================== */
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: var(--text);
-  margin: 0;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
+/*
+ * Layered for the same reason as the link reset below: element defaults must
+ * sit under @layer utilities so a text-* class on a heading or paragraph
+ * still wins.
+ */
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--text);
+    margin: 0;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
 
-h1 {
-  letter-spacing: -0.025em;
-}
+  h1 {
+    letter-spacing: -0.025em;
+  }
 
-p {
-  color: var(--text-muted);
-  line-height: 1.6;
+  p {
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
 }
 
 /* ==========================================================
    LINKS
 ========================================================== */
 
-a {
-  color: inherit;
-  text-decoration: none;
+/*
+ * Inside @layer base on purpose.
+ *
+ * Unlayered CSS outranks every @layer, so an unlayered `a { color: inherit }`
+ * beat Tailwind's `text-white` (which lives in @layer utilities) on every
+ * link-shaped button — the label inherited the card's dark text instead.
+ * Declaring it in base puts it below utilities where a text- class can win.
+ */
+@layer base {
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 
 /* ==========================================================

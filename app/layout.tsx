@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "IME Creative Lab",
+  title: "Nadi Academy",
   description: "AI Filmmaking Learning Platform",
 };
 

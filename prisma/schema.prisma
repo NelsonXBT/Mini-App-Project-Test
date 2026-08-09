@@ -324,7 +324,7 @@ model ActivityLog {
 model PlatformSettings {
   id String @id @default("singleton")
 
-  platformName           String  @default("IME Creative Lab")
+  platformName           String  @default("Nadi Academy")
   logoUrl                String?
   supportEmail           String?
   telegramCommunityUrl   String?
