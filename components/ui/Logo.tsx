@@ -11,55 +11,38 @@ type LogoProps = {
 };
 
 /*
- * NADI / ACADEMY locked into a single block.
+ * NADI ACADEMY as a single-line lockup.
  *
- * ACADEMY is spread with justify-between rather than a tracking value so
- * it measures exactly as wide as NADI at any size, in any font, without
- * a magic number to retune. The letters are separate spans for that
- * reason alone; aria-label carries the real name to assistive tech and
- * aria-hidden keeps the split letters from being announced one by one.
+ * NADI is unchanged from the stacked mark this replaces: same size, same
+ * weight, same tracking at every variant. That is deliberate — the mark had
+ * to keep the presence it already held in a 64px header, so the full name
+ * arrives without the corner getting louder.
  *
- * leading-none on both rows plus a small negative offset closes the gap
- * so the pair reads as one unit and costs almost no vertical space.
+ * ACADEMY is what moved. It sits on NADI's baseline rather than on its own
+ * row, set small, spread wide and dimmed. Scale and weight carry the
+ * hierarchy, so a name three times as long does not read three times as
+ * loud, and the pair still resolves as one drawn mark rather than a heading.
  *
- * NADI is set a weight heavier than the UI around it so the mark is the
- * first thing read in its corner. That weight — not size — is what does
- * the work: the mark has to sit inside a 64px header on both surfaces,
- * and going much bigger would turn a wordmark into a banner. ACADEMY
- * stays quieter beneath it, and the contrast between the two rows is
- * what makes the pair feel deliberate rather than merely small.
+ * ACADEMY is sized in em against the root, so a single font-size per variant
+ * drives the whole lockup and the two words cannot drift out of proportion
+ * when one is retuned.
  *
- * `pr` cancels the trailing letter-space that `tracking` adds after the
- * final I, so the spread row sits flush with the N and the I above it.
- * It must equal that size's tracking value — they are defined together
- * here for exactly that reason.
+ * letter-spacing is applied after the final glyph as well as between glyphs,
+ * so each word cancels its own with a negative right margin. On NADI that
+ * makes the ml on ACADEMY the real gap rather than the gap plus a tracking
+ * value that changes per variant; on ACADEMY it squares the right edge of
+ * the lockup, which the splash and the admin sign-in both centre. NADI's
+ * tracking and the margin cancelling it are defined together for that reason.
+ *
+ * items-baseline, not items-center: two sizes sharing a baseline is what
+ * makes this read as set type instead of two spans that happen to be
+ * adjacent. whitespace-nowrap keeps the name on the one line it now is.
  */
 
-const sizes: Record<
-  LogoSize,
-  { word: string; sub: string; pull: string; pr: string; subOpacity: string }
-> = {
-  sm: {
-    word: "text-[1.1875rem] tracking-[0.15em]",
-    sub: "text-[0.5rem]",
-    pull: "-mt-[0.5px]",
-    pr: "pr-[0.15em]",
-    subOpacity: "opacity-75",
-  },
-  md: {
-    word: "text-[1.5625rem] tracking-[0.16em]",
-    sub: "text-[0.5625rem]",
-    pull: "-mt-[1px]",
-    pr: "pr-[0.16em]",
-    subOpacity: "opacity-75",
-  },
-  lg: {
-    word: "text-[2.125rem] tracking-[0.17em]",
-    sub: "text-[0.6875rem]",
-    pull: "-mt-[1.5px]",
-    pr: "pr-[0.17em]",
-    subOpacity: "opacity-70",
-  },
+const sizes: Record<LogoSize, { root: string; pull: string }> = {
+  sm: { root: "text-[1.1875rem] tracking-[0.15em]", pull: "-mr-[0.15em]" },
+  md: { root: "text-[1.5625rem] tracking-[0.16em]", pull: "-mr-[0.16em]" },
+  lg: { root: "text-[2.125rem] tracking-[0.17em]", pull: "-mr-[0.17em]" },
 };
 
 export default function Logo({
@@ -74,36 +57,33 @@ export default function Logo({
     <span
       aria-label="Nadi Academy"
       role="img"
-      className={`inline-flex select-none flex-col items-stretch ${color} ${className}`}
+      className={`
+        inline-flex
+        select-none
+        items-baseline
+        whitespace-nowrap
+        leading-none
+        ${color}
+        ${s.root}
+        ${className}
+      `}
     >
-      <span
-        aria-hidden="true"
-        className={`
-          font-bold
-          leading-none
-          ${s.word}
-        `}
-      >
+      <span aria-hidden="true" className={`font-bold ${s.pull}`}>
         NADI
       </span>
 
       <span
         aria-hidden="true"
-        className={`
-          flex
-          justify-between
-          font-semibold
-          uppercase
-          leading-none
-          ${s.pull}
-          ${s.sub}
-          ${s.pr}
-          ${s.subOpacity}
-        `}
+        className="
+          ml-[0.72em]
+          -mr-[0.26em]
+          text-[0.56em]
+          font-medium
+          tracking-[0.26em]
+          opacity-70
+        "
       >
-        {"ACADEMY".split("").map((letter, index) => (
-          <span key={`${letter}-${index}`}>{letter}</span>
-        ))}
+        ACADEMY
       </span>
     </span>
   );

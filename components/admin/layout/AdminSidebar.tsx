@@ -115,26 +115,28 @@ export default function AdminSidebar({
       >
         {/* Brand */}
         <div className="flex h-16 items-center justify-between gap-2 border-b border-[var(--border)] px-5">
-          <Link href="/admin" className="flex min-w-0 items-center gap-2.5">
+          <Link
+            href="/admin"
+            className="flex min-w-0 flex-col items-start gap-1"
+          >
             {isBrand ? (
               <Logo size="sm" />
             ) : (
-              <span className="truncate text-[15px] font-semibold tracking-tight text-[var(--text)]">
+              <span className="max-w-full truncate text-[15px] font-semibold tracking-tight text-[var(--text)]">
                 {platformName}
               </span>
             )}
 
             {/*
-             * A hairline and an inline label rather than a second stacked row:
-             * the wordmark is already two lines, and stacking "Admin" beneath
-             * it would outgrow the 64px header.
+             * Stacked beneath the mark, not inline beside it. It was inline
+             * while the wordmark was two rows, because a third row would have
+             * outgrown this 64px header — but the wordmark is one row now, so
+             * the stack costs ~39px total and the inline form no longer fits:
+             * the one-line mark, a hairline, the label and the mobile close
+             * button together overrun the 208px of content this 248px rail
+             * has.
              */}
-            <span
-              className="h-3.5 w-px shrink-0 bg-[var(--border-strong)]"
-              aria-hidden="true"
-            />
-
-            <span className="shrink-0 text-[11px] font-medium uppercase tracking-[0.14em] text-[var(--text-subtle)]">
+            <span className="max-w-full truncate text-[10px] font-medium uppercase tracking-[0.18em] text-[var(--text-subtle)]">
               Admin
             </span>
           </Link>
