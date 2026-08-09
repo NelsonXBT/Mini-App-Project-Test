@@ -377,6 +377,34 @@ export async function getHomeLearningCard() {
     },
   });
 
+  /*
+   * Every lesson the student has any progress on, across all of these
+   * courses, in one round trip.
+   *
+   * This used to be a findFirst inside the loop below, which meant one query
+   * per candidate course — and because the loop returns on the first
+   * untouched course, the worst case was a student who had started
+   * everything: a full table scan per course, every time the home page
+   * rendered. One query answers it for all of them.
+   */
+  const startableLessonIds = startable.flatMap((course) =>
+    course.modules.flatMap((module) => module.lessons.map((lesson) => lesson.id))
+  );
+
+  const startedLessonIds = new Set(
+    startableLessonIds.length === 0
+      ? []
+      : (
+          await prisma.lessonProgress.findMany({
+            where: {
+              userId: user.id,
+              lessonId: { in: startableLessonIds },
+            },
+            select: { lessonId: true },
+          })
+        ).map((row) => row.lessonId)
+  );
+
   for (const course of startable) {
     const firstLesson = course.modules
       .flatMap((module) => module.lessons)
@@ -390,15 +418,7 @@ export async function getHomeLearningCard() {
       module.lessons.map((lesson) => lesson.id)
     );
 
-    const started = await prisma.lessonProgress.findFirst({
-      where: {
-        userId: user.id,
-        lessonId: { in: lessonIds },
-      },
-      select: { id: true },
-    });
-
-    if (started) {
+    if (lessonIds.some((lessonId) => startedLessonIds.has(lessonId))) {
       continue;
     }
 

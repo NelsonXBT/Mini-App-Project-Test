@@ -10,14 +10,32 @@ import { checkMembership } from "@/lib/telegram/checkMembership";
 
 export const dynamic = "force-dynamic";
 
+/*
+ * Login tracing, development only.
+ *
+ * This route logged every step at full volume in production, including the
+ * decoded Telegram user object — name, username, telegram id, photo URL — on
+ * every single app open. That is student PII sitting in the hosting provider's
+ * log retention for no operational benefit; the flow is either working or it
+ * throws, and the catch block below still reports real failures at all times.
+ *
+ * Kept rather than deleted because the step-by-step trace is genuinely useful
+ * when wiring up a new course channel locally.
+ */
+const debug = (...args: unknown[]) => {
+  if (process.env.NODE_ENV !== "production") {
+    console.log(...args);
+  }
+};
+
 export async function POST(req: NextRequest) {
   try {
-    console.log("========== TELEGRAM LOGIN ==========");
+    debug("========== TELEGRAM LOGIN ==========");
 
     const { initData } = await req.json();
 
     if (!initData) {
-      console.log("❌ Missing initData");
+      debug("❌ Missing initData");
 
       return NextResponse.json(
         {
@@ -28,7 +46,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log("✅ initData received");
+    debug("✅ initData received");
 
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
 
@@ -36,18 +54,18 @@ export async function POST(req: NextRequest) {
       throw new Error("Missing TELEGRAM_BOT_TOKEN");
     }
 
-    console.log("✅ Bot token found");
+    debug("✅ Bot token found");
 
     const telegramUser = verifyTelegramInitData(
       initData,
       botToken
     );
 
-    console.log("✅ Telegram verified");
-    console.log(telegramUser);
+    debug("✅ Telegram verified");
+    debug(telegramUser);
 
     
-    console.log("Loading published courses...");
+    debug("Loading published courses...");
 
     const courses = await prisma.course.findMany({
       where: {
@@ -55,7 +73,7 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    console.log("Published courses:", courses.length);
+    debug("Published courses:", courses.length);
 
     const unlockedCourses: {
           id: string;
@@ -75,28 +93,28 @@ export async function POST(req: NextRequest) {
     const revokedCourseIds: string[] = [];
 
     for (const course of courses) {
-      console.log("--------------------------------");
-      console.log("Course:", course.title);
-      console.log("Slug:", course.slug);
-      console.log("Published:", course.isPublished);
-      console.log("Chat ID:", course.telegramChatId);
+      debug("--------------------------------");
+      debug("Course:", course.title);
+      debug("Slug:", course.slug);
+      debug("Published:", course.isPublished);
+      debug("Chat ID:", course.telegramChatId);
 
       if (!course.telegramChatId) {
-        console.log("⏭ Skipped (No Telegram Chat ID)");
+        debug("⏭ Skipped (No Telegram Chat ID)");
         continue;
       }
 
-      console.log("Calling checkMembership()...");
+      debug("Calling checkMembership()...");
 
       const member = await checkMembership(
         course.telegramChatId,
         telegramUser.id
       );
 
-      console.log("Membership result:", member);
+      debug("Membership result:", member);
 
       if (!member) {
-        console.log("❌ User not a member");
+        debug("❌ User not a member");
         revokedCourseIds.push(course.id);
         continue;
       }
@@ -139,12 +157,21 @@ if (existingUser && revokedCourseIds.length > 0) {
     },
   });
 
-  console.log(`Deactivated ${count} revoked enrollment(s)`);
+  /*
+   * Kept at production volume, unlike the tracing above: this is a state
+   * change, not a step marker. If a student reports losing a course, this
+   * line is the record of when it happened. No PII — a count and an id.
+   */
+  if (count > 0) {
+    console.info(
+      `[telegram-login] deactivated ${count} enrollment(s) for user ${existingUser.id}`
+    );
+  }
 }
 
 
 if (unlockedCourses.length === 0) {
-  console.log("❌ No accessible courses");
+  debug("❌ No accessible courses");
 
   return NextResponse.json({
     success: true,
@@ -154,7 +181,7 @@ if (unlockedCourses.length === 0) {
 }
 
 
-console.log("Saving user...");
+debug("Saving user...");
 
     const user = await prisma.user.upsert({
       where: {
@@ -175,10 +202,10 @@ console.log("Saving user...");
       },
     });
 
-    console.log("✅ User saved");
+    debug("✅ User saved");
 
 
-    console.log("Creating enrollments...");
+    debug("Creating enrollments...");
 
 for (const course of unlockedCourses) {
   await prisma.enrollment.upsert({
@@ -201,14 +228,14 @@ for (const course of unlockedCourses) {
   });
 }
 
-console.log("✅ Enrollments created");
+debug("✅ Enrollments created");
 
 
 
-    console.log("Unlocked Courses:");
-    console.log(unlockedCourses);
+    debug("Unlocked Courses:");
+    debug(unlockedCourses);
 
-    console.log("========== LOGIN COMPLETE ==========");
+    debug("========== LOGIN COMPLETE ==========");
 
     const token = crypto.randomUUID();
 
@@ -247,13 +274,24 @@ cookieStore.set("session", token, {
     console.error("========== LOGIN FAILED ==========");
     console.error(error);
 
+    /*
+     * Generic message to the client, real one to the server log above.
+     *
+     * This used to return error.message verbatim, which handed the caller
+     * internals like "Missing TELEGRAM_BOT_TOKEN" and Prisma's connection
+     * strings. Nothing consumes the text — TelegramAuth branches on `success`
+     * and only logs the body — so the shape is unchanged, and the detail is
+     * still there in development.
+     */
     return NextResponse.json(
       {
         success: false,
         error:
-          error instanceof Error
-            ? error.message
-            : "Unknown error",
+          process.env.NODE_ENV === "production"
+            ? "Authentication failed."
+            : error instanceof Error
+              ? error.message
+              : "Unknown error",
       },
       {
         status: 401,

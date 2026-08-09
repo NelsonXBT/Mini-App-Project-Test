@@ -101,6 +101,13 @@ export default function Daluplayer({
   // (CourseLearning swaps key={lessonId} on auto-advance) keeps us fullscreen.
   const [controlsVisible, setControlsVisible] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(getFullscreen);
+  /*
+   * Playback failure. `error` holds the message to show; `reloadNonce` is
+   * what actually restarts the stream, since retrying the same lesson leaves
+   * `src` untouched and would otherwise not re-run VideoCanvas's effect.
+   */
+  const [error, setError] = useState<string | null>(null);
+  const [reloadNonce, setReloadNonce] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [showRotateOverlay, setShowRotateOverlay] = useState(false);
 
@@ -499,11 +506,67 @@ export default function Daluplayer({
           saveCurrentProgress();
         }}
         onLoading={setLoading}
+        onError={(message) => {
+          setError(message);
+          setLoading(false);
+          setPlaying(false);
+        }}
+        reloadNonce={reloadNonce}
         onEnded={onEnded}
         onClick={toggleControls}
       />
 
-      {loading && <LoadingSpinner />}
+      {/*
+        Not while errored: VideoCanvas turns loading off before reporting a
+        failure, but a stale spinner behind the error panel would read as the
+        video still trying.
+      */}
+      {loading && !error && <LoadingSpinner />}
+
+      {/*
+        Above the rotate overlay (z-50) — a video that cannot play is worth
+        more of the student's attention than advice to turn their phone.
+      */}
+      {error && (
+        <div className="absolute inset-0 z-[60] flex flex-col items-center justify-center gap-4 bg-black/80 px-6 text-center backdrop-blur-[2px]">
+          <p className="max-w-xs text-sm leading-relaxed text-white/90">
+            {error}
+          </p>
+
+          <button
+            onClick={() => {
+              setError(null);
+              setLoading(true);
+              setReloadNonce((n) => n + 1);
+            }}
+            className="
+              inline-flex
+              h-10
+              select-none
+              items-center
+              justify-center
+              gap-2
+              rounded-[var(--radius-control)]
+              bg-white/15
+              px-4
+              text-[13px]
+              font-medium
+              text-white
+              ring-1
+              ring-inset
+              ring-white/25
+              transition-all
+              duration-150
+              ease-out
+              hover:bg-white/25
+              active:scale-[0.97]
+            "
+          >
+            <RotateCw className="h-4 w-4" strokeWidth={2.2} />
+            Try again
+          </button>
+        </div>
+      )}
 
       {/* Countdown overlay for next lesson */}
       {countdown !== null && countdown !== undefined && (

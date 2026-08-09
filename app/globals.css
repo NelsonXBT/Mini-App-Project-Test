@@ -231,8 +231,22 @@ body {
   background: var(--background);
   color: var(--text);
 
+  /*
+   * Geist, loaded by next/font in app/layout.tsx, which self-hosts the files
+   * and exposes them as --font-geist-sans on <html>.
+   *
+   * This list used to start with a bare `Inter`, which was never loaded by
+   * anything — no next/font call, no @font-face, no stylesheet link. On a
+   * device without Inter installed (which is nearly all of them, including
+   * every phone) the browser fell straight through to system-ui, so the app
+   * rendered in San Francisco on iOS and Roboto on Android while the Geist
+   * files it had already downloaded went unused.
+   *
+   * The var() must stay first: the fallbacks after it are what render during
+   * the font swap and if the file ever fails to load.
+   */
   font-family:
-    Inter,
+    var(--font-geist-sans),
     ui-sans-serif,
     system-ui,
     -apple-system,
