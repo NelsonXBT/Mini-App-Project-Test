@@ -28,7 +28,9 @@ export default function ResourceContent() {
                 icon={pack.icon}
                 title={pack.title}
                 description={pack.description}
-                badge={`${pack.files} Files`}
+                meta={`${pack.files} files`}
+                cta="Browse"
+                href={pack.href}
               />
             ))
           : featuredTools.map((tool) => (
@@ -37,7 +39,10 @@ export default function ResourceContent() {
                 icon={tool.icon}
                 title={tool.title}
                 description={tool.description}
-                badge="Affiliate"
+                meta={tool.affiliate ? "Affiliate link" : undefined}
+                cta={tool.cta}
+                external
+                href={tool.href}
               />
             ))}
       </div>

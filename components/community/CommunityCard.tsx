@@ -1,23 +1,40 @@
-import {
-  MessageCircle,
-  Users,
-  ChevronRight,
-  MessageSquareText,
-} from "lucide-react";
+import { MessageCircle, Users, MessageSquareText } from "lucide-react";
+
+import { ActionChip } from "@/components/ui";
 
 type CommunityCardProps = {
   icon: string;
   title: string;
   description: string;
+  cta: string;
+  href?: string;
 };
 
 export default function CommunityCard({
   icon,
   title,
   description,
+  cta,
+  href,
 }: CommunityCardProps) {
   const shared = "h-5 w-5";
   const stroke = 1.9;
+
+  /*
+   * The icon tile picks up a wash of the same hue as its glyph. It reads as
+   * a channel's own colour rather than a grey chip, which also stops three
+   * stacked cards from looking like one repeated row.
+   */
+  const tiles: Record<string, { tile: string; ring: string }> = {
+    whatsapp: { tile: "bg-[#3f8f63]/10", ring: "shadow-[inset_0_0_0_1px_rgba(63,143,99,0.18)]" },
+    community: { tile: "bg-[#4a6fa8]/10", ring: "shadow-[inset_0_0_0_1px_rgba(74,111,168,0.18)]" },
+    support: { tile: "bg-[#c47a3d]/10", ring: "shadow-[inset_0_0_0_1px_rgba(196,122,61,0.18)]" },
+  };
+
+  const tile = tiles[icon] ?? {
+    tile: "bg-[var(--surface-secondary)]",
+    ring: "",
+  };
 
   const renderIcon = () => {
     switch (icon) {
@@ -32,14 +49,27 @@ export default function CommunityCard({
     }
   };
 
+  /*
+   * Renders as a real anchor once a destination exists so Telegram opens it
+   * natively and the row is reachable by keyboard; falls back to a button
+   * while a channel link is still unset.
+   */
+  const Root = href ? "a" : "button";
+
+  const linkProps = href
+    ? { href, target: "_blank" as const, rel: "noopener noreferrer" }
+    : { type: "button" as const, disabled: true };
+
   return (
-    <button
+    <Root
+      {...linkProps}
+      aria-label={`${cta} — ${title}`}
       className="
         group
         flex
         w-full
         items-center
-        gap-4
+        gap-3.5
         rounded-[var(--radius)]
         border
         border-[var(--border)]
@@ -54,12 +84,17 @@ export default function CommunityCard({
         hover:-translate-y-0.5
         hover:border-[var(--border-strong)]
         hover:shadow-[var(--shadow-raised)]
+        active:translate-y-0
+        active:scale-[0.985]
+        active:bg-[var(--surface-secondary)]
+        disabled:pointer-events-none
+        disabled:opacity-60
       "
     >
       {/* Icon */}
 
       <div
-        className="
+        className={`
           flex
           h-10
           w-10
@@ -67,8 +102,9 @@ export default function CommunityCard({
           items-center
           justify-center
           rounded-[var(--radius-control)]
-          bg-[var(--surface-secondary)]
-        "
+          ${tile.tile}
+          ${tile.ring}
+        `}
       >
         {renderIcon()}
       </div>
@@ -76,7 +112,10 @@ export default function CommunityCard({
       {/* Text */}
 
       <div className="min-w-0 flex-1">
-        <h3 className="truncate text-[14px] font-medium tracking-tight text-[var(--text)]">
+        {/* Wraps to a second line rather than truncating: on a 320px phone
+            the chip leaves roughly 130px here, which clips a title like
+            "WhatsApp Community" mid-word. */}
+        <h3 className="text-[14px] font-semibold leading-snug tracking-tight text-[var(--text)]">
           {title}
         </h3>
 
@@ -85,21 +124,7 @@ export default function CommunityCard({
         </p>
       </div>
 
-      {/* Arrow */}
-
-      <ChevronRight
-        className="
-          h-4.5
-          w-4.5
-          shrink-0
-          text-[var(--text-subtle)]
-          transition-transform
-          duration-200
-          ease-out
-          group-hover:translate-x-0.5
-        "
-        strokeWidth={1.9}
-      />
-    </button>
+      <ActionChip label={cta} external />
+    </Root>
   );
 }

@@ -23,6 +23,8 @@ export default function CommunityContent() {
               icon={item.icon}
               title={item.title}
               description={item.description}
+              cta={item.cta}
+              href={item.href}
             />
           ))}
         </div>

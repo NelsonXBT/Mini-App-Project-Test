@@ -1,3 +1,8 @@
+/*
+ * `href` is where a pack opens. Empty until each destination is wired up;
+ * ResourceCard renders those rows disabled rather than as tappable cards
+ * that lead nowhere.
+ */
 export const featuredResources = [
   {
     id: 1,
@@ -5,6 +10,7 @@ export const featuredResources = [
     description: "High-quality prompts for AI filmmaking.",
     icon: "package",
     files: 45,
+    href: "",
   },
   {
     id: 2,
@@ -12,6 +18,7 @@ export const featuredResources = [
     description: "Ready-to-use production workflows.",
     icon: "clipboard",
     files: 18,
+    href: "",
   },
   {
     id: 3,
@@ -19,6 +26,7 @@ export const featuredResources = [
     description: "Download project assets and examples.",
     icon: "folder",
     files: 12,
+    href: "",
   },
   {
     id: 4,
@@ -26,6 +34,7 @@ export const featuredResources = [
     description: "Professional cinematic LUTs.",
     icon: "palette",
     files: 26,
+    href: "",
   },
   {
     id: 5,
@@ -33,5 +42,6 @@ export const featuredResources = [
     description: "Royalty-free images, videos and audio.",
     icon: "images",
     files: 84,
+    href: "",
   },
 ];
