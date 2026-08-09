@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 
 import AdminLoginForm from "@/components/admin/AdminLoginForm";
+import Logo from "@/components/ui/Logo";
+import { BRAND_NAME } from "@/lib/admin/constants";
 import { getPlatformSettings } from "@/lib/db/admin/settings";
 
 export const dynamic = "force-dynamic";
@@ -16,12 +18,16 @@ export default async function AdminLoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[var(--background)] px-5">
       <div className="animate-rise-in w-full max-w-sm">
-        <div className="mb-6 text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-subtle)]">
-            {settings.platformName}
-          </p>
+        <div className="mb-6 flex flex-col items-center text-center">
+          {settings.platformName.trim() === BRAND_NAME ? (
+            <Logo size="md" />
+          ) : (
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-subtle)]">
+              {settings.platformName}
+            </p>
+          )}
 
-          <h1 className="mt-1.5 text-[1.375rem] font-semibold leading-tight tracking-[-0.025em] text-[var(--text)]">
+          <h1 className="mt-4 text-[1.375rem] font-semibold leading-tight tracking-[-0.025em] text-[var(--text)]">
             Admin sign in
           </h1>
         </div>

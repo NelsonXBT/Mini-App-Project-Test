@@ -10,6 +10,9 @@ import {
   X,
 } from "lucide-react";
 
+import Logo from "@/components/ui/Logo";
+import { BRAND_NAME } from "@/lib/admin/constants";
+
 const navItems = [
   {
     href: "/admin",
@@ -45,6 +48,12 @@ export default function AdminSidebar({
   platformName,
 }: AdminSidebarProps) {
   const pathname = usePathname();
+
+  /*
+   * Settings can rename the platform. The wordmark is only correct while the
+   * name is still ours — a renamed platform gets its own name as plain type.
+   */
+  const isBrand = platformName.trim() === BRAND_NAME;
 
   function isActive(href: string) {
     // "/admin" would otherwise match every nested route.
@@ -87,13 +96,28 @@ export default function AdminSidebar({
       >
         {/* Brand */}
         <div className="flex h-16 items-center justify-between gap-2 border-b border-[var(--border)] px-5">
-          <Link href="/admin" className="min-w-0">
-            <p className="truncate text-[15px] font-semibold tracking-tight text-[var(--text)]">
-              {platformName}
-            </p>
-            <p className="text-[11px] font-medium uppercase tracking-[0.14em] text-[var(--text-subtle)]">
+          <Link href="/admin" className="flex min-w-0 items-center gap-2.5">
+            {isBrand ? (
+              <Logo size="sm" />
+            ) : (
+              <span className="truncate text-[15px] font-semibold tracking-tight text-[var(--text)]">
+                {platformName}
+              </span>
+            )}
+
+            {/*
+             * A hairline and an inline label rather than a second stacked row:
+             * the wordmark is already two lines, and stacking "Admin" beneath
+             * it would outgrow the 64px header.
+             */}
+            <span
+              className="h-3.5 w-px shrink-0 bg-[var(--border-strong)]"
+              aria-hidden="true"
+            />
+
+            <span className="shrink-0 text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--text-subtle)]">
               Admin
-            </p>
+            </span>
           </Link>
 
           <button

@@ -1,8 +1,9 @@
 import { prisma } from "@/lib/prisma";
+import { BRAND_NAME } from "@/lib/admin/constants";
 
 export const SETTINGS_ID = "singleton";
 
-export const DEFAULT_PLATFORM_NAME = "Nadi Academy";
+export const DEFAULT_PLATFORM_NAME = BRAND_NAME;
 
 /**
  * Reads the single settings row, creating it on first access so callers never
