@@ -39,7 +39,7 @@ export default async function AdminStudentPage({
           inline-flex
           items-center
           gap-1
-          text-[13px]
+          text-[14px]
           font-medium
           text-[var(--text-muted)]
           transition-colors

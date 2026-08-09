@@ -56,12 +56,12 @@ export default function EmptyState({
         </div>
       )}
 
-      <p className="text-[14px] font-medium tracking-tight text-[var(--text)]">
+      <p className="text-[15px] font-medium tracking-tight text-[var(--text)]">
         {title}
       </p>
 
       {description && (
-        <p className="mt-1 max-w-xs text-[13px] leading-relaxed text-[var(--text-muted)]">
+        <p className="mt-1 max-w-xs text-[14px] leading-relaxed text-[var(--text-muted)]">
           {description}
         </p>
       )}

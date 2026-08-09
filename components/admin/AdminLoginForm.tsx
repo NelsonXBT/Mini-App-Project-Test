@@ -90,7 +90,7 @@ export default function AdminLoginForm() {
             bg-[var(--danger)]/10
             px-3
             py-2.5
-            text-[13px]
+            text-[14px]
             text-[var(--danger)]
           "
         >

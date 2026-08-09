@@ -103,7 +103,7 @@ export default function LessonEditor({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-[12px] font-semibold uppercase tracking-[0.1em] text-[var(--text-subtle)]">
+        <h3 className="text-[13px] font-semibold uppercase tracking-[0.1em] text-[var(--text-subtle)]">
           Lessons
         </h3>
 
@@ -114,7 +114,7 @@ export default function LessonEditor({
               inline-flex
               items-center
               gap-1.5
-              text-[12px]
+              text-[13px]
               font-medium
               text-[var(--primary-text)]
               transition-opacity
@@ -140,7 +140,7 @@ export default function LessonEditor({
       )}
 
       {error && (
-        <p className="text-[12px] text-[var(--danger)]">{error}</p>
+        <p className="text-[13px] text-[var(--danger)]">{error}</p>
       )}
 
       {lessons.length === 0 && !creating ? (
@@ -169,11 +169,11 @@ export default function LessonEditor({
                 <>
                   <div className="flex items-center gap-2">
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-[13px] font-medium tracking-tight text-[var(--text)]">
+                      <p className="truncate text-[14px] font-medium tracking-tight text-[var(--text)]">
                         {lesson.title}
                       </p>
 
-                      <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-[var(--text-subtle)]">
+                      <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[12px] text-[var(--text-subtle)]">
                         <span>{lesson.provider}</span>
 
                         {lesson.duration != null && (
@@ -232,7 +232,7 @@ export default function LessonEditor({
                         resourcesFor === lesson.id ? null : lesson.id
                       )
                     }
-                    className="mt-1.5 text-[11px] font-medium text-[var(--primary-text)] transition-opacity hover:opacity-70"
+                    className="mt-1.5 text-[12px] font-medium text-[var(--primary-text)] transition-opacity hover:opacity-70"
                   >
                     {resourcesFor === lesson.id ? "Hide" : "Manage"}{" "}
                     resources

@@ -86,7 +86,7 @@ function ReorderRow<T extends { id: string }>({
         border
         border-[var(--border)]
         bg-[var(--card)]
-        shadow-[var(--shadow-card)]
+        shadow-[var(--shadow-panel)]
       "
     >
       <button

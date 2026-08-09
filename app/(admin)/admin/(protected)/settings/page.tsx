@@ -19,7 +19,7 @@ export default async function AdminSettingsPage() {
           Settings
         </h1>
 
-        <p className="mt-1 text-[13px] text-[var(--text-muted)]">
+        <p className="mt-1 text-[14px] text-[var(--text-muted)]">
           Platform-wide configuration.
         </p>
       </div>
@@ -32,7 +32,7 @@ export default async function AdminSettingsPage() {
           border-[var(--border)]
           bg-[var(--card)]
           p-5
-          shadow-[var(--shadow-card)]
+          shadow-[var(--shadow-panel)]
         "
       >
         <SettingsForm settings={settings} />

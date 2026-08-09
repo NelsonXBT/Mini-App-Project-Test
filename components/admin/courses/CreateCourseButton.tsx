@@ -36,7 +36,7 @@ export default function CreateCourseButton() {
       </Button>
 
       {error && (
-        <p className="text-[12px] text-[var(--danger)]">{error}</p>
+        <p className="text-[13px] text-[var(--danger)]">{error}</p>
       )}
     </div>
   );

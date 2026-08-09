@@ -44,10 +44,11 @@ export default function AdminHeader({
         gap-3
         border-b
         border-[var(--border)]
-        bg-[var(--surface)]/90
+        bg-[var(--surface)]/85
         px-4
+        shadow-[0_1px_2px_rgba(28,18,18,0.04),0_4px_16px_rgba(28,18,18,0.05)]
         backdrop-blur-xl
-        sm:px-6
+        sm:px-8
       "
     >
       <button
@@ -87,8 +88,10 @@ export default function AdminHeader({
             items-center
             justify-center
             rounded-[var(--radius-pill)]
+            border
+            border-[var(--border)]
             bg-[var(--primary-soft)]
-            text-[13px]
+            text-[15px]
             font-semibold
             text-[var(--primary-text)]
           "

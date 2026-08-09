@@ -23,7 +23,7 @@ export default function FormField({
     <div className={`space-y-1.5 ${className}`}>
       <label
         htmlFor={htmlFor}
-        className="block text-[13px] font-medium tracking-tight text-[var(--text)]"
+        className="block text-[14px] font-medium tracking-tight text-[var(--text)]"
       >
         {label}
         {required && (
@@ -34,9 +34,9 @@ export default function FormField({
       {children}
 
       {error ? (
-        <p className="text-[12px] text-[var(--danger)]">{error}</p>
+        <p className="text-[13px] text-[var(--danger)]">{error}</p>
       ) : hint ? (
-        <p className="text-[12px] text-[var(--text-subtle)]">{hint}</p>
+        <p className="text-[13px] text-[var(--text-subtle)]">{hint}</p>
       ) : null}
     </div>
   );
@@ -53,7 +53,7 @@ export const controlClasses = `
   border-[var(--border)]
   bg-[var(--card)]
   px-3
-  text-[14px]
+  text-[15px]
   text-[var(--text)]
   outline-none
   transition-all

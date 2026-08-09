@@ -60,7 +60,7 @@ function PanelSkeleton({ rows = 4 }: { rows?: number }) {
         border-[var(--border)]
         bg-[var(--card)]
         p-4
-        shadow-[var(--shadow-card)]
+        shadow-[var(--shadow-panel)]
       "
     >
       <div className="space-y-3">
@@ -83,7 +83,7 @@ export default function AdminDashboardPage() {
           Dashboard
         </h1>
 
-        <p className="mt-1 text-[13px] text-[var(--text-muted)]">
+        <p className="mt-1 text-[14px] text-[var(--text-muted)]">
           An overview of your platform.
         </p>
       </div>

@@ -24,7 +24,7 @@ export default function AdminShell({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-[var(--background)]">
+    <div className="min-h-screen bg-[var(--admin-ground)]">
       <AdminSidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
@@ -37,7 +37,7 @@ export default function AdminShell({
           adminName={adminName}
         />
 
-        <main className="px-4 py-6 sm:px-6 sm:py-8">
+        <main className="px-4 py-7 sm:px-8 sm:py-9">
           <div className="mx-auto w-full max-w-6xl">
             {children}
           </div>

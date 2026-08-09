@@ -20,13 +20,13 @@ export default function Toggle({
       {(label || description) && (
         <div className="min-w-0">
           {label && (
-            <p className="text-[13px] font-medium tracking-tight text-[var(--text)]">
+            <p className="text-[14px] font-medium tracking-tight text-[var(--text)]">
               {label}
             </p>
           )}
 
           {description && (
-            <p className="mt-0.5 text-[12px] leading-relaxed text-[var(--text-muted)]">
+            <p className="mt-0.5 text-[13px] leading-relaxed text-[var(--text-muted)]">
               {description}
             </p>
           )}

@@ -72,7 +72,7 @@ export default function StudentTable({
             bg-[var(--card)]
             pl-9
             pr-3
-            text-[14px]
+            text-[15px]
             text-[var(--text)]
             outline-none
             transition-all
@@ -106,7 +106,7 @@ export default function StudentTable({
             border
             border-[var(--border)]
             bg-[var(--card)]
-            shadow-[var(--shadow-card)]
+            shadow-[var(--shadow-panel)]
           "
         >
           <div
@@ -118,7 +118,7 @@ export default function StudentTable({
               border-[var(--border)]
               px-4
               py-2.5
-              text-[11px]
+              text-[12px]
               font-semibold
               uppercase
               tracking-[0.1em]
@@ -162,11 +162,11 @@ export default function StudentTable({
                     />
 
                     <div className="min-w-0">
-                      <p className="truncate text-[14px] font-medium tracking-tight text-[var(--text)]">
+                      <p className="truncate text-[15px] font-medium tracking-tight text-[var(--text)]">
                         {student.name}
                       </p>
 
-                      <p className="truncate text-[11px] text-[var(--text-subtle)]">
+                      <p className="truncate text-[12px] text-[var(--text-subtle)]">
                         {student.username
                           ? `@${student.username}`
                           : "No username"}
@@ -174,7 +174,7 @@ export default function StudentTable({
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] tabular-nums text-[var(--text-muted)] lg:contents">
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[13px] tabular-nums text-[var(--text-muted)] lg:contents">
                     <span className="lg:w-24 lg:shrink-0 lg:text-right">
                       <span className="lg:hidden">Courses: </span>
                       {student.courseCount}

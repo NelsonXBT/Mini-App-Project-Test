@@ -116,7 +116,7 @@ export default function GlobalSearch() {
           bg-[var(--surface-secondary)]
           pl-9
           pr-9
-          text-[14px]
+          text-[15px]
           text-[var(--text)]
           outline-none
           transition-all
@@ -152,7 +152,7 @@ export default function GlobalSearch() {
           "
         >
           {results.length === 0 ? (
-            <p className="px-4 py-3.5 text-[13px] text-[var(--text-muted)]">
+            <p className="px-4 py-3.5 text-[14px] text-[var(--text-muted)]">
               {pending ? "Searching…" : "No matches."}
             </p>
           ) : (
@@ -201,12 +201,12 @@ export default function GlobalSearch() {
                   </span>
 
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[13px] font-medium tracking-tight text-[var(--text)]">
+                    <span className="block truncate text-[14px] font-medium tracking-tight text-[var(--text)]">
                       {result.title}
                     </span>
 
                     {result.subtitle && (
-                      <span className="block truncate text-[11px] text-[var(--text-subtle)]">
+                      <span className="block truncate text-[12px] text-[var(--text-subtle)]">
                         {result.subtitle}
                       </span>
                     )}

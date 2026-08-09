@@ -54,11 +54,11 @@ export default async function RecentActivity() {
         border
         border-[var(--border)]
         bg-[var(--card)]
-        shadow-[var(--shadow-card)]
+        shadow-[var(--shadow-panel)]
       "
     >
       <div className="border-b border-[var(--border)] px-4 py-3.5">
-        <h2 className="text-[14px] font-semibold tracking-tight text-[var(--text)]">
+        <h2 className="text-[15px] font-semibold tracking-tight text-[var(--text)]">
           Recent Activity
         </h2>
       </div>
@@ -84,11 +84,11 @@ export default async function RecentActivity() {
               />
 
               <div className="min-w-0 flex-1">
-                <p className="text-[13px] leading-snug text-[var(--text)]">
+                <p className="text-[14px] leading-snug text-[var(--text)]">
                   {entry.summary}
                 </p>
 
-                <p className="mt-0.5 text-[11px] text-[var(--text-subtle)]">
+                <p className="mt-0.5 text-[12px] text-[var(--text-subtle)]">
                   {relativeTime(entry.createdAt)}
                   {entry.actor
                     ? ` · ${entry.actor.name ?? entry.actor.username}`

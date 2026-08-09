@@ -124,7 +124,7 @@ export default function SettingsForm({
       </FormField>
 
       {error && (
-        <p className="text-[13px] text-[var(--danger)]">{error}</p>
+        <p className="text-[14px] text-[var(--danger)]">{error}</p>
       )}
 
       <div className="flex items-center gap-3">
@@ -133,7 +133,7 @@ export default function SettingsForm({
         </Button>
 
         {saved && !pending && (
-          <span className="text-[13px] text-[var(--success)]">
+          <span className="text-[14px] text-[var(--success)]">
             Saved
           </span>
         )}

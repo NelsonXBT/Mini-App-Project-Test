@@ -17,7 +17,7 @@ export default function StatusBadge({
         border
         px-2.5
         py-1
-        text-[11px]
+        text-[12px]
         font-medium
         uppercase
         leading-none

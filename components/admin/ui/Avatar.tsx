@@ -20,7 +20,7 @@ export default function Avatar({
   photoUrl,
   size = "md",
 }: AvatarProps) {
-  const dimensions = size === "sm" ? "h-7 w-7 text-[11px]" : "h-9 w-9 text-[13px]";
+  const dimensions = size === "sm" ? "h-7 w-7 text-[12px]" : "h-9 w-9 text-[14px]";
 
   const initials =
     name

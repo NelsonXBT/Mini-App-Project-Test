@@ -66,7 +66,7 @@ export default function CourseTable({
   return (
     <>
       {error && (
-        <p className="mb-3 text-[13px] text-[var(--danger)]">{error}</p>
+        <p className="mb-3 text-[14px] text-[var(--danger)]">{error}</p>
       )}
 
       <div
@@ -76,7 +76,7 @@ export default function CourseTable({
           border
           border-[var(--border)]
           bg-[var(--card)]
-          shadow-[var(--shadow-card)]
+          shadow-[var(--shadow-panel)]
         "
       >
         {/* Column headings are desktop-only; each row becomes a stacked
@@ -90,7 +90,7 @@ export default function CourseTable({
             border-[var(--border)]
             px-4
             py-2.5
-            text-[11px]
+            text-[12px]
             font-semibold
             uppercase
             tracking-[0.1em]
@@ -163,12 +163,12 @@ export default function CourseTable({
                 <div className="min-w-0 flex-1">
                   <Link
                     href={`/admin/courses/${course.id}`}
-                    className="block truncate text-[14px] font-medium tracking-tight text-[var(--text)] hover:text-[var(--primary-text)]"
+                    className="block truncate text-[15px] font-medium tracking-tight text-[var(--text)] hover:text-[var(--primary-text)]"
                   >
                     {course.title}
                   </Link>
 
-                  <p className="truncate text-[11px] text-[var(--text-subtle)]">
+                  <p className="truncate text-[12px] text-[var(--text-subtle)]">
                     /{course.slug}
                   </p>
                 </div>
@@ -180,7 +180,7 @@ export default function CourseTable({
                 <Stat label="Modules" value={course.moduleCount} />
                 <Stat label="Lessons" value={course.lessonCount} />
 
-                <span className="text-[12px] tabular-nums text-[var(--text-muted)] lg:w-24 lg:shrink-0 lg:text-right">
+                <span className="text-[13px] tabular-nums text-[var(--text-muted)] lg:w-24 lg:shrink-0 lg:text-right">
                   <span className="lg:hidden">Duration: </span>
                   {course.manualDuration ?? "—"}
                 </span>
@@ -261,7 +261,7 @@ function Stat({
   value: number;
 }) {
   return (
-    <span className="text-[12px] tabular-nums text-[var(--text-muted)] lg:w-20 lg:shrink-0 lg:text-right">
+    <span className="text-[13px] tabular-nums text-[var(--text-muted)] lg:w-20 lg:shrink-0 lg:text-right">
       <span className="lg:hidden">{label}: </span>
       {value}
     </span>

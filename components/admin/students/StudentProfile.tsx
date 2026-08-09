@@ -104,7 +104,7 @@ export default function StudentProfile({
           border-[var(--border)]
           bg-[var(--card)]
           p-5
-          shadow-[var(--shadow-card)]
+          shadow-[var(--shadow-panel)]
         "
       >
         <div className="flex items-center gap-3.5">
@@ -116,7 +116,7 @@ export default function StudentProfile({
             </h1>
 
             {student.currentLesson && (
-              <p className="truncate text-[12px] text-[var(--text-muted)]">
+              <p className="truncate text-[13px] text-[var(--text-muted)]">
                 Currently on {student.currentLesson.title} ·{" "}
                 {student.currentLesson.course}
               </p>
@@ -127,11 +127,11 @@ export default function StudentProfile({
         <dl className="mt-5 grid grid-cols-2 gap-x-4 gap-y-4 sm:grid-cols-3">
           {facts.map((fact) => (
             <div key={fact.label}>
-              <dt className="text-[11px] font-medium uppercase tracking-[0.1em] text-[var(--text-subtle)]">
+              <dt className="text-[12px] font-medium uppercase tracking-[0.1em] text-[var(--text-subtle)]">
                 {fact.label}
               </dt>
 
-              <dd className="mt-1 truncate text-[14px] font-medium tracking-tight text-[var(--text)]">
+              <dd className="mt-1 truncate text-[15px] font-medium tracking-tight text-[var(--text)]">
                 {fact.value}
               </dd>
             </div>
@@ -140,7 +140,7 @@ export default function StudentProfile({
       </section>
 
       {error && (
-        <p className="text-[13px] text-[var(--danger)]">{error}</p>
+        <p className="text-[14px] text-[var(--danger)]">{error}</p>
       )}
 
       {/* Courses */}
@@ -151,7 +151,7 @@ export default function StudentProfile({
           border-[var(--border)]
           bg-[var(--card)]
           p-5
-          shadow-[var(--shadow-card)]
+          shadow-[var(--shadow-panel)]
         "
       >
         <h2 className="mb-4 text-[15px] font-semibold tracking-tight text-[var(--text)]">
@@ -181,11 +181,11 @@ export default function StudentProfile({
                 "
               >
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[13px] font-medium tracking-tight text-[var(--text)]">
+                  <p className="truncate text-[14px] font-medium tracking-tight text-[var(--text)]">
                     {enrollment.courseTitle}
                   </p>
 
-                  <p className="text-[11px] text-[var(--text-subtle)]">
+                  <p className="text-[12px] text-[var(--text-subtle)]">
                     Since {formatDate(enrollment.enrolledAt)}
                   </p>
                 </div>
@@ -251,14 +251,14 @@ export default function StudentProfile({
           border-[var(--border)]
           bg-[var(--card)]
           p-5
-          shadow-[var(--shadow-card)]
+          shadow-[var(--shadow-panel)]
         "
       >
         <h2 className="text-[15px] font-semibold tracking-tight text-[var(--text)]">
           Reset progress
         </h2>
 
-        <p className="mt-1 text-[13px] leading-relaxed text-[var(--text-muted)]">
+        <p className="mt-1 text-[14px] leading-relaxed text-[var(--text-muted)]">
           Clears every watched position and completion for this student.
           Course access is not affected.
         </p>

@@ -136,14 +136,14 @@ export default function LinkListEditor({
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between gap-3">
-        <h3 className="text-[12px] font-semibold uppercase tracking-[0.1em] text-[var(--text-subtle)]">
+        <h3 className="text-[13px] font-semibold uppercase tracking-[0.1em] text-[var(--text-subtle)]">
           {heading}
         </h3>
 
         {!creating && (
           <button
             onClick={() => setCreating(true)}
-            className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[var(--primary-text)] transition-opacity duration-200 hover:opacity-70"
+            className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[var(--primary-text)] transition-opacity duration-200 hover:opacity-70"
           >
             <Plus className="h-3.5 w-3.5" strokeWidth={2.1} />
             {addLabel}
@@ -160,7 +160,7 @@ export default function LinkListEditor({
       )}
 
       {error && (
-        <p className="text-[12px] text-[var(--danger)]">{error}</p>
+        <p className="text-[13px] text-[var(--danger)]">{error}</p>
       )}
 
       {items.length === 0 && !creating ? (
@@ -190,11 +190,11 @@ export default function LinkListEditor({
             ) : (
               <div className="flex items-center gap-2">
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[13px] font-medium tracking-tight text-[var(--text)]">
+                  <p className="truncate text-[14px] font-medium tracking-tight text-[var(--text)]">
                     {item.title}
                   </p>
 
-                  <p className="truncate text-[11px] text-[var(--text-subtle)]">
+                  <p className="truncate text-[12px] text-[var(--text-subtle)]">
                     {item.type.replace("_", " ")} · {item.url}
                   </p>
                 </div>

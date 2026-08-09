@@ -42,7 +42,7 @@ export default async function AdminCourseEditorPage({
           inline-flex
           items-center
           gap-1
-          text-[13px]
+          text-[14px]
           font-medium
           text-[var(--text-muted)]
           transition-colors
@@ -71,7 +71,7 @@ export default async function AdminCourseEditorPage({
           border-[var(--border)]
           bg-[var(--card)]
           p-5
-          shadow-[var(--shadow-card)]
+          shadow-[var(--shadow-panel)]
         "
       >
         <h2 className="mb-4 text-[15px] font-semibold tracking-tight text-[var(--text)]">
@@ -104,7 +104,7 @@ export default async function AdminCourseEditorPage({
           border-[var(--border)]
           bg-[var(--card)]
           p-5
-          shadow-[var(--shadow-card)]
+          shadow-[var(--shadow-panel)]
         "
       >
         <ModuleEditor
@@ -139,7 +139,7 @@ export default async function AdminCourseEditorPage({
           border-[var(--border)]
           bg-[var(--card)]
           p-5
-          shadow-[var(--shadow-card)]
+          shadow-[var(--shadow-panel)]
         "
       >
         <CourseFilesEditor

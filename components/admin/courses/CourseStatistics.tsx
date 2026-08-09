@@ -52,7 +52,7 @@ export default function CourseStatistics({
         border-[var(--border)]
         bg-[var(--card)]
         p-5
-        shadow-[var(--shadow-card)]
+        shadow-[var(--shadow-panel)]
       "
     >
       <div className="flex flex-wrap items-start justify-between gap-3">
@@ -69,7 +69,7 @@ export default function CourseStatistics({
 
           return (
             <div key={stat.label}>
-              <dt className="flex items-center gap-1.5 text-[11px] font-medium uppercase tracking-[0.1em] text-[var(--text-subtle)]">
+              <dt className="flex items-center gap-1.5 text-[12px] font-medium uppercase tracking-[0.1em] text-[var(--text-subtle)]">
                 <Icon className="h-3.5 w-3.5" strokeWidth={1.9} />
                 {stat.label}
               </dt>

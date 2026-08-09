@@ -190,10 +190,10 @@ export default function CourseDetailsForm({
         <legend className="sr-only">Telegram access</legend>
 
         <div>
-          <h3 className="text-[13px] font-semibold text-[var(--text)]">
+          <h3 className="text-[14px] font-semibold text-[var(--text)]">
             Telegram access
           </h3>
-          <p className="mt-0.5 text-[13px] text-[var(--text-muted)]">
+          <p className="mt-0.5 text-[14px] text-[var(--text-muted)]">
             Which channel or group grants access to this course.
           </p>
         </div>
@@ -262,7 +262,7 @@ export default function CourseDetailsForm({
       </div>
 
       {error && (
-        <p className="text-[13px] text-[var(--danger)]">{error}</p>
+        <p className="text-[14px] text-[var(--danger)]">{error}</p>
       )}
 
       <div className="flex items-center gap-3">
@@ -271,7 +271,7 @@ export default function CourseDetailsForm({
         </Button>
 
         {saved && !pending && (
-          <span className="text-[13px] text-[var(--success)]">
+          <span className="text-[14px] text-[var(--success)]">
             Saved
           </span>
         )}

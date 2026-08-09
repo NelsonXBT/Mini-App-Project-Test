@@ -160,7 +160,7 @@ export default function LessonForm({
       </div>
 
       {error && (
-        <p className="text-[12px] text-[var(--danger)]">{error}</p>
+        <p className="text-[13px] text-[var(--danger)]">{error}</p>
       )}
 
       <div className="flex gap-2">

@@ -87,6 +87,7 @@ export default function AdminSidebar({
           border-r
           border-[var(--border)]
           bg-[var(--surface)]
+          shadow-[1px_0_2px_rgba(28,18,18,0.03),4px_0_20px_rgba(28,18,18,0.04)]
           transition-transform
           duration-200
           ease-out
@@ -115,7 +116,7 @@ export default function AdminSidebar({
               aria-hidden="true"
             />
 
-            <span className="shrink-0 text-[10px] font-medium uppercase tracking-[0.14em] text-[var(--text-subtle)]">
+            <span className="shrink-0 text-[11px] font-medium uppercase tracking-[0.14em] text-[var(--text-subtle)]">
               Admin
             </span>
           </Link>
@@ -162,7 +163,7 @@ export default function AdminSidebar({
                   rounded-[var(--radius-control)]
                   px-3
                   py-2.5
-                  text-[14px]
+                  text-[14.5px]
                   font-medium
                   tracking-tight
                   transition-colors
@@ -170,14 +171,14 @@ export default function AdminSidebar({
                   ease-out
                   ${
                     active
-                      ? "bg-[var(--primary-soft)] text-[var(--primary-text)]"
+                      ? "bg-[var(--primary-soft)] text-[var(--primary-text)] shadow-[inset_0_0_0_1px_var(--primary-ring)]"
                       : "text-[var(--text-muted)] hover:bg-[var(--surface-secondary)] hover:text-[var(--text)]"
                   }
                 `}
               >
                 <Icon
-                  className="h-[18px] w-[18px] shrink-0"
-                  strokeWidth={active ? 2.1 : 1.9}
+                  className="h-[19px] w-[19px] shrink-0"
+                  strokeWidth={active ? 2.2 : 1.9}
                 />
                 {item.label}
               </Link>

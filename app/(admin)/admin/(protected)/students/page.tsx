@@ -19,7 +19,7 @@ export default async function AdminStudentsPage() {
           Students
         </h1>
 
-        <p className="mt-1 text-[13px] text-[var(--text-muted)]">
+        <p className="mt-1 text-[14px] text-[var(--text-muted)]">
           {students.length} student{students.length === 1 ? "" : "s"}
         </p>
       </div>

@@ -184,7 +184,7 @@ export default function ModuleEditor({
       )}
 
       {error && (
-        <p className="text-[13px] text-[var(--danger)]">{error}</p>
+        <p className="text-[14px] text-[var(--danger)]">{error}</p>
       )}
 
       {modules.length === 0 ? (
@@ -245,11 +245,11 @@ export default function ModuleEditor({
                       }
                       className="min-w-0 flex-1 text-left"
                     >
-                      <span className="block truncate text-[14px] font-medium tracking-tight text-[var(--text)]">
+                      <span className="block truncate text-[15px] font-medium tracking-tight text-[var(--text)]">
                         {module.title}
                       </span>
 
-                      <span className="block text-[11px] text-[var(--text-subtle)]">
+                      <span className="block text-[12px] text-[var(--text-subtle)]">
                         {module.lessons.length} lesson
                         {module.lessons.length === 1 ? "" : "s"}
                       </span>

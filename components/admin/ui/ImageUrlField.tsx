@@ -77,7 +77,7 @@ export default function ImageUrlField({
         />
 
         {value && broken && (
-          <p className="mt-1.5 text-[12px] text-[var(--danger)]">
+          <p className="mt-1.5 text-[13px] text-[var(--danger)]">
             That image could not be loaded.
           </p>
         )}

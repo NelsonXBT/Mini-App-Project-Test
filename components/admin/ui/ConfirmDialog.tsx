@@ -112,7 +112,7 @@ export default function ConfirmDialog({
             </h2>
 
             {description && (
-              <p className="mt-1.5 text-[13px] leading-relaxed text-[var(--text-muted)]">
+              <p className="mt-1.5 text-[14px] leading-relaxed text-[var(--text-muted)]">
                 {description}
               </p>
             )}

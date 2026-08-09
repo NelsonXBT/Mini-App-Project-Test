@@ -16,13 +16,13 @@ export default async function AdminLoginPage() {
   const settings = await getPlatformSettings();
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-[var(--background)] px-5">
+    <main className="flex min-h-screen items-center justify-center bg-[var(--admin-ground)] px-5">
       <div className="animate-rise-in w-full max-w-sm">
         <div className="mb-6 flex flex-col items-center text-center">
           {settings.platformName.trim() === BRAND_NAME ? (
             <Logo size="md" />
           ) : (
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--text-subtle)]">
+            <p className="text-[13px] font-semibold uppercase tracking-[0.2em] text-[var(--text-subtle)]">
               {settings.platformName}
             </p>
           )}
@@ -39,7 +39,7 @@ export default async function AdminLoginPage() {
             border-[var(--border)]
             bg-[var(--card)]
             p-5
-            shadow-[var(--shadow-card)]
+            shadow-[var(--shadow-panel)]
           "
         >
           {/* useSearchParams needs a Suspense boundary. */}

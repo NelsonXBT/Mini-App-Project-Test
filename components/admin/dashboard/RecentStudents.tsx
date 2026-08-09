@@ -23,17 +23,17 @@ export default async function RecentStudents() {
         border
         border-[var(--border)]
         bg-[var(--card)]
-        shadow-[var(--shadow-card)]
+        shadow-[var(--shadow-panel)]
       "
     >
       <div className="flex items-center justify-between gap-3 border-b border-[var(--border)] px-4 py-3.5">
-        <h2 className="text-[14px] font-semibold tracking-tight text-[var(--text)]">
+        <h2 className="text-[15px] font-semibold tracking-tight text-[var(--text)]">
           Recent Students
         </h2>
 
         <Link
           href="/admin/students"
-          className="text-[12px] font-medium text-[var(--primary-text)] transition-opacity duration-200 hover:opacity-70"
+          className="text-[13px] font-medium text-[var(--primary-text)] transition-opacity duration-200 hover:opacity-70"
         >
           View all
         </Link>
@@ -73,24 +73,24 @@ export default async function RecentStudents() {
                 />
 
                 <div className="min-w-0 flex-1">
-                  <p className="truncate text-[13px] font-medium tracking-tight text-[var(--text)]">
+                  <p className="truncate text-[14px] font-medium tracking-tight text-[var(--text)]">
                     {student.name}
                   </p>
 
                   {student.username && (
-                    <p className="truncate text-[11px] text-[var(--text-subtle)]">
+                    <p className="truncate text-[12px] text-[var(--text-subtle)]">
                       @{student.username}
                     </p>
                   )}
                 </div>
 
                 <div className="hidden shrink-0 text-right sm:block">
-                  <p className="text-[12px] tabular-nums text-[var(--text-muted)]">
+                  <p className="text-[13px] tabular-nums text-[var(--text-muted)]">
                     {student.courseCount} course
                     {student.courseCount !== 1 ? "s" : ""}
                   </p>
 
-                  <p className="text-[11px] text-[var(--text-subtle)]">
+                  <p className="text-[12px] text-[var(--text-subtle)]">
                     {formatDate(student.joinedAt)}
                   </p>
                 </div>
