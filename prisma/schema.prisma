@@ -63,6 +63,29 @@ enum ActivityType {
   PROGRESS_RESET
 
   SETTINGS_UPDATED
+
+  COMMUNITY_CHANNEL_CREATED
+  COMMUNITY_CHANNEL_UPDATED
+  COMMUNITY_CHANNEL_DELETED
+
+  RESOURCE_ITEM_CREATED
+  RESOURCE_ITEM_UPDATED
+  RESOURCE_ITEM_DELETED
+
+  NOTIFICATION_CREATED
+  NOTIFICATION_UPDATED
+  NOTIFICATION_DELETED
+}
+
+// Which tab of the student Resources page an item belongs to.
+enum ResourceSection {
+  packs
+  tools
+}
+
+enum NotificationAudience {
+  ALL
+  COURSE
 }
 
 model User {
@@ -79,6 +102,10 @@ model User {
   progress    LessonProgress[]
 
   sessions Session[]
+
+  // Everything created after this instant counts as unread. Null means the
+  // student has never opened the panel, so their whole feed is unread.
+  notificationsSeenAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -127,6 +154,8 @@ model Course {
   modules     Module[]
   enrollments Enrollment[]
   files       CourseFile[]
+
+  notifications Notification[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -281,6 +310,8 @@ model AdminUser {
   sessions   AdminSession[]
   activities ActivityLog[]
 
+  notifications Notification[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -318,6 +349,108 @@ model ActivityLog {
   createdAt DateTime @default(now())
 
   @@index([createdAt])
+}
+
+// ============================================================
+// STUDENT-FACING CONTENT
+//
+// Community channels and resource items were hardcoded arrays in
+// lib/constants. They live here so an admin can edit them
+// without a deploy.
+//
+// `icon` stores a key, not a class name or an SVG: the student
+// card maps it to a Lucide component and a colour. An unknown
+// key falls back rather than rendering nothing, so renaming an
+// icon in code cannot blank a live card.
+// ============================================================
+
+model CommunityChannel {
+  id String @id @default(cuid())
+
+  title       String
+  description String
+  icon        String @default("community")
+
+  // The verb on the button ("Join", "Open", "Chat"). Per-channel because
+  // joining a group and messaging support are not the same action.
+  cta String @default("Open")
+
+  url String
+
+  isPublished Boolean @default(true)
+  sortOrder   Int     @default(1)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sortOrder])
+}
+
+model ResourceItem {
+  id String @id @default(cuid())
+
+  section ResourceSection
+
+  title       String
+  description String
+  icon        String @default("folder")
+
+  cta String @default("Browse")
+
+  url String
+
+  // Packs show a file count; tools show an affiliate disclosure. Both are
+  // optional because neither applies to the other section.
+  fileCount   Int?
+  isAffiliate Boolean @default(false)
+
+  isPublished Boolean @default(true)
+  sortOrder   Int     @default(1)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([section, sortOrder])
+}
+
+// ============================================================
+// NOTIFICATIONS
+//
+// In-app only. Unread state is derived from
+// User.notificationsSeenAt rather than stored per row, so there
+// is no join table and no write on read.
+// ============================================================
+
+model Notification {
+  id String @id @default(cuid())
+
+  title String
+  body  String
+
+  audience NotificationAudience @default(ALL)
+
+  // Set only when audience is COURSE. Cascades, because a notification
+  // addressed to the students of a deleted course has no audience left.
+  courseId String?
+  course   Course? @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  // Optional tap-through target for the student card.
+  linkUrl String?
+
+  // Drafts are invisible to students. Separate from createdAt so an admin can
+  // write a notification now and release it later.
+  publishedAt DateTime?
+
+  actorId String?
+  actor   AdminUser? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // The student feed both filters and orders on publishedAt.
+  @@index([publishedAt])
+  @@index([courseId])
+  @@index([actorId])
 }
 
 // Single row, addressed by a fixed id.

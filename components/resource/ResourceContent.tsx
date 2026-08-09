@@ -5,46 +5,50 @@ import { useState } from "react";
 import ResourceTabs from "./ResourceTabs";
 import ResourceCard from "./ResourceCard";
 
-import { featuredResources } from "@/lib/constants/featured-resources";
-import { featuredTools } from "@/lib/constants/featured-tools";
+import type { ResourceItemView } from "@/lib/db/resources";
 
-export default function ResourceContent() {
-  const [activeTab, setActiveTab] = useState<
-    "packs" | "tools"
-  >("tools");
+type ResourceContentProps = {
+  packs: ResourceItemView[];
+  tools: ResourceItemView[];
+};
+
+export default function ResourceContent({
+  packs,
+  tools,
+}: ResourceContentProps) {
+  const [activeTab, setActiveTab] = useState<"packs" | "tools">("tools");
+
+  /*
+   * The Packs tab was hard-locked in code. It now locks itself whenever
+   * nothing is published in that section, so an admin publishing the first
+   * pack opens the tab without a code change — and unpublishing them all
+   * closes it again rather than leaving an empty tab.
+   */
+  const packsLocked = packs.length === 0;
+
+  const items = activeTab === "packs" && !packsLocked ? packs : tools;
 
   return (
     <>
       <ResourceTabs
-        activeTab={activeTab}
+        activeTab={packsLocked ? "tools" : activeTab}
         onTabChange={setActiveTab}
+        packsLocked={packsLocked}
       />
 
       <div className="space-y-2.5">
-        {activeTab === "packs"
-          ? featuredResources.map((pack) => (
-              <ResourceCard
-                key={pack.id}
-                icon={pack.icon}
-                title={pack.title}
-                description={pack.description}
-                meta={`${pack.files} files`}
-                cta="Browse"
-                href={pack.href}
-              />
-            ))
-          : featuredTools.map((tool) => (
-              <ResourceCard
-                key={tool.id}
-                icon={tool.icon}
-                title={tool.title}
-                description={tool.description}
-                meta={tool.affiliate ? "Affiliate link" : undefined}
-                cta={tool.cta}
-                external
-                href={tool.href}
-              />
-            ))}
+        {items.map((item) => (
+          <ResourceCard
+            key={item.id}
+            icon={item.icon}
+            title={item.title}
+            description={item.description}
+            meta={item.meta}
+            cta={item.cta}
+            external={item.section === "tools"}
+            href={item.url || undefined}
+          />
+        ))}
       </div>
     </>
   );

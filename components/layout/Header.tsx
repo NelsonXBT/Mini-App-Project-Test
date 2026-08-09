@@ -1,10 +1,11 @@
 "use client";
 
-import { Bell, ChevronLeft } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 import IconButton from "@/components/ui/IconButton";
 import Logo from "@/components/ui/Logo";
+import NotificationBell from "@/components/notifications/NotificationBell";
 
 export default function Header() {
   const pathname = usePathname();
@@ -32,9 +33,7 @@ export default function Header() {
         <Logo size="sm" />
       </h1>
 
-      <IconButton aria-label="Notifications">
-        <Bell className="h-[18px] w-[18px]" />
-      </IconButton>
+      <NotificationBell />
     </header>
   );
 }

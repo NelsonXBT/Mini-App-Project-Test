@@ -2,9 +2,11 @@ import CommunityBanner from "./CommunityBanner";
 import CommunityCard from "./CommunityCard";
 
 import { PageTitle } from "@/components/ui";
-import { communityItems } from "@/lib/constants/community";
+import { getPublishedCommunityChannels } from "@/lib/db/community";
 
-export default function CommunityContent() {
+export default async function CommunityContent() {
+  const channels = await getPublishedCommunityChannels();
+
   return (
     <div className="space-y-4">
 
@@ -12,24 +14,26 @@ export default function CommunityContent() {
       <CommunityBanner />
 
       {/* Community Channels */}
-      <div>
+      {channels.length > 0 && (
+        <div>
 
-        <PageTitle as="h2">Community Channels</PageTitle>
+          <PageTitle as="h2">Community Channels</PageTitle>
 
-        <div className="space-y-2.5">
-          {communityItems.map((item) => (
-            <CommunityCard
-              key={item.id}
-              icon={item.icon}
-              title={item.title}
-              description={item.description}
-              cta={item.cta}
-              href={item.href}
-            />
-          ))}
+          <div className="space-y-2.5">
+            {channels.map((channel) => (
+              <CommunityCard
+                key={channel.id}
+                icon={channel.icon}
+                title={channel.title}
+                description={channel.description}
+                cta={channel.cta}
+                href={channel.url || undefined}
+              />
+            ))}
+          </div>
+
         </div>
-
-      </div>
+      )}
 
     </div>
   );

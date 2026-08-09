@@ -8,6 +8,9 @@ import {
   Users,
   Settings,
   X,
+  Bell,
+  FolderOpen,
+  MessagesSquare,
 } from "lucide-react";
 
 import Logo from "@/components/ui/Logo";
@@ -28,6 +31,21 @@ const navItems = [
     href: "/admin/students",
     label: "Students",
     icon: Users,
+  },
+  {
+    href: "/admin/community",
+    label: "Community",
+    icon: MessagesSquare,
+  },
+  {
+    href: "/admin/resources",
+    label: "Resources",
+    icon: FolderOpen,
+  },
+  {
+    href: "/admin/notifications",
+    label: "Notifications",
+    icon: Bell,
   },
   {
     href: "/admin/settings",

@@ -1,6 +1,5 @@
-import { MessageCircle, Users, MessageSquareText } from "lucide-react";
-
 import { ActionChip } from "@/components/ui";
+import { communityIcon } from "@/lib/constants/icon-map";
 
 type CommunityCardProps = {
   icon: string;
@@ -17,42 +16,18 @@ export default function CommunityCard({
   cta,
   href,
 }: CommunityCardProps) {
-  const shared = "h-5 w-5";
-  const stroke = 1.9;
-
   /*
-   * The icon tile picks up a wash of the same hue as its glyph. It reads as
-   * a channel's own colour rather than a grey chip, which also stops three
-   * stacked cards from looking like one repeated row.
+   * The icon tile picks up a wash of the same hue as its glyph, so a channel
+   * reads as having its own colour rather than a grey chip — which also stops
+   * three stacked cards from looking like one repeated row.
    */
-  const tiles: Record<string, { tile: string; ring: string }> = {
-    whatsapp: { tile: "bg-[#3f8f63]/10", ring: "shadow-[inset_0_0_0_1px_rgba(63,143,99,0.18)]" },
-    community: { tile: "bg-[#4a6fa8]/10", ring: "shadow-[inset_0_0_0_1px_rgba(74,111,168,0.18)]" },
-    support: { tile: "bg-[#c47a3d]/10", ring: "shadow-[inset_0_0_0_1px_rgba(196,122,61,0.18)]" },
-  };
-
-  const tile = tiles[icon] ?? {
-    tile: "bg-[var(--surface-secondary)]",
-    ring: "",
-  };
-
-  const renderIcon = () => {
-    switch (icon) {
-      case "whatsapp":
-        return <MessageCircle className={`${shared} text-[#3f8f63]`} strokeWidth={stroke} />;
-
-      case "community":
-        return <Users className={`${shared} text-[#4a6fa8]`} strokeWidth={stroke} />;
-
-      case "support":
-        return <MessageSquareText className={`${shared} text-[#c47a3d]`} strokeWidth={stroke} />;
-    }
-  };
+  const { Glyph, tint, tile, ring } = communityIcon(icon);
 
   /*
    * Renders as a real anchor once a destination exists so Telegram opens it
-   * natively and the row is reachable by keyboard; falls back to a button
-   * while a channel link is still unset.
+   * natively and the row is reachable by keyboard; falls back to a disabled
+   * button while a channel link is still unset, because a card that looks
+   * tappable and goes nowhere is worse than one that shows it is not ready.
    */
   const Root = href ? "a" : "button";
 
@@ -102,11 +77,11 @@ export default function CommunityCard({
           items-center
           justify-center
           rounded-[var(--radius-control)]
-          ${tile.tile}
-          ${tile.ring}
+          ${tile}
+          ${ring}
         `}
       >
-        {renderIcon()}
+        <Glyph className={`h-5 w-5 ${tint}`} strokeWidth={1.9} />
       </div>
 
       {/* Text */}
