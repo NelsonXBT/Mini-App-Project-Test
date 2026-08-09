@@ -2,12 +2,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
 
 enum VideoProvider {
   youtube
@@ -67,172 +65,187 @@ enum ActivityType {
   SETTINGS_UPDATED
 }
 
-
-
 model User {
-  id          String   @id @default(cuid())
-  telegramId  BigInt   @unique
-  username    String?
-  firstName   String
-  lastName    String?
-  email       String?
-  photoUrl    String?
-  isAdmin     Boolean  @default(false)
+  id         String  @id @default(cuid())
+  telegramId BigInt  @unique
+  username   String?
+  firstName  String
+  lastName   String?
+  email      String?
+  photoUrl   String?
+  isAdmin    Boolean @default(false)
 
   enrollments Enrollment[]
   progress    LessonProgress[]
 
   sessions Session[]
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Session {
-  id        String   @id @default(cuid())
+  id String @id @default(cuid())
 
-  token     String   @unique
+  token String @unique
 
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   expiresAt DateTime
 
   createdAt DateTime @default(now())
+
+  @@index([userId])
 }
 
 model Course {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  description String?
+  id               String  @id @default(cuid())
+  title            String
+  slug             String  @unique
+  description      String?
   shortDescription String?
-  thumbnail   String?
-  purchaseUrl String?
+  thumbnail        String?
+  purchaseUrl      String?
 
   // Authored by hand, never derived from lesson durations.
   manualDuration String?
 
-  instructor  String?
-  difficulty  Difficulty?
+  instructor String?
+  difficulty Difficulty?
 
-  isFree      Boolean  @default(true)
-  price       Decimal?
+  isFree Boolean  @default(true)
+  price  Decimal?
 
-  isPublished Boolean  @default(false)
+  isPublished Boolean @default(false)
 
   // Telegram Protection
-  telegramChatId       String?
-  telegramUsername     String?
-  telegramInviteLink   String?
+  telegramChatId     String?
+  telegramUsername   String?
+  telegramInviteLink String?
 
   modules     Module[]
   enrollments Enrollment[]
   files       CourseFile[]
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Module {
-  id        String @id @default(cuid())
-  title     String
-  order     Int
-
-  courseId  String
-  course    Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
-
-  lessons   Lesson[]
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Lesson {
-  id            String @id @default(cuid())
-  title         String
-  description   String?
+model Module {
+  id    String @id @default(cuid())
+  title String
+  order Int
 
-  provider      VideoProvider
-  videoId       String
-  duration      Int?
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  lessons Lesson[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Postgres does not index foreign keys automatically. Every course page
+  // loads its modules by courseId, and every cascade delete scans for them.
+  @@index([courseId])
+}
+
+model Lesson {
+  id          String  @id @default(cuid())
+  title       String
+  description String?
+
+  provider VideoProvider
+  videoId  String
+  duration Int?
 
   // Defaults to true so every lesson that existed before this migration
   // stays visible to students without a backfill.
-  isPublished   Boolean @default(true)
-  isPreview     Boolean @default(false)
+  isPublished Boolean @default(true)
+  isPreview   Boolean @default(false)
 
-  order         Int
+  order Int
 
-  moduleId       String
-  module         Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+  moduleId String
+  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 
-  progress       LessonProgress[]
-  resources      Resource[]
+  progress  LessonProgress[]
+  resources Resource[]
 
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([moduleId])
 }
 
 model Enrollment {
-  id        String @id @default(cuid())
+  id String @id @default(cuid())
 
-  userId    String
-  courseId  String
+  userId   String
+  courseId String
 
-  user       User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  course     Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
-  status           EnrollmentStatus @default(ACTIVE)
-  lastCheckedAt    DateTime?
-  lastVerifiedAt   DateTime?
+  status         EnrollmentStatus @default(ACTIVE)
+  lastCheckedAt  DateTime?
+  lastVerifiedAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([userId, courseId])
+  // courseId is the trailing column of the unique above, so a per-course
+  // lookup (the admin student counts) cannot use it.
+  @@index([courseId])
 }
 
 model LessonProgress {
-  id        String @id @default(cuid())
+  id String @id @default(cuid())
 
-  userId    String
-  lessonId  String
+  userId   String
+  lessonId String
 
   completed Boolean @default(false)
 
   // Playback state
-  currentTime Int @default(0)
+  currentTime Int   @default(0)
   progress    Float @default(0)
 
   lastWatchedAt DateTime?
-  completedAt  DateTime?
+  completedAt   DateTime?
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
   @@unique([userId, lessonId])
+  // userId needs no index of its own — it leads the unique above, which
+  // Postgres can use for userId-only lookups. lessonId does not, so joins
+  // from a lesson to its progress rows have nothing to use.
+  @@index([lessonId])
 }
 
 model Resource {
-  id          String @id @default(cuid())
+  id String @id @default(cuid())
 
-  lessonId    String
-  lesson       Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  lessonId String
+  lesson   Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
-  title       String
-  type        ResourceType
-  url         String
-  sortOrder   Int @default(1)
+  title     String
+  type      ResourceType
+  url       String
+  sortOrder Int          @default(1)
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@index([lessonId])
 }
 
 model CourseFile {
-  id        String @id @default(cuid())
+  id String @id @default(cuid())
 
-  courseId  String
-  course    Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 
   title String
 
@@ -243,6 +256,8 @@ model CourseFile {
   sortOrder Int @default(1)
 
   createdAt DateTime @default(now())
+
+  @@index([courseId])
 }
 
 // ============================================================
@@ -254,29 +269,29 @@ model CourseFile {
 // ============================================================
 
 model AdminUser {
-  id           String @id @default(cuid())
+  id String @id @default(cuid())
 
   username     String @unique
   passwordHash String
 
-  name         String?
+  name String?
 
-  lastLoginAt  DateTime?
+  lastLoginAt DateTime?
 
-  sessions     AdminSession[]
-  activities   ActivityLog[]
+  sessions   AdminSession[]
+  activities ActivityLog[]
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model AdminSession {
-  id        String @id @default(cuid())
+  id String @id @default(cuid())
 
-  token     String @unique
+  token String @unique
 
-  adminId   String
-  admin     AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  adminId String
+  admin   AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
 
   expiresAt DateTime
 
@@ -289,18 +304,18 @@ model AdminSession {
 // outlive the row it describes, so the feed cannot be derived from the
 // createdAt/updatedAt columns on the content tables.
 model ActivityLog {
-  id         String @id @default(cuid())
+  id String @id @default(cuid())
 
-  type       ActivityType
-  summary    String
+  type    ActivityType
+  summary String
 
   entityType String?
   entityId   String?
 
-  actorId    String?
-  actor      AdminUser? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  actorId String?
+  actor   AdminUser? @relation(fields: [actorId], references: [id], onDelete: SetNull)
 
-  createdAt  DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@index([createdAt])
 }

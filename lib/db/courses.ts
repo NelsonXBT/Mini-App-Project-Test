@@ -1,5 +1,3 @@
-export const dynamic = "force-dynamic";
-
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 
@@ -23,9 +21,6 @@ export async function getCourses() {
 
 export async function getCourse(slug: string) {
   const user = await getCurrentUser();
-
-  console.log("================================");
-  console.log("Looking for course slug:", slug);
 
   const course = await prisma.course.findUnique({
     where: {
@@ -68,10 +63,6 @@ export async function getCourse(slug: string) {
       },
     },
   });
-
-  console.log("Database result:");
-  console.dir(course, { depth: null });
-  console.log("================================");
 
   return course;
 }
