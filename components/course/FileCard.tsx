@@ -47,11 +47,11 @@ export default function FileCard({
         return <NotebookText className={`${shared} text-[var(--text)]`} strokeWidth={stroke} />;
 
       case "website":
-        return <Globe className={`${shared} text-[var(--primary)]`} strokeWidth={stroke} />;
+        return <Globe className={`${shared} text-[#4a6fa8]`} strokeWidth={stroke} />;
 
       case "download":
       default:
-        return <FileText className={`${shared} text-[var(--primary)]`} strokeWidth={stroke} />;
+        return <FileText className={`${shared} text-[var(--text-muted)]`} strokeWidth={stroke} />;
     }
   }
 

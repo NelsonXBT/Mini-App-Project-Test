@@ -31,13 +31,13 @@ export default function ResourceCard({
   const renderIcon = () => {
     switch (icon) {
       case "package":
-        return <Package className={`${shared} text-[var(--primary)]`} strokeWidth={stroke} />;
+        return <Package className={`${shared} text-[var(--text-muted)]`} strokeWidth={stroke} />;
 
       case "clipboard":
         return <ClipboardList className={`${shared} text-[#3f8f63]`} strokeWidth={stroke} />;
 
       case "folder":
-        return <FolderOpen className={`${shared} text-[var(--primary)]`} strokeWidth={stroke} />;
+        return <FolderOpen className={`${shared} text-[#b8802a]`} strokeWidth={stroke} />;
 
       case "palette":
         return <Palette className={`${shared} text-[#7a5cc0]`} strokeWidth={stroke} />;
@@ -49,7 +49,7 @@ export default function ResourceCard({
         return <Rabbit className={`${shared} text-[var(--text)]`} strokeWidth={stroke} />;
 
       case "coins":
-        return <Coins className={`${shared} text-[var(--primary)]`} strokeWidth={stroke} />;
+        return <Coins className={`${shared} text-[#b8802a]`} strokeWidth={stroke} />;
 
       case "trending":
         return <TrendingUp className={`${shared} text-[#3f8f63]`} strokeWidth={stroke} />;

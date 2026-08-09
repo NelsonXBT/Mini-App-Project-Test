@@ -25,7 +25,7 @@ export default function CommunityCard({
         return <MessageCircle className={`${shared} text-[#3f8f63]`} strokeWidth={stroke} />;
 
       case "community":
-        return <Users className={`${shared} text-[var(--primary)]`} strokeWidth={stroke} />;
+        return <Users className={`${shared} text-[#4a6fa8]`} strokeWidth={stroke} />;
 
       case "support":
         return <MessageSquareText className={`${shared} text-[#c47a3d]`} strokeWidth={stroke} />;

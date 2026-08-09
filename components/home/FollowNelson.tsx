@@ -8,26 +8,36 @@ import {
 
 import { PageTitle } from "@/components/ui";
 
+/*
+ * Each icon keeps its own platform tone, muted a step or two from the
+ * official hue so the row sits quietly in the page. Deliberately not the
+ * brand accent: four oxblood glyphs beside the accent used for actions
+ * would spend the colour on something that is not an action.
+ */
 const socials = [
   {
     name: "YouTube",
     href: "#",
     icon: FaYoutube,
+    tone: "text-[#b8443c]",
   },
   {
     name: "Instagram",
     href: "#",
     icon: FaInstagram,
+    tone: "text-[#a8557f]",
   },
   {
     name: "Facebook",
     href: "#",
     icon: FaFacebook,
+    tone: "text-[#4a6fa8]",
   },
   {
     name: "TikTok",
     href: "#",
     icon: FaTiktok,
+    tone: "text-[var(--text)]",
   },
 ];
 
@@ -64,11 +74,11 @@ export default function FollowNelson() {
               "
             >
               <Icon
-                className="
+                className={`
                   h-[15px]
                   w-[15px]
-                  text-[var(--primary)]
-                "
+                  ${social.tone}
+                `}
               />
 
               <span

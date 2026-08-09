@@ -8,4 +8,5 @@ export { default as PageTitle } from "./PageTitle";
 export { default as Progress } from "./Progress";
 export { default as SectionTitle } from "./SectionTitle";
 export { default as Icon } from "./Icon";
+export { default as Logo } from "./Logo";
 export { default as Skeleton } from "./Skeleton";

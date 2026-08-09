@@ -4,6 +4,7 @@ import { Bell, ChevronLeft } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 import IconButton from "@/components/ui/IconButton";
+import Logo from "@/components/ui/Logo";
 
 export default function Header() {
   const pathname = usePathname();
@@ -27,8 +28,8 @@ export default function Header() {
 
   return (
     <header className="player-header flex items-center justify-between gap-3 py-1">
-      <h1 className="text-[1.125rem] font-semibold leading-tight tracking-[-0.02em] text-[var(--text)]">
-        IME Creative Lab
+      <h1>
+        <Logo size="sm" />
       </h1>
 
       <IconButton aria-label="Notifications">
