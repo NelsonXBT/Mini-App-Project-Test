@@ -242,6 +242,26 @@ export async function getHomeLearningCard() {
       },
     });
 
+  /*
+   * Where the resumed lesson actually sits in the course, 1-based.
+   *
+   * The card used to label this `completedLessons + 1`, which only lines up
+   * when the student watches strictly in order — skip ahead and a student
+   * resuming lesson 8 was told they were on lesson 4.
+   */
+  function lessonNumberIn(
+    course: {
+      modules: { lessons: { id: string }[] }[];
+    },
+    lessonId: string
+  ) {
+    const index = course.modules
+      .flatMap((module) => module.lessons)
+      .findIndex((lesson) => lesson.id === lessonId);
+
+    return index === -1 ? 1 : index + 1;
+  }
+
   if (latestProgress) {
     const course = latestProgress.lesson.module.course;
 
@@ -255,6 +275,10 @@ export async function getHomeLearningCard() {
         mode: "continue",
         course,
         lesson: latestProgress.lesson,
+        lessonNumber: lessonNumberIn(
+          course,
+          latestProgress.lessonId
+        ),
         ...stats,
       };
     }
@@ -263,27 +287,30 @@ export async function getHomeLearningCard() {
   // ----------------------------
   // 2. START LEARNING
   //
-  // Any published course the student can open but has not begun. This used
-  // to require an Enrollment row, which only exists for Telegram-gated
-  // courses — so an ungated course never produced a "start" card at all.
+  // A published course the student can actually open but has not begun.
+  //
+  // "Can open" has to mean exactly what CourseGuard means by it, or the card
+  // offers a course that the course page then refuses. The guard checks the
+  // slug against the session's unlockedCourses, and /api/telegram-login only
+  // ever puts a course in that list when it has a telegramChatId *and* the
+  // membership check passes — which is precisely the set of ACTIVE
+  // enrollments it writes on the way through.
+  //
+  // An earlier version also matched `telegramChatId: null` here on the theory
+  // that ungated courses are open to everyone. They are not: the login route
+  // skips them outright, so they never reach unlockedCourses, and every such
+  // card landed the student on "You do not have access to this course yet."
   // ----------------------------
 
   const startable = await prisma.course.findMany({
     where: {
       ...publishedCourse,
-      OR: [
-        // Explicitly granted, or unlocked via Telegram membership.
-        {
-          enrollments: {
-            some: {
-              userId: user.id,
-              status: "ACTIVE",
-            },
-          },
+      enrollments: {
+        some: {
+          userId: user.id,
+          status: "ACTIVE",
         },
-        // Open courses: no Telegram gate configured.
-        { telegramChatId: null },
-      ],
+      },
     },
     orderBy: {
       createdAt: "desc",
@@ -337,14 +364,23 @@ export async function getHomeLearningCard() {
 
   // ----------------------------
   // 3. RECOMMENDED COURSE
+  //
+  // An upsell, so this is the one mode that deliberately points at a course
+  // the student cannot open yet — /courses/<slug> renders CourseGuard's
+  // "Gain Access Now" screen for them.
+  //
+  // Matched on ACTIVE enrollments only. Matching any enrollment row meant a
+  // student whose membership had lapsed to INACTIVE was never shown the
+  // course again, even though they no longer had access to it.
   // ----------------------------
 
-  const recommendedCourse = await prisma.course.findFirst({
+  const recommendable = await prisma.course.findMany({
     where: {
       ...publishedCourse,
       enrollments: {
         none: {
           userId: user.id,
+          status: "ACTIVE",
         },
       },
     },
@@ -363,24 +399,31 @@ export async function getHomeLearningCard() {
     },
   });
 
-  if (recommendedCourse) {
-    const firstLesson = recommendedCourse.modules
-      .flatMap((module) => module.lessons)
-      .at(0);
+  /*
+   * Walk the candidates rather than taking only the newest one. findFirst
+   * returned a single course, so if that one happened to have no lessons yet
+   * — a course still being authored — the card vanished from the home page
+   * entirely instead of recommending the next one down.
+   */
+  for (const course of recommendable) {
+    const lessons = course.modules.flatMap(
+      (module) => module.lessons
+    );
 
-    if (firstLesson) {
-      return {
-        mode: "recommend",
-        course: recommendedCourse,
-        lesson: firstLesson,
-        totalLessons: recommendedCourse.modules.reduce(
-          (sum, module) => sum + module.lessons.length,
-          0
-        ),
-        completedLessons: 0,
-        progress: 0,
-      };
+    const firstLesson = lessons.at(0);
+
+    if (!firstLesson) {
+      continue;
     }
+
+    return {
+      mode: "recommend",
+      course,
+      lesson: firstLesson,
+      totalLessons: lessons.length,
+      completedLessons: 0,
+      progress: 0,
+    };
   }
 
   // ----------------------------
@@ -399,6 +442,10 @@ export async function getHomeLearningCard() {
       mode: "continue",
       course,
       lesson: latestProgress.lesson,
+      lessonNumber: lessonNumberIn(
+        course,
+        latestProgress.lessonId
+      ),
       ...summarise(course, rows),
     };
   }

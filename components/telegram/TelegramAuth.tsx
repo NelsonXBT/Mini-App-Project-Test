@@ -1,6 +1,11 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import {
+  ReactNode,
+  useEffect,
+  useState,
+  useTransition,
+} from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import SplashScreen from "@/components/common/SplashScreen";
@@ -20,6 +25,13 @@ export default function TelegramAuth({
   children: ReactNode;
 }) {
   const [loading, setLoading] = useState(true);
+
+  /*
+   * router.refresh() returns void, so the transition is what tells us when
+   * the re-rendered server payload has actually landed. Used to hold the
+   * splash instead of flashing an empty page.
+   */
+  const [refreshing, startRefresh] = useTransition();
 
   const {
         hasAccess,
@@ -80,7 +92,21 @@ export default function TelegramAuth({
           return;
         }
 
-        
+        /*
+         * The session cookie only exists once the response above lands, but
+         * the server components on this page already rendered without it:
+         * getCurrentUser() found no cookie, so every user-scoped query came
+         * back empty. That is why the home card stayed blank until a manual
+         * reload. Re-run the server tree now that the cookie is attached.
+         *
+         * Skipped when access was refused — no session is created in that
+         * case, and the gate is about to redirect to /no-access anyway.
+         */
+        if (data.hasAccess) {
+          startRefresh(() => {
+            router.refresh();
+          });
+        }
       } catch (error) {
         console.error("Telegram auth failed:", error);
       } finally {
@@ -89,7 +115,7 @@ export default function TelegramAuth({
     }
 
     authenticate();
-  }, []);
+  }, [router]);
 
   const isPublicRoute = publicRoutes.some((route) =>
     pathname.startsWith(route)
@@ -107,7 +133,10 @@ export default function TelegramAuth({
     }
   }, [blocked, router]);
 
-  if (loading) {
+  // Keep the splash up through the post-login refresh too. Dropping it the
+  // moment authenticate() returns would paint one frame of the stale,
+  // user-less server render — the very blank card this fixes.
+  if (loading || refreshing) {
     return <SplashScreen />;
   }
 
