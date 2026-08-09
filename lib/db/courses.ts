@@ -272,7 +272,7 @@ export async function getHomeLearningCard() {
     // inviting the student to continue something already complete.
     if (stats.completedLessons < stats.totalLessons) {
       return {
-        mode: "continue",
+        mode: "continue" as const,
         course,
         lesson: latestProgress.lesson,
         lessonNumber: lessonNumberIn(
@@ -353,7 +353,7 @@ export async function getHomeLearningCard() {
     }
 
     return {
-      mode: "start",
+      mode: "start" as const,
       course,
       lesson: firstLesson,
       totalLessons: lessonIds.length,
@@ -417,7 +417,7 @@ export async function getHomeLearningCard() {
     }
 
     return {
-      mode: "recommend",
+      mode: "recommend" as const,
       course,
       lesson: firstLesson,
       totalLessons: lessons.length,
@@ -439,7 +439,7 @@ export async function getHomeLearningCard() {
     const rows = await progressRowsFor(course.id);
 
     return {
-      mode: "continue",
+      mode: "continue" as const,
       course,
       lesson: latestProgress.lesson,
       lessonNumber: lessonNumberIn(

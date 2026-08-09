@@ -19,16 +19,20 @@ export default async function HomeLearningCard() {
     course,
     lesson,
     totalLessons,
-    completedLessons,
     progress,
   } = learningCard;
 
   const isContinue = mode === "continue";
 
+  /*
+   * "start" is a course the student has access to but has never opened, so
+   * there is nothing to pick back up — that heading belongs to "continue",
+   * the only branch with a resume point.
+   */
   const heading = isContinue
     ? "Continue Learning"
     : mode === "start"
-      ? "Pick Up Where You Left Off"
+      ? "Start Learning"
       : "Recommended For You";
 
   const badge = isContinue
@@ -43,9 +47,18 @@ export default async function HomeLearningCard() {
       ? "Start Learning"
       : "Open Course";
 
-  const lessonText = isContinue
-    ? `Lesson ${completedLessons + 1} of ${totalLessons}`
-    : `${totalLessons} Lessons`;
+  /*
+   * Read off learningCard rather than the destructure: lessonNumber only
+   * exists on the "continue" branch, and checking mode here is what lets
+   * TypeScript narrow the union to it.
+   *
+   * It is the resumed lesson's real position in the course, not
+   * completedLessons + 1 — those only agree when the student watches in order.
+   */
+  const lessonText =
+    learningCard.mode === "continue"
+      ? `Lesson ${learningCard.lessonNumber} of ${totalLessons}`
+      : `${totalLessons} Lessons`;
 
   /*
    * Only the "continue" card deep-links to a lesson — the other two modes have

@@ -1,5 +1,4 @@
-import Header from "@/components/layout/Header";
-import BottomNavigation from "@/components/layout/BottomNavigation";
+import StudentShell from "@/components/layout/StudentShell";
 import TelegramAuth from "@/components/telegram/TelegramAuth";
 
 /**
@@ -12,6 +11,11 @@ import TelegramAuth from "@/components/telegram/TelegramAuth";
  * to happen one level below the root.
  *
  * URLs are unchanged: route groups in parentheses do not appear in the path.
+ *
+ * Two gates, in order. TelegramAuth decides whether this is a validated Mini
+ * App context at all and renders nothing but a message if not; StudentShell
+ * then decides how much chrome the route gets. Header and BottomNavigation
+ * are imported by StudentShell alone, so neither can mount outside Telegram.
  */
 export default function StudentLayout({
   children,
@@ -20,13 +24,7 @@ export default function StudentLayout({
 }) {
   return (
     <TelegramAuth>
-      <main className="app-main mx-auto min-h-screen w-full max-w-md px-4 pt-3 pb-24 sm:px-5">
-        <Header />
-
-        <div className="animate-fade-in">{children}</div>
-      </main>
-
-      <BottomNavigation />
+      <StudentShell>{children}</StudentShell>
     </TelegramAuth>
   );
 }
