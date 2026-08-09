@@ -31,6 +31,20 @@ interface Props {
  */
 const MAX_RECOVERIES = 2;
 
+/*
+ * How long to wait for a stream to produce metadata before calling it dead.
+ *
+ * hls.js does not report a second fatal error after startLoad(): it retries
+ * internally with backoff and stays silent, so a permanently broken URL (a
+ * deleted Bunny video, a typo'd playlist) emits exactly one fatal event and
+ * then nothing. Without this timer the retry path would leave the student on
+ * the same endless spinner this error handling exists to remove.
+ *
+ * Generous on purpose — a slow mobile connection should be given every chance
+ * before being told the video is broken.
+ */
+const STALL_TIMEOUT_MS = 20000;
+
 const NETWORK_MESSAGE =
   "We couldn't reach this video. Check your connection and try again.";
 const MEDIA_MESSAGE =
@@ -61,8 +75,39 @@ const VideoCanvas = forwardRef<HTMLVideoElement, Props>(
 
       let hls: Hls | undefined;
       let recoveries = 0;
+      let watchdog: ReturnType<typeof setTimeout> | undefined;
+      let reported = false;
+
+      /*
+       * Every failure path funnels through here, so the spinner can never
+       * outlive the stream and the student can never be shown two errors for
+       * one broken video.
+       */
+      const fail = (message: string) => {
+        if (reported) return;
+        reported = true;
+
+        clearTimeout(watchdog);
+
+        hls?.destroy();
+        hls = undefined;
+
+        onLoading(false);
+        onError(message);
+      };
+
+      /*
+       * (Re)start the deadline for the stream to prove it is alive. Armed on
+       * first load and again after each recovery attempt, since a recovery
+       * that silently fails is indistinguishable from one still in progress.
+       */
+      const armWatchdog = () => {
+        clearTimeout(watchdog);
+        watchdog = setTimeout(() => fail(NETWORK_MESSAGE), STALL_TIMEOUT_MS);
+      };
 
       onLoading(true);
+      armWatchdog();
 
       if (video.canPlayType("application/vnd.apple.mpegurl")) {
         // Native HLS (Safari, iOS). hls.js never loads here, so the only
@@ -75,6 +120,29 @@ const VideoCanvas = forwardRef<HTMLVideoElement, Props>(
 
         hls.attachMedia(video);
 
+        /*
+         * A parsed manifest proves the URL is reachable and valid, which is
+         * exactly what the initial deadline is testing for. Cleared here
+         * rather than waiting for playback, so a device that can fetch the
+         * stream but is slow to decode is never told the video is broken.
+         *
+         * Safe to clear this early: any later failure re-arms the deadline
+         * before retrying, so a manifest that parses and then serves dead
+         * fragments is still caught.
+         */
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+          clearTimeout(watchdog);
+        });
+
+        /*
+         * A buffered fragment is the proof used after a recovery attempt,
+         * when the manifest has long since parsed: loadedmetadata does not
+         * fire a second time, and timeupdate needs playback to be running.
+         */
+        hls.on(Hls.Events.FRAG_BUFFERED, () => {
+          clearTimeout(watchdog);
+        });
+
         hls.on(Hls.Events.ERROR, (_, data) => {
           /*
            * Non-fatal errors are hls.js reporting that it already retried a
@@ -86,29 +154,28 @@ const VideoCanvas = forwardRef<HTMLVideoElement, Props>(
           if (recoveries < MAX_RECOVERIES) {
             if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
               recoveries += 1;
+              armWatchdog();
               hls?.startLoad();
               return;
             }
 
             if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
               recoveries += 1;
+              armWatchdog();
               hls?.recoverMediaError();
               return;
             }
           }
 
           // Out of retries, or an error type neither call can heal.
-          hls?.destroy();
-          hls = undefined;
-
-          onLoading(false);
-          onError(
+          fail(
             data.type === Hls.ErrorTypes.NETWORK_ERROR
               ? NETWORK_MESSAGE
               : MEDIA_MESSAGE
           );
         });
       } else {
+        clearTimeout(watchdog);
         onLoading(false);
         onError("This browser can't play this video.");
 
@@ -116,6 +183,8 @@ const VideoCanvas = forwardRef<HTMLVideoElement, Props>(
       }
 
       const loaded = () => {
+        clearTimeout(watchdog);
+
         onLoading(false);
 
         onLoaded(video.duration);
@@ -131,8 +200,7 @@ const VideoCanvas = forwardRef<HTMLVideoElement, Props>(
        * spinner turning with nothing behind it.
        */
       const failed = () => {
-        onLoading(false);
-        onError(NETWORK_MESSAGE);
+        fail(NETWORK_MESSAGE);
       };
 
       video.addEventListener("loadedmetadata", loaded);
@@ -150,6 +218,14 @@ const VideoCanvas = forwardRef<HTMLVideoElement, Props>(
       video.addEventListener("error", failed);
 
       return () => {
+        /*
+         * Cleared before destroy so a pending deadline cannot fire against an
+         * unmounted player — on lesson auto-advance this component is torn
+         * down and rebuilt immediately, and a stale timer would post an error
+         * over the next lesson.
+         */
+        clearTimeout(watchdog);
+
         hls?.destroy();
 
         video.removeEventListener("loadedmetadata", loaded);

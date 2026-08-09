@@ -5,12 +5,17 @@ import { ADMIN_COOKIE } from "@/lib/admin/constants";
 /**
  * Convenience redirect only.
  *
- * Middleware runs on the edge and cannot reach Prisma, so it can do no more
- * than check that a session cookie is present. Real verification happens in
- * app/(admin)/admin/layout.tsx and again at the top of every admin server
- * action — a forged cookie gets past this and no further.
+ * Proxy runs on the edge and cannot reach Prisma, so it can do no more than
+ * check that a session cookie is present. Real verification happens in
+ * app/(admin)/admin/(protected)/layout.tsx and again at the top of every
+ * admin server action via requireAdmin() — a forged cookie gets past this and
+ * no further.
+ *
+ * Named `proxy` in `proxy.ts` because Next.js 16 renamed the middleware file
+ * convention; the behaviour is identical, and the matcher below still scopes
+ * it to the admin tree so no student route pays for it.
  */
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   const isLoginPage = pathname === "/admin/login";
