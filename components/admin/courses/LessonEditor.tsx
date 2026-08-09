@@ -116,7 +116,7 @@ export default function LessonEditor({
               gap-1.5
               text-[12px]
               font-medium
-              text-[var(--primary)]
+              text-[var(--primary-text)]
               transition-opacity
               duration-200
               hover:opacity-70
@@ -189,7 +189,7 @@ export default function LessonEditor({
                         )}
 
                         {lesson.isPreview && (
-                          <span className="inline-flex items-center gap-1 text-[var(--primary)]">
+                          <span className="inline-flex items-center gap-1 text-[var(--primary-text)]">
                             · <Eye className="h-3 w-3" /> Preview
                           </span>
                         )}
@@ -232,7 +232,7 @@ export default function LessonEditor({
                         resourcesFor === lesson.id ? null : lesson.id
                       )
                     }
-                    className="mt-1.5 text-[11px] font-medium text-[var(--primary)] transition-opacity hover:opacity-70"
+                    className="mt-1.5 text-[11px] font-medium text-[var(--primary-text)] transition-opacity hover:opacity-70"
                   >
                     {resourcesFor === lesson.id ? "Hide" : "Manage"}{" "}
                     resources

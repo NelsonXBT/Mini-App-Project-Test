@@ -42,7 +42,7 @@ export default function Avatar({
         rounded-[var(--radius-pill)]
         bg-[var(--primary-soft)]
         font-semibold
-        text-[var(--primary)]
+        text-[var(--primary-text)]
         ${dimensions}
       `}
     >

@@ -90,7 +90,7 @@ export default function AdminHeader({
             bg-[var(--primary-soft)]
             text-[13px]
             font-semibold
-            text-[var(--primary)]
+            text-[var(--primary-text)]
           "
           title={adminName}
         >

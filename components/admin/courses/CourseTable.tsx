@@ -163,7 +163,7 @@ export default function CourseTable({
                 <div className="min-w-0 flex-1">
                   <Link
                     href={`/admin/courses/${course.id}`}
-                    className="block truncate text-[14px] font-medium tracking-tight text-[var(--text)] hover:text-[var(--primary)]"
+                    className="block truncate text-[14px] font-medium tracking-tight text-[var(--text)] hover:text-[var(--primary-text)]"
                   >
                     {course.title}
                   </Link>

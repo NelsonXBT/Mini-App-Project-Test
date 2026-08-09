@@ -106,7 +106,7 @@ export default function ModuleCard({
             ease-out
             ${
               isExpanded
-                ? "rotate-180 text-[var(--primary)]"
+                ? "rotate-180 text-[var(--primary-text)]"
                 : "text-[var(--text-muted)]"
             }
           `}

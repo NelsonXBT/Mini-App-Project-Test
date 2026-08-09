@@ -126,7 +126,7 @@ export default function LessonCard({
 
               ${
                 selected
-                  ? "text-[var(--primary)]"
+                  ? "text-[var(--primary-text)]"
                   : "text-[var(--text)]"
               }
             `}
@@ -162,7 +162,7 @@ export default function LessonCard({
 
               ${
                 selected
-                  ? "text-[var(--primary)]"
+                  ? "text-[var(--primary-text)]"
                   : "text-[var(--text-subtle)] group-hover:translate-x-0.5"
               }
             `}

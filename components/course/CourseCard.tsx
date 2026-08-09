@@ -119,7 +119,7 @@ export default function CourseCard({
                 className="
                   h-4
                   w-4
-                  text-[var(--primary)]
+                  text-[var(--primary-text)]
                   transition-transform
                   duration-200
                   ease-out

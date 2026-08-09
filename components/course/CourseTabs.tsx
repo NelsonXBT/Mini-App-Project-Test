@@ -55,7 +55,7 @@ export default function CourseTabs({
               ease-out
               ${
                 active
-                  ? "text-[var(--primary)]"
+                  ? "text-[var(--primary-text)]"
                   : "text-[var(--text-muted)] hover:text-[var(--text)]"
               }
             `}

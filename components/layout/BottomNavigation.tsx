@@ -89,7 +89,7 @@ export default function BottomNavigation() {
                 duration-200
                 ${
                   active
-                  ? "bg-[var(--primary-soft)] text-[var(--primary)]"
+                  ? "bg-[var(--primary-soft)] text-[var(--primary-text)]"
                   : "text-[var(--text-muted)] hover:text-[var(--text)]"
                 }
               `}

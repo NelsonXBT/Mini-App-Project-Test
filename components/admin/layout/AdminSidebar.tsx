@@ -146,7 +146,7 @@ export default function AdminSidebar({
                   ease-out
                   ${
                     active
-                      ? "bg-[var(--primary-soft)] text-[var(--primary)]"
+                      ? "bg-[var(--primary-soft)] text-[var(--primary-text)]"
                       : "text-[var(--text-muted)] hover:bg-[var(--surface-secondary)] hover:text-[var(--text)]"
                   }
                 `}

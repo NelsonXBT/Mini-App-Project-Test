@@ -47,7 +47,7 @@ export default function StatsCard({
           "
         >
           <Icon
-            className="h-4 w-4 text-[var(--primary)]"
+            className="h-4 w-4 text-[var(--primary-text)]"
             strokeWidth={1.9}
           />
         </span>

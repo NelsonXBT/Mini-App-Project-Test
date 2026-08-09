@@ -23,7 +23,7 @@ export default function CommunityBanner() {
       {/* Accent hairline */}
 
       <span
-        className="absolute inset-x-0 top-0 h-px bg-[var(--primary)]/40"
+        className="absolute inset-x-0 top-0 h-px bg-[var(--accent-quiet)]/50"
         aria-hidden="true"
       />
 

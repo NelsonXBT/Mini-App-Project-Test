@@ -33,7 +33,7 @@ export default async function RecentStudents() {
 
         <Link
           href="/admin/students"
-          className="text-[12px] font-medium text-[var(--primary)] transition-opacity duration-200 hover:opacity-70"
+          className="text-[12px] font-medium text-[var(--primary-text)] transition-opacity duration-200 hover:opacity-70"
         >
           View all
         </Link>

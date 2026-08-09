@@ -143,7 +143,7 @@ export default function LinkListEditor({
         {!creating && (
           <button
             onClick={() => setCreating(true)}
-            className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[var(--primary)] transition-opacity duration-200 hover:opacity-70"
+            className="inline-flex items-center gap-1.5 text-[12px] font-medium text-[var(--primary-text)] transition-opacity duration-200 hover:opacity-70"
           >
             <Plus className="h-3.5 w-3.5" strokeWidth={2.1} />
             {addLabel}

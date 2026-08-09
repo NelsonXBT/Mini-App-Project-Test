@@ -25,7 +25,7 @@ type IconProps = {
 const toneClasses: Record<IconTone, string> = {
   default: "text-[var(--text)]",
   muted: "text-[var(--text-muted)]",
-  accent: "text-[var(--primary)]",
+  accent: "text-[var(--primary-text)]",
   success: "text-[var(--success)]",
   danger: "text-[var(--danger)]",
 };

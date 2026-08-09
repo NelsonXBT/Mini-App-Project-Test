@@ -121,7 +121,7 @@ export default function FileCard({
           px-3
           text-[13px]
           font-medium
-          text-[var(--primary)]
+          text-[var(--primary-text)]
           transition-all
           duration-200
           ease-out
