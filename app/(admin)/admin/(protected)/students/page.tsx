@@ -15,7 +15,7 @@ export default async function AdminStudentsPage() {
   return (
     <div className="animate-rise-in space-y-5">
       <div>
-        <h1 className="text-[1.375rem] font-semibold leading-tight tracking-[-0.025em] text-[var(--text)]">
+        <h1 className="text-[1.5rem] font-semibold leading-tight tracking-[-0.025em] text-[var(--text)]">
           Students
         </h1>
 

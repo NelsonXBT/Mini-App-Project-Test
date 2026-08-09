@@ -27,6 +27,8 @@ export default async function AdminLoginPage() {
             </p>
           )}
 
+          {/* Held a step below the other page H1s on purpose: the wordmark
+              sits directly above it and should stay the dominant mark. */}
           <h1 className="mt-4 text-[1.375rem] font-semibold leading-tight tracking-[-0.025em] text-[var(--text)]">
             Admin sign in
           </h1>
