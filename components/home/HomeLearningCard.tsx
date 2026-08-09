@@ -19,6 +19,7 @@ export default async function HomeLearningCard() {
     course,
     lesson,
     totalLessons,
+    lessonNumber,
     progress,
   } = learningCard;
 
@@ -48,17 +49,13 @@ export default async function HomeLearningCard() {
       : "Open Course";
 
   /*
-   * Read off learningCard rather than the destructure: lessonNumber only
-   * exists on the "continue" branch, and checking mode here is what lets
-   * TypeScript narrow the union to it.
-   *
-   * It is the resumed lesson's real position in the course, not
-   * completedLessons + 1 — those only agree when the student watches in order.
+   * The resumed lesson's real position in the course, not completedLessons + 1
+   * — those only agree when the student watches strictly in order. Every mode
+   * now carries a lessonNumber, so this needs no union narrowing.
    */
-  const lessonText =
-    learningCard.mode === "continue"
-      ? `Lesson ${learningCard.lessonNumber} of ${totalLessons}`
-      : `${totalLessons} Lessons`;
+  const lessonText = isContinue
+    ? `Lesson ${lessonNumber} of ${totalLessons}`
+    : `${totalLessons} Lessons`;
 
   /*
    * Only the "continue" card deep-links to a lesson — the other two modes have

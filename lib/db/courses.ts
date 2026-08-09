@@ -152,6 +152,30 @@ export async function getHomeLearningCard() {
    */
   const publishedCourse = { isPublished: true } as const;
 
+  /*
+   * A course the student can actually open, right now.
+   *
+   * This is the single definition of "accessible" for every branch below, and
+   * it deliberately mirrors what CourseGuard enforces on the course page: an
+   * ACTIVE enrollment, which /api/telegram-login writes only after a passing
+   * Telegram membership check and now deactivates the moment one fails.
+   *
+   * "Continue" used to filter on isPublished alone. Access is not permanent —
+   * a student removed from one course chat and added to another kept a stale
+   * ACTIVE-looking history for the old course, so the card welcomed them back
+   * to a course the guard then refused. Past progress is not present access,
+   * and only the enrollment says which is which.
+   */
+  const accessibleCourse = {
+    ...publishedCourse,
+    enrollments: {
+      some: {
+        userId: user.id,
+        status: "ACTIVE",
+      },
+    },
+  } as const;
+
   function summarise(
     course: {
       modules: { lessons: { id: string }[] }[];
@@ -202,6 +226,11 @@ export async function getHomeLearningCard() {
   //
   // Checked before "start" so a student who is mid-course is always taken
   // back to where they stopped rather than to the top of another course.
+  //
+  // Scoped to courses the student can still open. Progress rows outlive
+  // access — losing a course does not erase what was watched — so without
+  // this filter the most recent row wins even when it belongs to a course
+  // that is no longer theirs, and the card offers a locked course.
   // ----------------------------
 
   const latestProgress =
@@ -211,7 +240,7 @@ export async function getHomeLearningCard() {
         lastWatchedAt: { not: null },
         lesson: {
           module: {
-            course: publishedCourse,
+            course: accessibleCourse,
           },
         },
       },
@@ -303,15 +332,7 @@ export async function getHomeLearningCard() {
   // ----------------------------
 
   const startable = await prisma.course.findMany({
-    where: {
-      ...publishedCourse,
-      enrollments: {
-        some: {
-          userId: user.id,
-          status: "ACTIVE",
-        },
-      },
-    },
+    where: accessibleCourse,
     orderBy: {
       createdAt: "desc",
     },
@@ -356,6 +377,9 @@ export async function getHomeLearningCard() {
       mode: "start" as const,
       course,
       lesson: firstLesson,
+      // Nothing watched yet, so the entry point is lesson 1. Present on every
+      // branch so the card reads one field rather than narrowing the union.
+      lessonNumber: 1,
       totalLessons: lessonIds.length,
       completedLessons: 0,
       progress: 0,
@@ -420,6 +444,8 @@ export async function getHomeLearningCard() {
       mode: "recommend" as const,
       course,
       lesson: firstLesson,
+      // Not started — and not owned. Lesson 1 is the notional entry point.
+      lessonNumber: 1,
       totalLessons: lessons.length,
       completedLessons: 0,
       progress: 0,
@@ -429,8 +455,11 @@ export async function getHomeLearningCard() {
   // ----------------------------
   // 4. FALLBACK
   //
-  // Every published course is finished. Send the student back to the most
+  // Every accessible course is finished. Send the student back to the most
   // recent one so the card still links somewhere useful.
+  //
+  // Safe to reuse latestProgress: it is already scoped to accessibleCourse,
+  // so this cannot resurrect a course whose access was revoked.
   // ----------------------------
 
   if (latestProgress) {

@@ -62,6 +62,18 @@ export async function POST(req: NextRequest) {
           slug: string;
         }[] = [];
 
+    /*
+     * Gated courses this student is NOT in the chat for.
+     *
+     * The loop below used to just `continue` past a failed membership check,
+     * which meant losing access was never written down: the Enrollment row
+     * stayed ACTIVE forever, and nothing else in the app ever set INACTIVE.
+     * A student who lost access to one course and gained another then had two
+     * ACTIVE rows, and the home card happily offered the one they could no
+     * longer open.
+     */
+    const revokedCourseIds: string[] = [];
+
     for (const course of courses) {
       console.log("--------------------------------");
       console.log("Course:", course.title);
@@ -85,15 +97,50 @@ export async function POST(req: NextRequest) {
 
       if (!member) {
         console.log("❌ User not a member");
+        revokedCourseIds.push(course.id);
         continue;
       }
 
-    
+
       unlockedCourses.push({
         id: course.id,
         slug: course.slug,
       });
           }
+
+/*
+ * Write the revocations down before deciding anything else.
+ *
+ * Only for a student we already know about — looking them up rather than
+ * upserting keeps the existing behaviour of never creating a User row for
+ * someone who has never had access.
+ *
+ * Scoped to courses we actually checked, so a manual grant from the admin
+ * panel for an ungated course is left alone: those are skipped above and
+ * never reach revokedCourseIds.
+ */
+const existingUser = await prisma.user.findUnique({
+  where: {
+    telegramId: BigInt(telegramUser.id),
+  },
+  select: { id: true },
+});
+
+if (existingUser && revokedCourseIds.length > 0) {
+  const { count } = await prisma.enrollment.updateMany({
+    where: {
+      userId: existingUser.id,
+      courseId: { in: revokedCourseIds },
+      status: "ACTIVE",
+    },
+    data: {
+      status: "INACTIVE",
+      lastCheckedAt: new Date(),
+    },
+  });
+
+  console.log(`Deactivated ${count} revoked enrollment(s)`);
+}
 
 
 if (unlockedCourses.length === 0) {
