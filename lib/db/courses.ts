@@ -1,6 +1,23 @@
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/lib/auth";
 
+/*
+ * Students only ever see published lessons.
+ *
+ * Unpublishing is how a half-written lesson is kept out of the course while
+ * it is being authored, but nothing in the student tree filtered on it: the
+ * lesson list rendered it, module headers counted it, and the progress bar
+ * measured against it — so a course could never reach 100%, and the home
+ * card treated a finished course as still in progress.
+ *
+ * Admin reads deliberately do NOT use this. lib/db/admin/courses.ts has its
+ * own fetchers, and an editor has to see the drafts they are working on.
+ */
+const publishedLessons = {
+  where: { isPublished: true },
+  orderBy: { order: "asc" },
+} as const;
+
 export async function getCourses() {
   return prisma.course.findMany({
     where: {
@@ -11,8 +28,11 @@ export async function getCourses() {
     },
     include: {
       modules: {
+        orderBy: {
+          order: "asc",
+        },
         include: {
-          lessons: true,
+          lessons: publishedLessons,
         },
       },
     },
@@ -33,9 +53,7 @@ export async function getCourse(slug: string) {
         },
         include: {
           lessons: {
-            orderBy: {
-              order: "asc",
-            },
+            ...publishedLessons,
             include: {
               resources: true,
 
@@ -82,6 +100,7 @@ export async function getCourseProgress(
 
   const lessons = await prisma.lesson.findMany({
     where: {
+      isPublished: true,
       module: {
         courseId,
       },
@@ -206,11 +225,20 @@ export async function getHomeLearningCard() {
     };
   }
 
+  /*
+   * Progress rows for a course, scoped to published lessons.
+   *
+   * summarise() divides by the published lesson count, so counting progress
+   * on unpublished ones would let a student who completed a lesson that was
+   * later withdrawn report more completions than the course has lessons —
+   * and a progress percentage above 100.
+   */
   async function progressRowsFor(courseId: string) {
     return prisma.lessonProgress.findMany({
       where: {
         userId: user!.id,
         lesson: {
+          isPublished: true,
           module: { courseId },
         },
       },
@@ -239,6 +267,11 @@ export async function getHomeLearningCard() {
         userId: user.id,
         lastWatchedAt: { not: null },
         lesson: {
+          // The card deep-links to this lesson, so it has to be one the
+          // course page will actually render — otherwise "Continue Lesson"
+          // opens a course whose list no longer contains it and the player
+          // falls back to lesson 1.
+          isPublished: true,
           module: {
             course: accessibleCourse,
           },
@@ -257,9 +290,7 @@ export async function getHomeLearningCard() {
                     modules: {
                       orderBy: { order: "asc" },
                       include: {
-                        lessons: {
-                          orderBy: { order: "asc" },
-                        },
+                        lessons: publishedLessons,
                       },
                     },
                   },
@@ -340,9 +371,7 @@ export async function getHomeLearningCard() {
       modules: {
         orderBy: { order: "asc" },
         include: {
-          lessons: {
-            orderBy: { order: "asc" },
-          },
+          lessons: publishedLessons,
         },
       },
     },
@@ -415,9 +444,7 @@ export async function getHomeLearningCard() {
       modules: {
         orderBy: { order: "asc" },
         include: {
-          lessons: {
-            orderBy: { order: "asc" },
-          },
+          lessons: publishedLessons,
         },
       },
     },
