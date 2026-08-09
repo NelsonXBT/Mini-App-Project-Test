@@ -19,7 +19,7 @@
      accent reads as part of the palette instead of applied on top of it.
      The shift is a point or two of hue — never enough to read as pink. */
 
-  --background: #f7f5f4;
+  --background: #faf9f8;
   --surface: #ffffff;
   --surface-secondary: #f1eeed;
 
@@ -112,7 +112,7 @@
      language more contrast, without changing either token globally.
   =========================== */
 
-  --admin-ground: #efebe9;
+  --admin-ground: #f2efed;
 
   --shadow-panel:
     0 0 0 1px rgba(28, 18, 18, 0.05),
