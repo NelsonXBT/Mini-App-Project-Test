@@ -1,4 +1,5 @@
 import Daluplayer from "@/components/player/Daluplayer";
+import { lessonPosterUrl } from "@/lib/player/poster";
 
 type VideoPlayerProps = {
   lessonId: string;
@@ -20,6 +21,13 @@ export default function VideoPlayer({
   onEnded,
 }: VideoPlayerProps) {
   if (provider === "bunny") {
+    /*
+     * Derived here rather than in Daluplayer: this is the one component that
+     * already holds both provider and videoId, and it keeps the player itself
+     * unaware of where any particular host puts its thumbnails.
+     */
+    const poster = lessonPosterUrl({ provider, videoId });
+
     return (
       <div
         className="
@@ -33,6 +41,7 @@ export default function VideoPlayer({
         <Daluplayer
         lessonId={lessonId}
         src={videoId}
+        poster={poster}
         countdown={countdown}
         autoPlay={autoPlay}
         resumeAt={resumeAt}

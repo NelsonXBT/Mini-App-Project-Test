@@ -5,6 +5,7 @@ import Hls from "hls.js";
 
 interface Props {
   src: string;
+  poster?: string | null;
   onLoaded: (duration: number) => void;
   onTimeUpdate: (time: number) => void;
   onPlay: () => void;
@@ -18,6 +19,7 @@ const VideoCanvas = forwardRef<HTMLVideoElement, Props>(
   (
     {
       src,
+      poster,
       onLoaded,
       onTimeUpdate,
       onPlay,
@@ -120,6 +122,18 @@ const VideoCanvas = forwardRef<HTMLVideoElement, Props>(
         ref={ref}
         playsInline
         preload="metadata"
+        /*
+         * The native attribute rather than an overlaid <img>: the browser
+         * clears it on the first decoded frame with no play-state tracking of
+         * ours, and a poster that fails to load falls back to the black
+         * background the player showed before this existed — where an <img>
+         * would leave a broken-image icon over the video.
+         *
+         * object-contain on the element letterboxes the poster the same way
+         * it letterboxes the video, so the still and the first frame occupy
+         * exactly the same box and playback starts without a visible jump.
+         */
+        poster={poster ?? undefined}
         onClick={onClick}
         className="absolute inset-0 w-full h-full object-contain bg-black"
         />

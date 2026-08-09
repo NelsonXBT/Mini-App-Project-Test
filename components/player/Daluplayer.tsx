@@ -14,6 +14,11 @@ import { registerPlayer } from "@/lib/player/controller";
 export interface DaluplayerProps {
   lessonId: string;
   src: string;
+  /*
+   * Still frame shown until playback produces one. Optional, and null when
+   * the lesson's video URL is not a shape we can derive a poster from.
+   */
+  poster?: string | null;
   countdown?: number | null;
   onEnded?: () => void;
   autoPlay?: boolean;
@@ -72,6 +77,7 @@ function teardownFullscreen() {
 export default function Daluplayer({
   lessonId,
   src,
+  poster,
   countdown,
   onEnded,
   autoPlay,
@@ -453,6 +459,7 @@ export default function Daluplayer({
       <VideoCanvas
         ref={videoRef}
         src={src}
+        poster={poster}
         onLoaded={(videoDuration) => {
           setDuration(videoDuration);
           setLoading(false);
