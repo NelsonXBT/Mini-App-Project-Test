@@ -3,6 +3,7 @@
 import {
   ReactNode,
   useEffect,
+  useRef,
   useState,
   useSyncExternalStore,
   useTransition,
@@ -51,9 +52,7 @@ type Validation =
  * a frame.
  *
  * The value never changes for the lifetime of the page, so subscribe is a
- * no-op. getServerSnapshot returns false because the server cannot see
- * window — the server HTML is the brand-free "checking" state, and hydration
- * then commits the real answer.
+ * no-op.
  */
 const subscribeToTelegram = () => () => {};
 
@@ -91,10 +90,49 @@ export default function TelegramAuth({
    */
   const [refreshing, startRefresh] = useTransition();
 
+  /*
+   * Safety valve on that hold.
+   *
+   * Holding the splash until the refresh settles is a nicety — it avoids one
+   * frame of the stale, user-less render. An endless spinner is not a nicety,
+   * and gating the whole app on a transition makes that the failure mode if
+   * the refresh is ever slow or never resolves. After this timeout the app
+   * renders regardless; the worst case is the brief flash the hold was there
+   * to avoid, which beats a student staring at a spinning logo.
+   */
+  const [refreshTimedOut, setRefreshTimedOut] =
+    useState(false);
+
+  useEffect(() => {
+    if (!refreshing) {
+      return;
+    }
+
+    const timer = setTimeout(
+      () => setRefreshTimedOut(true),
+      4000
+    );
+
+    return () => clearTimeout(timer);
+  }, [refreshing]);
+
   const { hasAccess, setSession } = useSession();
 
   const pathname = usePathname();
   const router = useRouter();
+
+  /*
+   * Login is fired exactly once per mount.
+   *
+   * Each response carries fresh object identities, so setSession() re-rendered
+   * the provider, which changed the effect's dependencies, which re-ran the
+   * effect — a login loop that hammered /api/telegram-login and left the app
+   * pinned on the splash. SessionContext now memoises setSession, and this
+   * guard makes the effect independent of that: nothing about a dependency
+   * identity can produce a second POST. It also absorbs StrictMode's
+   * deliberate double-invoke in development.
+   */
+  const loginStarted = useRef(false);
 
   /*
    * Backend HMAC validation. Gated on inTelegram, so it can only ever fire
@@ -103,9 +141,11 @@ export default function TelegramAuth({
    * plain browser tab reached /no-access with the full shell around it.
    */
   useEffect(() => {
-    if (!inTelegram) {
+    if (!inTelegram || loginStarted.current) {
       return;
     }
+
+    loginStarted.current = true;
 
     const tg = window.Telegram?.WebApp;
 
@@ -128,31 +168,27 @@ export default function TelegramAuth({
 
         const data = await response.json();
 
-        console.log("Telegram Auth:", data);
-
-        setSession({
-            user: data.user ?? null,
-            hasAccess: data.hasAccess,
-            unlockedCourses: data.unlockedCourses ?? [],
-            });
-
-            console.log("Session saved:", {
-              user: data.user,
-              hasAccess: data.hasAccess,
-              unlockedCourses: data.unlockedCourses,
-              });
-
         /*
          * A rejected HMAC means the initData did not come from Telegram, so
          * this is not a validated Mini App context either — treat it the
          * same as having no initData at all rather than handing the visitor
          * to the access gate.
+         *
+         * Checked before the session is written, so nothing from an
+         * unvalidated response can reach the access gate: step 2 finishes
+         * before step 3 has any data to read.
          */
         if (!response.ok || !data.success) {
           console.error("Authentication failed:", data);
           setValidation("rejected");
           return;
         }
+
+        setSession({
+          user: data.user ?? null,
+          hasAccess: data.hasAccess,
+          unlockedCourses: data.unlockedCourses ?? [],
+        });
 
         /*
          * The session cookie only exists once the response above lands, but
@@ -169,6 +205,7 @@ export default function TelegramAuth({
             router.refresh();
           });
         }
+
         setValidation("verified");
       } catch (error) {
         console.error("Telegram auth failed:", error);
@@ -233,8 +270,14 @@ export default function TelegramAuth({
    * the branded splash is appropriate. Held through the post-login refresh
    * too: dropping it the moment validation returns would paint one frame of
    * the stale, user-less server render — the blank card this fixes.
+   *
+   * The hold is capped by refreshTimedOut: the refresh must not be able to
+   * pin the splash forever.
    */
-  if (validation === "pending" || refreshing) {
+  if (
+    validation === "pending" ||
+    (refreshing && !refreshTimedOut)
+  ) {
     return <SplashScreen />;
   }
 

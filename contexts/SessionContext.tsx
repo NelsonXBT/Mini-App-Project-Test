@@ -2,7 +2,9 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
+  useMemo,
   useState,
   ReactNode,
 } from "react";
@@ -41,20 +43,34 @@ export function SessionProvider({
   const [unlockedCourses, setUnlockedCourses] =
     useState<string[]>([]);
 
-  return (
-    <SessionContext.Provider
-      value={{
-  user,
-  hasAccess,
-  unlockedCourses,
+  /*
+   * A new setSession identity on every render was re-triggering any effect
+   * that listed it as a dependency. TelegramAuth's login effect does, so a
+   * successful login re-ran it, POSTed /api/telegram-login again, and the
+   * loop never settled — a logged-in user's session cookie was created, but
+   * the app stayed on the splash forever.
+   */
+  const setSession = useCallback(
+    (session: SessionData) => {
+      setUser(session.user);
+      setHasAccess(session.hasAccess);
+      setUnlockedCourses(session.unlockedCourses);
+    },
+    []
+  );
 
-  setSession: (session: SessionData) => {
-    setUser(session.user);
-    setHasAccess(session.hasAccess);
-    setUnlockedCourses(session.unlockedCourses);
-       },
-    }}
-    >
+  const value = useMemo(
+    () => ({
+      user,
+      hasAccess,
+      unlockedCourses,
+      setSession,
+    }),
+    [user, hasAccess, unlockedCourses, setSession]
+  );
+
+  return (
+    <SessionContext.Provider value={value}>
       {children}
     </SessionContext.Provider>
   );
