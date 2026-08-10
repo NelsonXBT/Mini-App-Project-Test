@@ -26,15 +26,15 @@ export default async function HomeLearningCard() {
   const isContinue = mode === "continue";
 
   /*
-   * "start" is a course the student has access to but has never opened, so
-   * there is nothing to pick back up — that heading belongs to "continue",
-   * the only branch with a resume point.
+   * Only the recommendation gets a heading.
+   *
+   * "Continue Learning" and "Start Learning" said exactly what the card's own
+   * button already said, one line below it — the label was pure repetition and
+   * cost a row of vertical space on a phone. "Recommended For You" is the one
+   * heading carrying information the card cannot: that this course was chosen
+   * for the student rather than already being theirs.
    */
-  const heading = isContinue
-    ? "Continue Learning"
-    : mode === "start"
-      ? "Start Learning"
-      : "Recommended For You";
+  const isRecommendation = !isContinue && mode !== "start";
 
   const badge = isContinue
     ? `${progress}%`
@@ -68,7 +68,14 @@ export default async function HomeLearningCard() {
 
   return (
     <section>
-      <PageTitle as="h2">{heading}</PageTitle>
+      {isRecommendation && (
+        <PageTitle
+          as="h2"
+          className="text-[var(--primary-text)]"
+        >
+          Recommended For You
+        </PageTitle>
+      )}
 
       <LearningCard
         thumbnail={

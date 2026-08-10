@@ -22,11 +22,12 @@ export default function StudentLoading() {
         <Skeleton className="mt-1.5 h-6 w-24" />
       </section>
 
-      {/* Learning card */}
+      {/* Learning card
+          No heading placeholder: only the recommendation branch renders a
+          title now, so reserving a line here would flash a bar that the
+          loaded card usually does not have, and shift the layout. */}
 
       <section>
-        <Skeleton className="mb-2.5 h-3.5 w-40" />
-
         <div className="overflow-hidden rounded-[var(--radius)] border border-[var(--border)] bg-[var(--card)] shadow-[var(--shadow-card)]">
           <Skeleton className="h-40 w-full rounded-none" />
 
@@ -47,7 +48,8 @@ export default function StudentLoading() {
       {/* Connect */}
 
       <section>
-        <Skeleton className="mb-2.5 h-3.5 w-20" />
+        {/* Widened to match "Connect With Nelson Edeh". */}
+        <Skeleton className="mb-2.5 h-3.5 w-44" />
 
         <div className="grid grid-cols-2 gap-2">
           <Skeleton className="h-11" />

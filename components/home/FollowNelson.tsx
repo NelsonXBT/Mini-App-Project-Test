@@ -44,7 +44,7 @@ const socials = [
 export default function FollowNelson() {
   return (
     <section>
-      <PageTitle as="h2">Connect</PageTitle>
+      <PageTitle as="h2">Connect With Nelson Edeh</PageTitle>
 
       <div className="grid grid-cols-2 gap-2">
         {socials.map((social) => {
