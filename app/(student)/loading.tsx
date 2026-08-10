@@ -48,8 +48,9 @@ export default function StudentLoading() {
       {/* Connect */}
 
       <section>
-        {/* Widened to match "Connect With Nelson Edeh". */}
-        <Skeleton className="mb-2.5 h-3.5 w-44" />
+        {/* Heading is now full-size with a subtitle line beneath it. */}
+        <Skeleton className="h-5 w-56" />
+        <Skeleton className="mb-3 mt-1.5 h-3.5 w-64" />
 
         <div className="grid grid-cols-2 gap-2">
           <Skeleton className="h-11" />
