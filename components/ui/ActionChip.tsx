@@ -20,10 +20,12 @@ type ActionChipProps = {
  * interactive. A labelled chip with a verb and a border reads as a button
  * standing still, with no pointer required.
  *
- * Deliberately not a filled accent button: a list of five of these would
- * put five oxblood blocks on one screen. The chip stays neutral at rest
- * and warms to the accent on press, which is where the feedback matters
- * on touch.
+ * Now filled in the brand accent rather than neutral-at-rest. The earlier
+ * note here argued a filled accent would put five oxblood blocks on one
+ * screen — true, but the cost of staying neutral was worse: the chip was the
+ * one element meant to look tappable and it read as a static label. At this
+ * size it registers as a control without approaching the weight of a
+ * full-width button, and it is the only accent-filled thing on the row.
  */
 export default function ActionChip({
   label,
@@ -41,24 +43,21 @@ export default function ActionChip({
         items-center
         gap-1
         rounded-[var(--radius-pill)]
-        border
-        border-[var(--border)]
-        bg-[var(--surface-secondary)]
+        bg-linear-to-b
+        from-[var(--primary)]
+        to-[var(--primary-deep)]
         pl-3
         pr-2.5
         text-[12.5px]
         font-semibold
         tracking-tight
-        text-[var(--text)]
-        transition-colors
+        !text-white
+        shadow-[0_1px_3px_rgba(0,0,0,0.14)]
+        transition-all
         duration-200
         ease-out
-        group-hover:border-[var(--primary-ring)]
-        group-hover:bg-[var(--primary-soft)]
-        group-hover:text-[var(--primary-text)]
-        group-active:border-[var(--primary-ring)]
-        group-active:bg-[var(--primary-soft)]
-        group-active:text-[var(--primary-text)]
+        group-hover:shadow-[0_2px_8px_rgba(0,0,0,0.18)]
+        group-active:scale-[0.97]
         ${className}
       `}
     >

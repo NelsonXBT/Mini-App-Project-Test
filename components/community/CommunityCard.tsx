@@ -21,7 +21,7 @@ export default function CommunityCard({
    * reads as having its own colour rather than a grey chip — which also stops
    * three stacked cards from looking like one repeated row.
    */
-  const { Glyph, tint, tile, ring } = communityIcon(icon);
+  const { Glyph, tint, tile, ring, sheen, edge } = communityIcon(icon);
 
   /*
    * Renders as a real anchor once a destination exists so Telegram opens it
@@ -39,15 +39,18 @@ export default function CommunityCard({
     <Root
       {...linkProps}
       aria-label={`${cta} — ${title}`}
-      className="
+      className={`
         group
+        relative
+        isolate
         flex
         w-full
         items-center
         gap-3.5
+        overflow-hidden
         rounded-[var(--radius)]
         border
-        border-[var(--border)]
+        ${edge}
         bg-[var(--card)]
         px-4
         py-3.5
@@ -57,15 +60,27 @@ export default function CommunityCard({
         duration-200
         ease-out
         hover:-translate-y-0.5
-        hover:border-[var(--border-strong)]
         hover:shadow-[var(--shadow-raised)]
         active:translate-y-0
         active:scale-[0.985]
-        active:bg-[var(--surface-secondary)]
         disabled:pointer-events-none
         disabled:opacity-60
-      "
+      `}
     >
+      {/*
+       * The wash sits in its own layer rather than on the card.
+       *
+       * A gradient set as the card's own background would have to be redone
+       * for every state — the press tint would land underneath it and never
+       * be seen. As a -z-10 sibling it composites over the card's background
+       * instead, so :active still reads through and the hue survives both
+       * themes without a second definition.
+       */}
+      <span
+        className={`absolute inset-0 -z-10 ${sheen}`}
+        aria-hidden="true"
+      />
+
       {/* Icon */}
 
       <div

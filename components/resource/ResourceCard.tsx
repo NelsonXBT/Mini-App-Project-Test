@@ -1,16 +1,5 @@
-import {
-  Package,
-  ClipboardList,
-  FolderOpen,
-  Palette,
-  Images,
-  Rabbit,
-  Coins,
-  TrendingUp,
-  ChartColumn,
-} from "lucide-react";
-
 import { ActionChip } from "@/components/ui";
+import { resourceIcon } from "@/lib/constants/icon-map";
 
 type ResourceCardProps = {
   title: string;
@@ -33,43 +22,15 @@ export default function ResourceCard({
   external = false,
   href,
 }: ResourceCardProps) {
-  // One size and stroke weight for every icon; the hue is the only variable.
-  const shared = "h-5 w-5";
-  const stroke = 1.9;
-
-  const renderIcon = () => {
-    switch (icon) {
-      case "package":
-        return <Package className={`${shared} text-[var(--text-muted)]`} strokeWidth={stroke} />;
-
-      case "clipboard":
-        return <ClipboardList className={`${shared} text-[#3f8f63]`} strokeWidth={stroke} />;
-
-      case "folder":
-        return <FolderOpen className={`${shared} text-[#b8802a]`} strokeWidth={stroke} />;
-
-      case "palette":
-        return <Palette className={`${shared} text-[#7a5cc0]`} strokeWidth={stroke} />;
-
-      case "images":
-        return <Images className={`${shared} text-[#c47a3d]`} strokeWidth={stroke} />;
-
-      case "rabbit":
-        return <Rabbit className={`${shared} text-[var(--text)]`} strokeWidth={stroke} />;
-
-      case "coins":
-        return <Coins className={`${shared} text-[#b8802a]`} strokeWidth={stroke} />;
-
-      case "trending":
-        return <TrendingUp className={`${shared} text-[#3f8f63]`} strokeWidth={stroke} />;
-
-      case "chart":
-        return <ChartColumn className={`${shared} text-[#4a72b8]`} strokeWidth={stroke} />;
-
-      default:
-        return <Package className={`${shared} text-[var(--text-muted)]`} strokeWidth={stroke} />;
-    }
-  };
+  /*
+   * Resolved from the shared icon map rather than a switch here.
+   *
+   * This file used to carry its own copy of the hue table, which meant the
+   * admin preview and the student card could drift apart — and it rendered
+   * every tile on the same grey, so the colour the map already defined was
+   * thrown away. One source now feeds both.
+   */
+  const { Glyph, tint, tile, ring, sheen, edge } = resourceIcon(icon);
 
   const Root = href ? "a" : "button";
 
@@ -81,15 +42,18 @@ export default function ResourceCard({
     <Root
       {...linkProps}
       aria-label={`${cta} — ${title}`}
-      className="
+      className={`
         group
+        relative
+        isolate
         flex
         w-full
         items-center
         gap-3.5
+        overflow-hidden
         rounded-[var(--radius)]
         border
-        border-[var(--border)]
+        ${edge}
         bg-[var(--card)]
         px-4
         py-3.5
@@ -99,17 +63,21 @@ export default function ResourceCard({
         duration-200
         ease-out
         hover:-translate-y-0.5
-        hover:border-[var(--border-strong)]
         hover:shadow-[var(--shadow-raised)]
         active:translate-y-0
         active:scale-[0.985]
-        active:bg-[var(--surface-secondary)]
         disabled:pointer-events-none
         disabled:opacity-60
-      "
+      `}
     >
+      {/* Own layer so the press state still reads through — see CommunityCard. */}
+      <span
+        className={`absolute inset-0 -z-10 ${sheen}`}
+        aria-hidden="true"
+      />
+
       <div
-        className="
+        className={`
           flex
           h-10
           w-10
@@ -117,10 +85,11 @@ export default function ResourceCard({
           items-center
           justify-center
           rounded-[var(--radius-control)]
-          bg-[var(--surface-secondary)]
-        "
+          ${tile}
+          ${ring}
+        `}
       >
-        {renderIcon()}
+        <Glyph className={`h-5 w-5 ${tint}`} strokeWidth={1.9} />
       </div>
 
       <div className="min-w-0 flex-1">
