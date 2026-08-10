@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui";
 /*
  * The course page is the heaviest query in the app — course, modules, lessons,
  * resources and per-user progress in one tree — so it is the surface where a
- * loading boundary matters most.
+ * loading boundary matters most. 1
  *
  * Stands in for CourseProgress above CourseLearning's module list.
  */
