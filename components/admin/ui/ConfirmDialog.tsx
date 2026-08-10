@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import { AlertTriangle } from "lucide-react";
 
 import { Button } from "@/components/ui";
@@ -18,8 +19,30 @@ type ConfirmDialogProps = {
 };
 
 /**
+ * Whether we are running on the client, expressed as a store read rather than
+ * mount state.
+ *
+ * A portal needs document.body, which does not exist during the server render.
+ * The usual `useState(false)` + `useEffect(setMounted)` pairing works but
+ * schedules an extra render on every mount; reading a constant store returns
+ * false on the server and true on the client with no state transition at all.
+ */
+const subscribeToNothing = () => () => {};
+const onClient = () => true;
+const onServer = () => false;
+
+/**
  * Every destructive admin action routes through this. Closing is always
  * available (Escape, backdrop, cancel) so the safe path is the easy one.
+ *
+ * Rendered into a portal on document.body rather than in place. `position:
+ * fixed` resolves against the viewport only while no ancestor establishes a
+ * containing block — but a transform, filter, or `will-change` on any parent
+ * makes *that* element the reference instead. Every admin page wraps its
+ * content in `.animate-rise-in`, whose keyframes carry a transform, so an
+ * in-place dialog centres on the page wrapper and drifts off-screen when the
+ * page is taller than the window. The portal puts the dialog outside that
+ * subtree, where `inset-0` means the viewport again.
  */
 export default function ConfirmDialog({
   open,
@@ -32,6 +55,12 @@ export default function ConfirmDialog({
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) {
+  const mounted = useSyncExternalStore(
+    subscribeToNothing,
+    onClient,
+    onServer
+  );
+
   useEffect(() => {
     if (!open) return;
 
@@ -53,25 +82,32 @@ export default function ConfirmDialog({
     };
   }, [open, busy, onCancel]);
 
-  if (!open) return null;
+  if (!open || !mounted) return null;
 
-  return (
+  return createPortal(
     <div
       role="dialog"
       aria-modal="true"
       aria-labelledby="confirm-dialog-title"
-      className="fixed inset-0 z-[100] flex items-center justify-center p-5"
+      /*
+       * Centred via grid rather than flex so `place-items-center` also
+       * constrains the card's height: a long description on a short window
+       * shrinks the card and scrolls its body, instead of overflowing equally
+       * in both directions and pushing the buttons past the top edge.
+       */
+      className="fixed inset-0 z-[100] grid max-h-[100dvh] place-items-center overflow-y-auto p-5"
     >
       {/* Backdrop */}
       <div
         onClick={busy ? undefined : onCancel}
-        className="animate-fade-in absolute inset-0 bg-black/25 backdrop-blur-[2px]"
+        className="animate-fade-in fixed inset-0 bg-black/25 backdrop-blur-[2px]"
       />
 
       <div
         className="
           animate-rise-in
           relative
+          my-auto
           w-full
           max-w-sm
           rounded-[var(--radius)]
@@ -120,11 +156,7 @@ export default function ConfirmDialog({
         </div>
 
         <div className="mt-5 flex justify-end gap-2">
-          <Button
-            variant="ghost"
-            onClick={onCancel}
-            disabled={busy}
-          >
+          <Button variant="ghost" onClick={onCancel} disabled={busy}>
             {cancelLabel}
           </Button>
 
@@ -132,15 +164,14 @@ export default function ConfirmDialog({
             onClick={onConfirm}
             disabled={busy}
             className={
-              destructive
-                ? "bg-[var(--danger)] hover:bg-[var(--danger)]/90"
-                : ""
+              destructive ? "bg-[var(--danger)] hover:bg-[var(--danger)]/90" : ""
             }
           >
             {busy ? "Working…" : confirmLabel}
           </Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

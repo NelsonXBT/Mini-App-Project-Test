@@ -167,7 +167,25 @@ export async function findStudents(query: string) {
 export async function sendBroadcastMessageAction(
   input: ComposeInput
 ): Promise<
-  | { ok: true; id: string; sent: number; failed: number; skipped: number; status: string }
+  | {
+      ok: true;
+      id: string;
+      sent: number;
+      failed: number;
+      skipped: number;
+      status: string;
+      /**
+       * Why delivery failed, when the whole send failed and the reasons are
+       * few enough to state plainly.
+       *
+       * Telegram's rejections are frequently actionable — "bot can't initiate
+       * conversation with a user" means the student must message the bot
+       * first, which is a thing the admin can go and arrange. Reporting only
+       * "Failed 1" hides that, and the admin has no way to tell a fixable
+       * situation from a broken feature.
+       */
+      failureReasons?: string[];
+    }
   | { ok: false; error: string }
 > {
   const admin = await requireAdmin();
@@ -223,6 +241,26 @@ export async function sendBroadcastMessageAction(
     revalidatePath("/admin/messaging");
     revalidatePath("/admin/messaging/history");
 
+    /*
+     * Pull the distinct rejections back only when something failed. Capped at
+     * a handful: on a large broadcast the same two or three reasons repeat,
+     * and the history view is where a full per-recipient breakdown belongs.
+     */
+    let failureReasons: string[] | undefined;
+
+    if (outcome.failed > 0) {
+      const failures = await prisma.broadcastDelivery.findMany({
+        where: { messageId, status: "FAILED", error: { not: null } },
+        select: { error: true },
+        distinct: ["error"],
+        take: 3,
+      });
+
+      failureReasons = failures
+        .map((row) => row.error)
+        .filter((reason): reason is string => Boolean(reason));
+    }
+
     return {
       ok: true,
       id: messageId,
@@ -230,6 +268,7 @@ export async function sendBroadcastMessageAction(
       failed: outcome.failed,
       skipped: outcome.skipped,
       status: outcome.status,
+      failureReasons,
     };
   } catch (error) {
     console.error("sendBroadcast failed:", error);

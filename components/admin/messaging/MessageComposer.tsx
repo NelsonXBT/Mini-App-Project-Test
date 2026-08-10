@@ -39,6 +39,38 @@ type Counts =
   | { kind: "error"; message: string }
   | null;
 
+/**
+ * Turn Telegram's wording into something the admin can act on.
+ *
+ * Telegram's descriptions are accurate but assume you know its rules. The
+ * most common one here — a bot may not open a conversation a user has not
+ * started — reads like a malfunction unless you know it is a deliberate
+ * anti-spam rule and that the fix is the student's to make. Anything
+ * unrecognised is passed through verbatim rather than flattened into a vague
+ * message.
+ */
+function explainFailure(reason: string): string {
+  const text = reason.toLowerCase();
+
+  if (text.includes("can't initiate conversation")) {
+    return "This student has never opened a chat with the bot, and Telegram does not allow bots to message first. Ask them to open the bot and press Start, then send again.";
+  }
+
+  if (text.includes("blocked")) {
+    return "This student has blocked the bot. They will need to unblock it before they can receive messages.";
+  }
+
+  if (text.includes("chat not found")) {
+    return "Telegram could not find this chat. For a channel or group, check the chat ID and that the bot is still an admin there.";
+  }
+
+  if (text.includes("deactivated")) {
+    return "This student's Telegram account is deactivated.";
+  }
+
+  return reason;
+}
+
 export default function MessageComposer({
   courses,
   destinations,
@@ -63,6 +95,14 @@ export default function MessageComposer({
   const [confirming, setConfirming] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<string | null>(null);
+
+  /*
+   * Kept separate from `result` so a partial send reads honestly: the success
+   * line still reports what was delivered, with the reasons beside it rather
+   * than replacing it.
+   */
+  const [failureReasons, setFailureReasons] = useState<string[] | null>(null);
+  const [failureCount, setFailureCount] = useState(0);
 
   /*
    * Whether the audience is fully specified. Derived during render rather than
@@ -119,6 +159,7 @@ export default function MessageComposer({
 
   function send() {
     setError(null);
+    setFailureReasons(null);
 
     startTransition(async () => {
       const response = await sendBroadcastMessageAction({
@@ -146,6 +187,11 @@ export default function MessageComposer({
         `Sent ${response.sent}` +
           (response.failed ? ` · Failed ${response.failed}` : "") +
           (response.skipped ? ` · Skipped ${response.skipped}` : "")
+      );
+
+      setFailureCount(response.failed);
+      setFailureReasons(
+        response.failureReasons?.length ? response.failureReasons : null
       );
 
       // Reset the composer so the same message cannot be sent twice by
@@ -326,8 +372,24 @@ export default function MessageComposer({
 
       {error && <p className="text-[14px] text-[var(--danger)]">{error}</p>}
 
-      {result && (
-        <p className="text-[14px] text-[var(--success)]">{result}</p>
+      {result && <p className="text-[14px] text-[var(--success)]">{result}</p>}
+
+      {failureReasons && (
+        <div className="space-y-2 rounded-[var(--radius-control)] border border-[var(--warning)]/30 bg-[var(--warning)]/5 p-3.5">
+          <p className="text-[13px] font-semibold text-[var(--warning)]">
+            Delivery failed for {failureCount} recipient
+            {failureCount === 1 ? "" : "s"}:
+          </p>
+
+          {failureReasons.map((reason, index) => (
+            <p
+              key={index}
+              className="text-[13px] leading-relaxed text-[var(--text-muted)]"
+            >
+              {explainFailure(reason)}
+            </p>
+          ))}
+        </div>
       )}
 
       <div className="flex items-center gap-3 border-t border-[var(--border)] pt-5">
