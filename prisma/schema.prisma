@@ -75,6 +75,12 @@ enum ActivityType {
   NOTIFICATION_CREATED
   NOTIFICATION_UPDATED
   NOTIFICATION_DELETED
+
+  BROADCAST_SENT
+
+  TELEGRAM_DESTINATION_CREATED
+  TELEGRAM_DESTINATION_UPDATED
+  TELEGRAM_DESTINATION_DELETED
 }
 
 // Which tab of the student Resources page an item belongs to.
@@ -102,6 +108,14 @@ model User {
   progress    LessonProgress[]
 
   sessions Session[]
+
+  /**
+   * Messaging back-relations. Virtual only — Prisma requires the other side of
+   * a relation to be named, but the foreign keys live on the messaging tables,
+   * so neither of these adds a column to User.
+   */
+  broadcastsTargeted  BroadcastMessage[]
+  broadcastDeliveries BroadcastDelivery[]
 
   // Everything created after this instant counts as unread. Null means the
   // student has never opened the panel, so their whole feed is unread.
@@ -156,6 +170,10 @@ model Course {
   files       CourseFile[]
 
   notifications Notification[]
+
+  // Messaging back-relation. Virtual only — the foreign key lives on
+  // BroadcastMessage, so this adds no column to Course.
+  broadcasts BroadcastMessage[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -312,6 +330,10 @@ model AdminUser {
 
   notifications Notification[]
 
+  // Messaging back-relation. Virtual only — the foreign key lives on
+  // BroadcastMessage, so this adds no column to AdminUser.
+  broadcasts BroadcastMessage[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -464,4 +486,211 @@ model PlatformSettings {
   defaultCourseThumbnail String?
 
   updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+// TELEGRAM MESSAGING / BROADCAST
+//
+// Entirely additive, and deliberately READ-ONLY with respect to
+// the existing student/course/access system. Recipient
+// resolution reads Enrollment.status; nothing here ever writes
+// it. Course access continues to be decided solely by
+// /api/telegram-login via lib/telegram/checkMembership.ts.
+//
+// TelegramDestination is NOT a course-access channel. Course
+// gating lives on Course.telegramChatId and is untouched by
+// anything in this section — editing a destination cannot
+// change who can open a course.
+// ============================================================
+
+enum BroadcastAudience {
+  // Every student with at least one ACTIVE enrollment. "Active" is exactly
+  // that and nothing more: it says nothing about when the student last opened
+  // the Mini App. A student dormant for a year with an ACTIVE enrolment is a
+  // valid recipient.
+  ALL_ACTIVE_STUDENTS
+
+  // Students whose enrollment in one specific course is ACTIVE.
+  COURSE_ACTIVE_STUDENTS
+
+  // One deliberately chosen student. Intentionally NOT filtered on active
+  // enrollment — an admin who picks a specific person means that person.
+  SPECIFIC_STUDENT
+
+  // A configured channel or group, addressed by TelegramDestination.
+  DESTINATION
+}
+
+enum BroadcastStatus {
+  DRAFT
+  SENDING
+  SENT
+  PARTIALLY_SENT
+  FAILED
+}
+
+enum BroadcastDeliveryStatus {
+  PENDING
+  SENT
+  FAILED
+  // Resolved as a recipient but unreachable — no usable Telegram chat id.
+  // Never retried, and never a reason to alter the student's enrollment.
+  SKIPPED
+}
+
+enum TelegramDestinationType {
+  CHANNEL
+  GROUP
+}
+
+/**
+ * An authorised send target.
+ * Exists so the frontend never submits a raw chat id: the composer posts a
+ * destination id, and the server reads the chat id from this table. Managed
+ * by admins only.
+ */
+model TelegramDestination {
+  id String @id @default(cuid())
+
+  name String
+
+  // Telegram numeric chat id, e.g. -1001234567890. String because Telegram
+  // channel ids exceed the safe integer range in JSON.
+  chatId String @unique
+
+  type TelegramDestinationType
+
+  isActive Boolean @default(true)
+
+  broadcasts BroadcastMessage[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isActive])
+}
+
+model BroadcastMessage {
+  id String @id @default(cuid())
+
+  audience BroadcastAudience
+
+  // Set only when audience is COURSE_ACTIVE_STUDENTS. SetNull rather than
+  // Cascade: a sent broadcast is a historical record and must outlive the
+  // course it was addressed to.
+  courseId String?
+  course   Course? @relation(fields: [courseId], references: [id], onDelete: SetNull)
+
+  // Set only when audience is SPECIFIC_STUDENT.
+  targetUserId String?
+  targetUser   User?   @relation(fields: [targetUserId], references: [id], onDelete: SetNull)
+
+  // Set only when audience is DESTINATION.
+  destinationId String?
+  destination   TelegramDestination? @relation(fields: [destinationId], references: [id], onDelete: SetNull)
+
+  // Every content field is optional — Telegram accepts a media-only message,
+  // and a text-only message needs no image.
+  title String?
+  body  String?
+
+  /**
+   * Image metadata only. The binary lives in Vercel Blob; PostgreSQL holds
+   * the reference. imageKey is the blob pathname, kept so the object can be
+   * addressed later independently of the URL.
+   */
+  imageUrl      String?
+  imageKey      String?
+  imageMimeType String?
+  imageSize     Int?
+
+  /**
+   * Inline keyboard as stored JSON: [{ text, action, url }].
+   * Json rather than a child table because buttons are never queried across
+   * broadcasts — they are read back only as part of this one message, and
+   * rebuilt verbatim for the preview and for reply_markup.
+   */
+  buttons Json?
+
+  status BroadcastStatus @default(DRAFT)
+
+  recipientCount Int @default(0)
+  sentCount      Int @default(0)
+  failedCount    Int @default(0)
+  skippedCount   Int @default(0)
+
+  // Nullable and SetNull: history outlives the admin account that sent it.
+  actorId String?
+  actor   AdminUser? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  /*
+   * Held while a send or resume pass is actively draining this message.
+   *
+   * A timestamp rather than a boolean so an abandoned lock expires: a
+   * serverless function killed mid-pass can never release it, and without a
+   * staleness window the broadcast would be unresumable forever. Any lock
+   * older than the TTL in broadcast.ts is treated as abandoned and may be
+   * reclaimed. Refreshed as the pass runs, so a live pass is never stolen.
+   */
+  lockedAt DateTime?
+
+  deliveries BroadcastDelivery[]
+
+  createdAt   DateTime  @default(now())
+  completedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  @@index([createdAt])
+  @@index([status])
+  @@index([courseId])
+  @@index([actorId])
+  @@index([targetUserId])
+  @@index([destinationId])
+}
+
+/**
+ * Per-recipient delivery state.
+ * Persisted before sending starts so a function timeout mid-broadcast leaves
+ * an inspectable record rather than an unknown state: anything still PENDING
+ * was not delivered. The unique constraint is also the duplicate-send guard —
+ * one row per recipient per message, so a retry cannot double-send.
+ */
+model BroadcastDelivery {
+  id String @id @default(cuid())
+
+  messageId String
+  message   BroadcastMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  // Null for channel/group sends, which have no User behind them.
+  userId String?
+  user   User?   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  // Resolved chat id, snapshotted at send time. String for the same
+  // JSON-safety reason as TelegramDestination.chatId.
+  chatId String?
+
+  status BroadcastDeliveryStatus @default(PENDING)
+
+  // Telegram's own description on failure, e.g. "bot was blocked by the user".
+  error String?
+
+  /*
+   * Whether this failure is worth another attempt.
+   *
+   * The transport already distinguishes a permanent rejection (403 blocked,
+   * 400 chat not found) from a transient one (429, 5xx, network) — that
+   * verdict was previously computed and thrown away. Persisting it is what
+   * lets "retry failed" re-send only to recipients that might succeed, rather
+   * than hammering accounts that have blocked the bot.
+   */
+  retryable Boolean @default(false)
+
+  sentAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  @@unique([messageId, chatId])
+  @@index([messageId])
+  @@index([status])
+  @@index([userId])
 }

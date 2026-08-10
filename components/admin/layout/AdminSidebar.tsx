@@ -11,6 +11,7 @@ import {
   Bell,
   FolderOpen,
   MessagesSquare,
+  Send,
 } from "lucide-react";
 
 import Logo from "@/components/ui/Logo";
@@ -46,6 +47,11 @@ const navItems = [
     href: "/admin/notifications",
     label: "Notifications",
     icon: Bell,
+  },
+  {
+    href: "/admin/messaging",
+    label: "Messaging",
+    icon: Send,
   },
   {
     href: "/admin/settings",
